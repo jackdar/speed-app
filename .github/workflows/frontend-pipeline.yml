@@ -1,7 +1,9 @@
-name: Initial CI Pipeline
+name: Initial Frontend Pipeline
 
 on:
   push:
+    paths:
+      - frontend/**
   pull_request:
     branches:
       - main
