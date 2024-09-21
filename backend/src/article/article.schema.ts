@@ -1,14 +1,15 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Date } from 'mongoose';
 
 @Schema()
 export class Article {
-  @Prop()
+  @Prop({ required: true })
   title: string;
 
-  @Prop()
+  @Prop({ required: true })
   author: string;
 
-  @Prop()
+  @Prop({ required: true })
   publisher: string;
 
   @Prop()
@@ -31,6 +32,12 @@ export class Article {
 
   @Prop()
   isPosted: boolean;
+
+  @Prop({ type: Date })
+  createDate: Date;
+
+  @Prop({ type: Date, default: Date.now})
+  lastUpdateDate: Date;
 }
 
 export const ArticleSchema = SchemaFactory.createForClass(Article);
