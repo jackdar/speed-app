@@ -1,6 +1,28 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Date } from 'mongoose';
 
+class Moderation {
+  @Prop()
+  moderatorId: string;
+
+  @Prop()
+  moderated: boolean
+
+  @Prop()
+  moderationPassed: boolean;
+}
+
+class Analysis {
+  @Prop()
+  analystId: string;
+
+  @Prop()
+  analyzed: boolean;
+
+  @Prop()
+  analyzePassed: boolean;
+}
+
 @Schema()
 export class Article {
   @Prop({ required: true })
@@ -36,8 +58,14 @@ export class Article {
   @Prop({ type: Date })
   createDate: Date;
 
-  @Prop({ type: Date, default: Date.now})
+  @Prop({ type: Date, default: Date.now })
   lastUpdateDate: Date;
+
+  @Prop()
+  moderationDetails: Moderation;
+
+  @Prop()
+  analysisDetails: Analysis;
 }
 
 export const ArticleSchema = SchemaFactory.createForClass(Article);
