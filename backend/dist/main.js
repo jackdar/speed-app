@@ -7,7 +7,7 @@ const common_1 = require("@nestjs/common");
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
     const configService = app.get(config_1.ConfigService);
-    const port = configService.get('PORT') || 5000;
+    const port = configService.get('PORT') || 8787;
     app.enableCors();
     await app.listen(port);
     common_1.Logger.log(`Application is running on http://localhost:${port}`, 'Speed');
