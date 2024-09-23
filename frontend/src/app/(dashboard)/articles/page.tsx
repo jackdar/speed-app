@@ -18,9 +18,9 @@ export default async function ArticlesPage() {
     .catch(console.error);
 
   return (
-    <div className='p-8 grid grid-cols-3 auto-rows-auto gap-4'>
+    <div className='grid grid-cols-3 auto-rows-auto gap-4'>
       {articles.map((article: ArticleProps, index: any) => (
-        <Card key={index} className='w-80'>
+        <Card key={index} className='w-full'>
           <CardHeader>
             <CardTitle>{article.title}</CardTitle>
             <CardDescription>{article.author}</CardDescription>
