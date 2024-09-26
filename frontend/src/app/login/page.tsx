@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Navbar from "@/components/navbar";
 
 const LoginPage = () => {
   const [form, setForm] = useState({ email: "", password: "" });
@@ -40,26 +41,43 @@ const LoginPage = () => {
   };
 
   return (
-    <div>
-      <h2>Login</h2>
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      <form onSubmit={handleSubmit}>
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={form.email}
-          onChange={handleChange}
-        />
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={form.password}
-          onChange={handleChange}
-        />
-        <button type="submit">Login</button>
-      </form>
+    <div className="min-h-screen bg-[#8D8D8D] flex flex-col">
+      <div className="w-full">
+        <Navbar />
+      </div>
+
+      <div className="flex-1 flex justify-center items-center">
+        <div className="bg-gray-100 p-8 rounded shadow-md w-full max-w-md">
+          <h2 className="text-center text-2xl text-black mb-4 w-full text-start border-b border-black pb-2">
+            Login
+          </h2>
+          <form onSubmit={handleSubmit} className="space-y-4 text-black">
+            <input
+              className="w-full p-2 border border-gray-300 rounded"
+              type="email"
+              name="email"
+              placeholder="Email"
+              value={form.email}
+              onChange={handleChange}
+            />
+            <input
+              className="w-full p-2 border border-gray-300 rounded"
+              type="password"
+              name="password"
+              placeholder="Password"
+              value={form.password}
+              onChange={handleChange}
+            />
+            <button
+              type="submit"
+              className="w-full bg-[#646464] text-white p-2 rounded"
+            >
+              Login
+            </button>
+            {error && <p style={{ color: "red" }}>{error}</p>}
+          </form>
+        </div>
+      </div>
     </div>
   );
 };
