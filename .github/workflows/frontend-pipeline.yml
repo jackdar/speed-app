@@ -14,13 +14,14 @@ defaults:
 
 jobs:
   build:
+    environment: frontend
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
         node-version: [20.x, 22.x]
 
-    steps:
+    steps:        
       - name: Checkout repository
         uses: actions/checkout@v3
 
@@ -34,5 +35,8 @@ jobs:
           npm install
 
       - name: Build frontend
+        env:
+          API_ORIGIN: ${{ secrets.API_ORIGIN }}
+          NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
         run: |
           npm run build
