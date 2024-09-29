@@ -19,13 +19,13 @@ export class UsersService {
   async register(userDto: any): Promise<User> {
     const { name, email, password, role } = userDto;
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = new this.userModel({
+    const newUser = await this.userModel.create({
       name,
       email,
       password: hashedPassword,
       role,
     });
-    return newUser.save();
+    return newUser;
   }
 
   async updateUser(id: string, updateDto: any): Promise<User | null> {
