@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ArticleModule } from './article/article.module';
+import { AdminModule } from './admin/admin.module';
 
 @Module({
   imports: [
@@ -19,8 +20,9 @@ import { ArticleModule } from './article/article.module';
       inject: [ConfigService],
     }),
     ArticleModule,
+    AdminModule
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }
