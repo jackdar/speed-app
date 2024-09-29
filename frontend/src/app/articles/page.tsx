@@ -1,7 +1,7 @@
 import React from "react";
 
 export default async function ArticlesPage() {
-  const articles = await fetch(`${process.env.API_ORIGIN}/articles`)
+  const articles = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/articles`)
     .then((res) => res.json())
     .catch(console.error);
 

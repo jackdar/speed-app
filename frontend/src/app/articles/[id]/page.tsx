@@ -6,7 +6,7 @@ export default async function ArticlePage({
   params: { id: string };
 }) {
   const articles = await fetch(
-    `${process.env.API_ORIGIN}/articles/${params.id}`
+    `${process.env.NEXT_PUBLIC_API_URL}/articles/${params.id}`
   );
 
   return <div>ArticlePage</div>;
