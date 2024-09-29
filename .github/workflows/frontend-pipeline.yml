@@ -1,4 +1,4 @@
-name: Initial Frontend Pipeline
+name: Updated Frontend Pipeline
 
 on:
   push:
