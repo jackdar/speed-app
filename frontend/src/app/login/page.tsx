@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import Navbar from "../../components/navbar";
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
+import { useAuth } from "../hooks/useAuth";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
 
 const LoginPage = () => {
-  const [form, setForm] = useState({ email: '', password: '' });
-  const [error, setError] = useState('');
+  const [form, setForm] = useState({ email: "", password: "" });
   const router = useRouter();
+  const { login, error } = useAuth();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({
@@ -19,34 +19,15 @@ const LoginPage = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(form),
-      });
-
-      const data = await res.json();
-
-      if (res.ok) {
-        localStorage.setItem('token', data.access_token);
-        router.push('/profile');
-      } else {
-        setError(data.message || 'Login failed');
-      }
-    } catch (err) {
-      setError('An error occurred');
-    }
+    login(form.email, form.password);
   };
 
   useEffect(() => {
     const checkAuth = () => {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem("token");
 
       if (token != null) {
-        router.push('articles');
+        router.push("articles");
       }
     };
 
@@ -82,10 +63,10 @@ const LoginPage = () => {
           >
             Login
           </button>
-          {error && <p style={{ color: 'red' }}>{error}</p>}
+          {error && <p style={{ color: "red" }}>{error}</p>}
         </form>
         <p className="text-center text-sm mt-4">
-          Haven't got an account?{' '}
+          Haven't got an account?{" "}
           <Link href="/register" className="font-medium">
             Register
           </Link>
