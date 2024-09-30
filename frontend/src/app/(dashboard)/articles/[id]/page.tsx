@@ -7,7 +7,7 @@ export default async function ArticlePage({
   params: { id: string };
 }) {
   const article: ArticleProps = await fetch(
-    `${process.env.API_ORIGIN}/articles/${params.id}`
+    `${process.env.API_ORIGIN}/article/${params.id}`
   )
     .then((res) => res.json())
     .catch(console.error);

@@ -1,4 +1,3 @@
-import { Article, ArticleTitle } from "@/components/article";
 import {
   Card,
   CardContent,
