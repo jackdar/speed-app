@@ -1,5 +1,3 @@
-import { Date } from "mongoose"
-
 export class CreateArticleDto {
     title: string;
     author: string;

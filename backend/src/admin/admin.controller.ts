@@ -12,8 +12,8 @@ export class AdminController {
     }
 
     @Get('admin/queue')
-    async getArticleQueue() {
-        return await this.adminService.getArticleQueue();
+    async getModeratorQueue() {
+        return await this.adminService.getModeratorQueue();
     }
 
     @Get('admin/queue/analyst')

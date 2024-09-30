@@ -2,7 +2,8 @@ import { Module } from "@nestjs/common";
 import { AdminController } from "./admin.controller";
 import { AdminService } from "./admin.service";
 import { MongooseModule } from "@nestjs/mongoose";
-import { Article, ArticleSchema } from "src/article/article.schema";
+import { Article, ArticleSchema } from "../article/article.schema";
+import { ArticleModule } from "src/article/article.module";
 
 @Module({
     imports: [
@@ -12,6 +13,7 @@ import { Article, ArticleSchema } from "src/article/article.schema";
                 schema: ArticleSchema,
             },
         ]),
+        ArticleModule
     ],
     controllers: [AdminController],
     providers: [AdminService],
