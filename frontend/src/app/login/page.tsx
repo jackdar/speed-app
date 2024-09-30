@@ -66,7 +66,7 @@ const LoginPage = () => {
           {error && <p style={{ color: "red" }}>{error}</p>}
         </form>
         <p className="text-center text-sm mt-4">
-          Haven't got an account?{" "}
+          Haven&apos;t got an account?{" "}
           <Link href="/register" className="font-medium">
             Register
           </Link>
