@@ -10,6 +10,5 @@ export interface Article {
   pagesStart: number;
   volume: number;
   year: number;
-  createdAt: string;
   updatedAt: string;
 }

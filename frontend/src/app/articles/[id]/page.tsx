@@ -20,6 +20,8 @@ export default async function ArticlePage({
     .then((res) => res.json())
     .catch(console.error);
 
+  console.log(article);
+
   return (
     <div className="flex-1 flex justify-center items-start bg-[#8D8D8D] p-8">
       <div className="bg-gray-200 p-8 rounded shadow-md w-full">

@@ -1,8 +1,8 @@
 'use client';
 
-import { revalidatePath } from 'next/cache';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 const LoginPage = () => {
   const [form, setForm] = useState({ email: '', password: '' });
@@ -32,7 +32,6 @@ const LoginPage = () => {
       if (res.ok) {
         localStorage.setItem('token', data.access_token);
         router.push('/profile');
-        revalidatePath('/profile');
       } else {
         setError(data.message || 'Login failed');
       }
@@ -40,6 +39,18 @@ const LoginPage = () => {
       setError('An error occurred');
     }
   };
+
+  useEffect(() => {
+    const checkAuth = () => {
+      const token = localStorage.getItem('token');
+
+      if (token != null) {
+        router.push('articles');
+      }
+    };
+
+    checkAuth();
+  }, [router]);
 
   return (
     <div className="flex-1 flex justify-center items-center bg-[#8D8D8D]">
@@ -72,6 +83,12 @@ const LoginPage = () => {
           </button>
           {error && <p style={{ color: 'red' }}>{error}</p>}
         </form>
+        <p className="text-center text-sm mt-4">
+          Haven't got an account?{' '}
+          <Link href="/register" className="font-medium">
+            Register
+          </Link>
+        </p>
       </div>
     </div>
   );

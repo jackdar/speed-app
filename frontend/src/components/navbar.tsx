@@ -15,11 +15,6 @@ export default function Navbar() {
     const fetchProfile = async () => {
       const token = localStorage.getItem('token');
 
-      if (!token) {
-        router.push('/login');
-        return;
-      }
-
       try {
         const res = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/auth/profile`,
@@ -45,7 +40,10 @@ export default function Navbar() {
     fetchProfile();
   }, [router]);
 
-  if (error) return <p>{error}</p>;
+  const logout = () => {
+    localStorage.removeItem('token');
+    router.push('/login');
+  };
 
   return (
     <nav className="w-full bg-black p-4 flex items-center justify-between text-white">
@@ -55,6 +53,7 @@ export default function Navbar() {
         </Link>
         <div className="flex flex-row gap-4">
           <Link href="/articles">Articles</Link>
+          <Link href="/moderate">Moderate</Link>
         </div>
       </div>
       <div className="flex flex-row gap-4">
@@ -64,9 +63,9 @@ export default function Navbar() {
           </Link>
         )}
         {user ? (
-          <Link href="/logout" className="px-4 py-2 rounded-md bg-red-500">
+          <button onClick={logout} className="px-4 py-2 rounded-md bg-red-500">
             Logout
-          </Link>
+          </button>
         ) : (
           <Link
             href="/login"

@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
@@ -84,6 +85,12 @@ const RegisterPage = () => {
           </button>
           {error && <p style={{ color: 'red' }}>{error}</p>}
         </form>
+        <p className="text-center text-sm mt-4">
+          Already got an account?{' '}
+          <Link href="/login" className="font-medium">
+            Log In
+          </Link>
+        </p>
       </div>
     </div>
   );
