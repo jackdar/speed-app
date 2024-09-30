@@ -35,182 +35,39 @@ describe('AdminService', () => {
     })
 
     describe('Admin Service', () => {
-        const unmodMockArticle = {
-            title: 'Article',
-            author: 'New Author',
-            publisher: 'New Publisher',
-            journal: 'New Journal',
-            year: 2024,
-            volume: 1,
-            pagesStart: 10,
-            pagesEnd: 20,
-            doi: '10.1234/test.doi',
-            isPosted: true,
-            dateCreated: new Date(),
-            dateUpdated: new Date(),
-            moderationDetails: {
-                moderatorID: "moderator id",
-                moderated: false,
-                moderation_passed: false
-            },
-            analysisDetails: {
-                analystID: "analyst id",
-                analyzed: false,
-                analyzed_passed: false
-            }
-        };
-
-        const modMockArticle = {
-            title: 'Article',
-            author: 'New Author',
-            publisher: 'New Publisher',
-            journal: 'New Journal',
-            year: 2024,
-            volume: 1,
-            pagesStart: 10,
-            pagesEnd: 20,
-            doi: '10.1234/test.doi',
-            isPosted: true,
-            dateCreated: new Date(),
-            dateUpdated: new Date(),
-            moderationDetails: {
-                moderatorID: "moderator id",
-                moderated: true,
-                moderation_passed: true
-            },
-            analysisDetails: {
-                analystID: "analyst id",
-                analyzed: false,
-                analyzed_passed: false
-            }
-        };
-
-        const expectedUnmodArticle = {
-            title: 'Article',
-            author: 'New Author',
-            publisher: 'New Publisher',
-            journal: 'New Journal',
-            year: 2024,
-            volume: 1,
-            pagesStart: 10,
-            pagesEnd: 20,
-            doi: '10.1234/test.doi',
-            isPosted: true,
-            dateCreated: new Date(),
-            dateUpdated: new Date(),
-            moderationDetails: {
-                moderatorID: "moderator id",
-                moderated: false,
-                moderation_passed: false
-            },
-            analysisDetails: {
-                analystID: "analyst id",
-                analyzed: false,
-                analyzed_passed: false
-            }
-        }
-
-        const modPassNoAnalyzeMockArticle = {
-            title: 'Article',
-            author: 'New Author',
-            publisher: 'New Publisher',
-            journal: 'New Journal',
-            year: 2024,
-            volume: 1,
-            pagesStart: 10,
-            pagesEnd: 20,
-            doi: '10.1234/test.doi',
-            isPosted: true,
-            dateCreated: new Date(),
-            dateUpdated: new Date(),
-            moderationDetails: {
-                moderatorID: "moderator id",
-                moderated: true,
-                moderation_passed: true
-            },
-            analysisDetails: {
-                analystID: "analyst id",
-                analyzed: false,
-                analyzed_passed: false
-            }
-        };
-
-        const modNoPassNoAnalyzeMockArticle = {
-            title: 'Article',
-            author: 'New Author',
-            publisher: 'New Publisher',
-            journal: 'New Journal',
-            year: 2024,
-            volume: 1,
-            pagesStart: 10,
-            pagesEnd: 20,
-            doi: '10.1234/test.doi',
-            isPosted: true,
-            dateCreated: new Date(),
-            dateUpdated: new Date(),
-            moderationDetails: {
-                moderatorID: "moderator id",
-                moderated: true,
-                moderation_passed: false
-            },
-            analysisDetails: {
-                analystID: "analyst id",
-                analyzed: false,
-                analyzed_passed: false
-            }
-        };
-
-        const modNoPassAnalyzedMockArticle = {
-            title: 'Article',
-            author: 'New Author',
-            publisher: 'New Publisher',
-            journal: 'New Journal',
-            year: 2024,
-            volume: 1,
-            pagesStart: 10,
-            pagesEnd: 20,
-            doi: '10.1234/test.doi',
-            isPosted: true,
-            dateCreated: new Date(),
-            dateUpdated: new Date(),
-            moderationDetails: {
-                moderatorID: "moderator id",
-                moderated: true,
-                moderation_passed: true
-            },
-            analysisDetails: {
-                analystID: "analyst id",
-                analyzed: true,
-                analyzed_passed: false
-            }
-        };
-
-        const expectedUnanalyzedArticle = {
-            title: 'Article',
-            author: 'New Author',
-            publisher: 'New Publisher',
-            journal: 'New Journal',
-            year: 2024,
-            volume: 1,
-            pagesStart: 10,
-            pagesEnd: 20,
-            doi: '10.1234/test.doi',
-            isPosted: true,
-            dateCreated: new Date(),
-            dateUpdated: new Date(),
-            moderationDetails: {
-                moderatorID: "moderator id",
-                moderated: true,
-                moderation_passed: true
-            },
-            analysisDetails: {
-                analystID: "analyst id",
-                analyzed: false,
-                analyzed_passed: false
-            }
-        };
-
         describe('getModeratorQueue()', () => {
+            const unmodMockArticle = {
+                moderationDetails: {
+                    moderated: false,
+                    moderation_passed: false
+                },
+                analysisDetails: {
+                    analyzed: false,
+                    analyzed_passed: false
+                }
+            };
+
+            const modMockArticle = {
+                moderationDetails: {
+                    moderated: true,
+                    moderation_passed: true
+                },
+                analysisDetails: {
+                    analyzed: false,
+                    analyzed_passed: false
+                }
+            };
+
+            const expectedUnmodArticle = {
+                moderationDetails: {
+                    moderated: false,
+                    moderation_passed: false
+                },
+                analysisDetails: {
+                    analyzed: false,
+                    analyzed_passed: false
+                }
+            }
             // Expected pass
             it('should return list of unmoderatored articles', async () => {
                 jest.spyOn(adminService, 'getModeratorQueue').mockResolvedValueOnce(unmodMockArticle as any);
@@ -231,6 +88,50 @@ describe('AdminService', () => {
         });
 
         describe('getAnalystQueue()', () => {
+            const modPassNoAnalyzeMockArticle = {
+                moderationDetails: {
+                    moderated: true,
+                    moderation_passed: true
+                },
+                analysisDetails: {
+                    analyzed: false,
+                    analyzed_passed: false
+                }
+            };
+
+            const modNoPassNoAnalyzeMockArticle = {
+                moderationDetails: {
+                    moderated: true,
+                    moderation_passed: false
+                },
+                analysisDetails: {
+                    analyzed: false,
+                    analyzed_passed: false
+                }
+            };
+
+            const modNoPassAnalyzedMockArticle = {
+                moderationDetails: {
+                    moderated: true,
+                    moderation_passed: true
+                },
+                analysisDetails: {
+                    analyzed: true,
+                    analyzed_passed: false
+                }
+            };
+
+            const expectedUnanalyzedArticle = {
+                moderationDetails: {
+                    moderated: true,
+                    moderation_passed: true
+                },
+                analysisDetails: {
+                    analyzed: false,
+                    analyzed_passed: false
+                }
+            };
+
             // Expected pass
             it('should return a list of articles passed moderation but not yet analyzed', async () => {
                 jest.spyOn(adminService, 'getAnalystQueue').mockResolvedValueOnce(modPassNoAnalyzeMockArticle as any);
