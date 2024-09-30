@@ -3,11 +3,17 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { User } from "../types";
+import React from "react";
 
 const ProfilePage = () => {
   const [user, setUser] = useState<User | undefined>(undefined);
   const [error, setError] = useState("");
   const router = useRouter();
+
+  const logout = () => {
+    localStorage.removeItem("token");
+    router.push("/login");
+  };
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -52,6 +58,7 @@ const ProfilePage = () => {
       <p>Name: {user.name}</p>
       <p>Email: {user.email}</p>
       <p>Role: {user.role}</p>
+      <button onClick={logout}>Logout</button>
     </div>
   );
 };
