@@ -50,7 +50,8 @@ describe('AuthService', () => {
         email: 'test@example.com',
         password: 'hashedPassword',
         role: 'registered',
-        name: 'Test User',
+        firstName: 'Test',
+        lastName: 'User',
         articlesPublished: [],
         articlesModerated: [],
         articlesAnalysed: [],
@@ -87,9 +88,9 @@ describe('AuthService', () => {
 
       jest.spyOn(usersService, 'findByEmail').mockResolvedValue(null);
 
-      await expect(
-        service.login(login.email, login.password),
-      ).rejects.toThrow(UnauthorizedException);
+      await expect(service.login(login.email, login.password)).rejects.toThrow(
+        UnauthorizedException,
+      );
     });
 
     it('should throw an UnauthorizedException if password is invalid', async () => {
@@ -97,7 +98,8 @@ describe('AuthService', () => {
         email: 'test@example.com',
         password: 'hashedPassword',
         role: 'registered',
-        name: 'Test User',
+        firstName: 'Test',
+        lastName: 'User',
         articlesPublished: [],
         articlesModerated: [],
         articlesAnalysed: [],
@@ -111,9 +113,9 @@ describe('AuthService', () => {
       jest.spyOn(usersService, 'findByEmail').mockResolvedValue(mockUser);
       jest.spyOn(usersService, 'validatePassword').mockResolvedValue(false);
 
-      await expect(
-        service.login(login.email, login.password),
-      ).rejects.toThrow(UnauthorizedException);
+      await expect(service.login(login.email, login.password)).rejects.toThrow(
+        UnauthorizedException,
+      );
     });
   });
 
@@ -123,7 +125,8 @@ describe('AuthService', () => {
         email: 'test@example.com',
         password: 'hashedPassword',
         role: 'registered',
-        name: 'Test User',
+        firstName: 'Test',
+        lastName: 'User',
         articlesPublished: [],
         articlesModerated: [],
         articlesAnalysed: [],

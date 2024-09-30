@@ -1,16 +1,20 @@
 'use client';
 
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Navbar from "../../components/navbar";
+import React from "react";
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
 
 const RegisterPage = () => {
   const [form, setForm] = useState({
-    name: '',
-    email: '',
-    password: '',
-    role: 'registered',
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    role: "registered",
   });
+  
   const [error, setError] = useState('');
   const router = useRouter();
 
@@ -53,14 +57,22 @@ const RegisterPage = () => {
           Signup
         </h2>
         <form onSubmit={handleSubmit} className="space-y-4 text-black">
-          <input
-            className="w-full p-2 border border-gray-300 rounded"
-            type="text"
-            name="name"
-            placeholder="Name"
-            value={form.name}
-            onChange={handleChange}
-          />
+            <input
+              className="w-full p-2 border border-gray-300 rounded"
+              type="text"
+              name="firstName"
+              placeholder="First Name"
+              value={form.firstName}
+              onChange={handleChange}
+            />
+            <input
+              className="w-full p-2 border border-gray-300 rounded"
+              type="text"
+              name="lastName"
+              placeholder="Last Name"
+              value={form.lastName}
+              onChange={handleChange}
+            />
           <input
             className="w-full p-2 border border-gray-300 rounded"
             type="email"

@@ -32,7 +32,8 @@ describe('UserController', () => {
     it('should return a user by id', async () => {
       const mockUser = {
         id: '1',
-        name: 'Test',
+        firstName: 'Test',
+        lastName: 'User',
         email: 'test@example.com',
         role: 'registered',
       };
@@ -50,7 +51,8 @@ describe('UserController', () => {
       const updateDto = { name: 'Updated Name' };
       const mockUpdatedUser = {
         id: '1',
-        name: 'Updated Name',
+        firstName: 'Updated',
+        lastName: 'Name',
         email: 'test@example.com',
         role: 'registered',
       };
