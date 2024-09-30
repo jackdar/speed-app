@@ -1,17 +1,17 @@
-import { Article } from '@/app/types';
+import { Article } from "@/app/types";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
-import Link from 'next/link';
+} from "@/components/ui/card";
+import Link from "next/link";
 
 export default async function ArticlesPage() {
   const articles: Article[] = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/articles`,
-    { cache: 'no-store' },
+    { cache: "no-store" }
   )
     .then((res) => res.json())
     .catch(console.error);
@@ -23,21 +23,22 @@ export default async function ArticlesPage() {
           Articles
         </h2>
         <div className="grid grid-cols-3 auto-rows-auto gap-4">
-          {articles.map((article: Article, index: any) => (
-            <Link href={`/articles/${article._id}`} key={index} passHref>
-              <Card className="w-full">
-                <CardHeader>
-                  <CardTitle>{article.title}</CardTitle>
-                  <CardDescription>{article.author}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <p>{article.journal}</p>
-                  <p>{article.year}</p>
-                  <p>{article.doi}</p>
-                </CardContent>
-              </Card>
-            </Link>
-          ))}
+          {articles &&
+            articles.map((article: Article, index: any) => (
+              <Link href={`/articles/${article._id}`} key={index} passHref>
+                <Card className="w-full">
+                  <CardHeader>
+                    <CardTitle>{article.title}</CardTitle>
+                    <CardDescription>{article.author}</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <p>{article.journal}</p>
+                    <p>{article.year}</p>
+                    <p>{article.doi}</p>
+                  </CardContent>
+                </Card>
+              </Link>
+            ))}
         </div>
       </div>
     </div>
