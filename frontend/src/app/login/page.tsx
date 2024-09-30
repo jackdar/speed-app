@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import Navbar from "@/components/navbar";
+import Navbar from "../../components/navbar";
 import React from "react";
 
 const LoginPage = () => {

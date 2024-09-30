@@ -49,13 +49,20 @@ const ProfilePage = () => {
     fetchProfile();
   }, [router]);
 
-  if (error) return <p>{error}</p>;
+  if (error)
+    return (
+      <p>
+        <button onClick={logout}>Logout</button>
+      </p>
+    );
   if (!user) return <p>Loading...</p>;
 
   return (
     <div>
       <h2>User Profile</h2>
-      <p>Name: {user.name}</p>
+      <p>
+        Name: {user.firstName} {user.lastName}
+      </p>
       <p>Email: {user.email}</p>
       <p>Role: {user.role}</p>
       <button onClick={logout}>Logout</button>

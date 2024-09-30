@@ -2,11 +2,13 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Navbar from "@/components/navbar";
+import Navbar from "../../components/navbar";
+import React from "react";
 
 const RegisterPage = () => {
   const [form, setForm] = useState({
-    name: "",
+    firstName: "",
+    lastName: "",
     email: "",
     password: "",
     role: "registered",
@@ -60,9 +62,17 @@ const RegisterPage = () => {
             <input
               className="w-full p-2 border border-gray-300 rounded"
               type="text"
-              name="name"
-              placeholder="Name"
-              value={form.name}
+              name="firstName"
+              placeholder="First Name"
+              value={form.firstName}
+              onChange={handleChange}
+            />
+            <input
+              className="w-full p-2 border border-gray-300 rounded"
+              type="text"
+              name="lastName"
+              placeholder="Last Name"
+              value={form.lastName}
               onChange={handleChange}
             />
             <input
