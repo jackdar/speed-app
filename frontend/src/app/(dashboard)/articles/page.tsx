@@ -4,22 +4,21 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { ArticleProps } from "@/types/Article";
-import React from "react";
+} from '@/components/ui/card';
+import { Article } from '../../types';
 
 export default async function ArticlesPage() {
-  const articles: ArticleProps[] = await fetch(
-    `${process.env.API_ORIGIN}/articles`,
-    { cache: "no-store" }
+  const articles: Article[] = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/articles`,
+    { cache: 'no-store' },
   )
     .then((res) => res.json())
     .catch(console.error);
 
   return (
-    <div className='grid grid-cols-3 auto-rows-auto gap-4'>
-      {articles.map((article: ArticleProps, index: any) => (
-        <Card key={index} className='w-full'>
+    <div className="grid grid-cols-3 auto-rows-auto gap-4">
+      {articles.map((article: Article, index: any) => (
+        <Card key={index} className="w-full">
           <CardHeader>
             <CardTitle>{article.title}</CardTitle>
             <CardDescription>{article.author}</CardDescription>

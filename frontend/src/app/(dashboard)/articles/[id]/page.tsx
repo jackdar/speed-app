@@ -1,13 +1,12 @@
-import { ArticleProps } from "@/types/Article";
-import React from "react";
+import { Article } from '@/app/types';
 
 export default async function ArticlePage({
   params,
 }: {
   params: { id: string };
 }) {
-  const article: ArticleProps = await fetch(
-    `${process.env.API_ORIGIN}/article/${params.id}`
+  const article: Article = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/article/${params.id}`,
   )
     .then((res) => res.json())
     .catch(console.error);

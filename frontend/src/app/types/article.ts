@@ -1,4 +1,4 @@
-export type ArticleProps = {
+export interface Article {
   id: string;
   title: string;
   author: string;
@@ -12,4 +12,4 @@ export type ArticleProps = {
   year: number;
   createdAt: string;
   updatedAt: string;
-};
+}
