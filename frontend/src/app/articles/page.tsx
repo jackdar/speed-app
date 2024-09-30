@@ -7,11 +7,13 @@ export default async function ArticlesPage() {
 
   return (
     <div>
-      {articles.map((article: any, index: any) => (
-        <div key={index}>
-          {article.title}-{article.author}
-        </div>
-      ))}
+      {articles &&
+        articles.map((article: any, index: any) => (
+          <div key={index}>
+            {article.title}-{article.author}
+          </div>
+        ))}
+      {}
     </div>
   );
 }
