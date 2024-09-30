@@ -22,7 +22,7 @@ import { AuthModule } from './auth/auth.module';
       inject: [ConfigService],
     }),
     ArticleModule,
-    AdminModule
+    AdminModule,
     AuthModule,
     UserModule,
   ],
