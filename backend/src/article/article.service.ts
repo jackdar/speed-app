@@ -1,8 +1,8 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { Article } from './article.schema';
-import { InjectModel } from '@nestjs/mongoose';
 import { ConfigService } from '@nestjs/config';
+import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { Article } from './article.schema';
 import { CreateArticleDto } from './create-article.dto';
 
 @Injectable()
@@ -25,7 +25,7 @@ export class ArticleService {
       const createResult = await this.articleModel.create(createArticleDto);
       return createResult;
     } catch (error) {
-      throw new BadRequestException("Failed to create new article. " + error);
+      throw new BadRequestException('Failed to create new article. ' + error);
     }
   }
 }

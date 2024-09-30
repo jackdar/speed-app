@@ -5,7 +5,7 @@ class Moderation {
   moderatorId: string;
 
   @Prop()
-  moderated: boolean
+  moderated: boolean;
 
   @Prop()
   moderationPassed: boolean;
