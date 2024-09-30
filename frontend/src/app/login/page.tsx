@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/navbar";
+import React from "react";
 
 const LoginPage = () => {
   const [form, setForm] = useState({ email: "", password: "" });
@@ -39,6 +40,18 @@ const LoginPage = () => {
       setError("An error occurred");
     }
   };
+
+  useEffect(() => {
+    const checkAuth = () => {
+      const token = localStorage.getItem("token");
+
+      if (token != null) {
+        router.push("articles");
+      }
+    };
+
+    checkAuth();
+  }, [router]);
 
   return (
     <div className="min-h-screen bg-[#8D8D8D] flex flex-col">
