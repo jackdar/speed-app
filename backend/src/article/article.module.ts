@@ -18,3 +18,4 @@ import { Article, ArticleSchema } from './article.schema';
   exports: [ArticleService],
 })
 export class ArticleModule {}
+
