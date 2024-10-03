@@ -1,4 +1,4 @@
-name: Initial Frontend Pipeline
+name: Updated Frontend Pipeline
 
 on:
   push:
@@ -7,6 +7,8 @@ on:
   pull_request:
     branches:
       - main
+  workflow_call:
+  workflow_dispatch:
 
 defaults:
   run:
@@ -14,6 +16,7 @@ defaults:
 
 jobs:
   build:
+    environment: frontend
     runs-on: ubuntu-latest
 
     strategy:
@@ -34,5 +37,8 @@ jobs:
           npm install
 
       - name: Build frontend
+        env:
+          API_ORIGIN: ${{ secrets.API_ORIGIN }}
+          NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
         run: |
           npm run build
