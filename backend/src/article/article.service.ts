@@ -10,7 +10,7 @@ export class ArticleService {
   constructor(
     @InjectModel(Article.name) private articleModel: Model<Article>,
     private configService: ConfigService,
-  ) {}
+  ) { }
 
   async getArticles(): Promise<Article[]> {
     return await this.articleModel.find();
@@ -18,6 +18,20 @@ export class ArticleService {
 
   async getArticleById(id: string): Promise<Article> {
     return await this.articleModel.findById(id);
+  }
+
+  async updateArticle(id: string, updatedArticle: Article): Promise<any> {
+    try {
+      let newArticle: Article = updatedArticle;
+      newArticle.lastUpdateDate = new Date();
+      // await this.articleModel.findByIdAndUpdate({ _id: id }, { $set: updatedArticle });
+      // const updatedResult = await this.getArticleById(id);
+      // console.log(updatedArticle);
+      return { "hi": "hi" };
+
+    } catch (error) {
+      throw new BadRequestException("Failed to update article. " + error);
+    }
   }
 
   async createArticle(createArticleDto: CreateArticleDto): Promise<Article> {
