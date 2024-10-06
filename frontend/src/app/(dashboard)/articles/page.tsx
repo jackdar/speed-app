@@ -1,17 +1,17 @@
-import { Article } from "@/app/types";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import Link from "next/link";
+} from '@/components/ui/card';
+import { Article } from '@/types';
+import Link from 'next/link';
 
 export default async function ArticlesPage() {
   const articles: Article[] = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/articles`,
-    { cache: "no-store" }
+    { cache: 'no-store' },
   )
     .then((res) => res.json())
     .catch(console.error);

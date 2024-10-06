@@ -1,6 +1,9 @@
-import ArticleTable from '@/components/article-table';
+'use client';
 
-export default async function ModeratePage() {
+import ArticleTable from '@/components/article-table';
+import withAuth from '@/lib/withAuth';
+
+async function ModeratePage() {
   //   const articles = await fetch(
   //     `${process.env.NEXT_PUBLIC_API_URL}/admin/moderate`,
   //     {
@@ -21,3 +24,5 @@ export default async function ModeratePage() {
     </div>
   );
 }
+
+export default withAuth(ModeratePage);

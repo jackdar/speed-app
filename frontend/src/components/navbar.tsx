@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { useAuth } from "../app/hooks/useAuth";
-import { User as UserIcon } from "lucide-react";
-import Link from "next/link";
+import { useAuthContext } from '@/context/authContext';
+import { User as UserIcon } from 'lucide-react';
+import Link from 'next/link';
 
 export default function Navbar() {
-  const { user, logout } = useAuth();
+  const { user, logout } = useAuthContext();
 
   return (
     <nav className="w-full bg-black p-4 flex items-center justify-between text-white">
@@ -21,7 +21,7 @@ export default function Navbar() {
       <div className="flex flex-row gap-4">
         {user && (
           <Link href="/profile" className="bg-gray-700 p-2 rounded-full">
-            <UserIcon />  
+            <UserIcon />
           </Link>
         )}
         {user ? (
