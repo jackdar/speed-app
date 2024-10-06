@@ -25,4 +25,4 @@ async function ModeratePage() {
   );
 }
 
-export default withAuth(ModeratePage);
+export default withAuth(ModeratePage, 'moderator');

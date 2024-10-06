@@ -2,8 +2,14 @@ import { useAuthContext } from '@/context/authContext';
 import { useRouter } from 'next/navigation';
 import { FunctionComponent, useEffect } from 'react';
 
-const withAuth = (WrappedComponent: FunctionComponent) => {
-  const Wrapper = (props: any) => {
+const withAuth = ({
+  WrappedComponent,
+  role = 'registered',
+}: {
+  WrappedComponent: FunctionComponent;
+  role: string;
+}) => {
+  return function Wrapper(props: any) {
     const { user } = useAuthContext();
     const router = useRouter();
 
@@ -11,13 +17,12 @@ const withAuth = (WrappedComponent: FunctionComponent) => {
       // If the user is not authenticated, redirect them to the login page
       if (!user) {
         router.push('/login');
+        return;
       }
     }, [user, router]);
 
-    return <WrappedComponent {...props} />;
+    return user?.role === role ? <WrappedComponent {...props} /> : null;
   };
-
-  return Wrapper;
 };
 
 export default withAuth;

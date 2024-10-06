@@ -15,7 +15,7 @@ export default function Navbar() {
         </Link>
         <div className="flex flex-row gap-4">
           <Link href="/articles">Articles</Link>
-          <Link href="/moderate">Moderate</Link>
+          {user?.role === 'moderator' && <Link href="/moderate">Moderate</Link>}
         </div>
       </div>
       <div className="flex flex-row gap-4">

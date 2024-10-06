@@ -8,7 +8,9 @@ import React, { useEffect, useState } from 'react';
 const LoginPage = () => {
   const [form, setForm] = useState({ email: '', password: '' });
   const router = useRouter();
-  const { login, error } = useAuthContext();
+  const { user, login, error } = useAuthContext();
+
+  if (user) router.push('articles');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({
