@@ -13,9 +13,11 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 import { useRouter } from 'next/navigation';
-import { Suspense, useMemo, useState } from 'react';
+import { Suspense, useMemo, useRef, useState } from 'react';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
+import { Label } from '../ui/label';
+import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
 import {
   Table,
   TableBody,
@@ -29,14 +31,12 @@ export default function ArticleTable({ data }: { data: Article[] }) {
   const router = useRouter();
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [selectedFilter, setSelectedFilter] = useState<string>('title');
+
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
   const columns = useMemo<ColumnDef<Article>[]>(
     () => [
-      {
-        header: 'ID',
-        accessorKey: '_id',
-        isHidden: true,
-      },
       {
         header: 'Title',
         accessorKey: 'title',
@@ -96,16 +96,42 @@ export default function ArticleTable({ data }: { data: Article[] }) {
           <h2 className=" text-2xl text-black mb-4 w-full text-start border-b border-black pb-2">
             Articles
           </h2>
-          <div className="flex flex-row justify-between gap-4">
+          <div className="flex flex-col gap-4">
             <Input
-              placeholder="Search title..."
-              value={table.getColumn('author')?.getFilterValue() as string}
-              onChange={(event) =>
-                table.getColumn('author')?.setFilterValue(event.target.value)
+              ref={searchInputRef}
+              placeholder="Search..."
+              value={
+                table.getColumn(selectedFilter)?.getFilterValue() as string
               }
-              className="max-w-xs"
+              onChange={(event) => {
+                setColumnFilters([]);
+                table
+                  .getColumn(selectedFilter)
+                  ?.setFilterValue(event.target.value);
+              }}
             />
-            <Button>Search</Button>
+            <RadioGroup
+              defaultValue="Title"
+              className="flex flex-row"
+              onValueChange={(value) => {
+                setSelectedFilter(value.toLowerCase());
+                table
+                  .getColumn(value.toLowerCase())
+                  ?.setFilterValue(searchInputRef.current?.value);
+              }}
+            >
+              {columns.map((column, index) => (
+                <div className="flex items-center space-x-2" key={index}>
+                  <RadioGroupItem
+                    value={column.header?.toString() || ''}
+                    id={column.header?.toString() || `column-${index}`}
+                  />
+                  <Label
+                    htmlFor={column.header?.toString() || `column-${index}`}
+                  >{`${column.header?.toString() || 'Unnamed Column'}`}</Label>
+                </div>
+              ))}
+            </RadioGroup>
           </div>
         </div>
       </div>
