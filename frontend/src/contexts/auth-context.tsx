@@ -7,7 +7,6 @@ import { createContext, ReactNode, useEffect, useState } from 'react';
 
 interface AuthContextType {
   user: User | null;
-  loading: boolean;
   error: string | null;
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
@@ -19,7 +18,6 @@ export const AuthContext = createContext<AuthContextType | undefined>(
 
 const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
@@ -31,7 +29,6 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     const token = localStorage.getItem('token');
 
     if (!token) {
-      setLoading(false);
       return;
     }
 
@@ -54,8 +51,6 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
     } catch (err) {
       setError('An error occurred');
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -92,11 +87,11 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
       variant: 'default',
       title: 'Logged out',
       description: 'You have been logged out',
-    })
+    });
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, error, login, logout }}>
+    <AuthContext.Provider value={{ user, error, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

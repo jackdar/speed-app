@@ -1,14 +1,14 @@
 'use client';
 
+import Error from '@/app/error';
+import Loading from '@/app/loading';
 import { useAuth } from '@/hooks/use-auth';
 
 const ProfilePage = () => {
-  const { user, loading, error } = useAuth();
+  const { user, error } = useAuth();
 
-  {
-    error && <p>{error}</p>;
-  }
-  if (!user) return <p>Loading...</p>;
+  if (error) return <Error />;
+  if (!user) return <Loading />;
 
   return (
     <div className="flex-1 flex justify-center items-start bg-[#8D8D8D] p-8">
