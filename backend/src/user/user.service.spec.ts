@@ -10,7 +10,8 @@ const mockUser: any = {
   email: 'test@example.com',
   password: 'hashedPassword',
   role: 'registered',
-  name: 'Test User',
+  firstName: 'Test',
+  lastName: 'User',
   articlesPublished: [],
   articlesModerated: [],
   articlesAnalysed: [],
@@ -58,7 +59,9 @@ describe('UsersService', () => {
       } as any);
 
       const result = await service.findByEmail('test@example.com');
-      expect(userModel.findOne).toHaveBeenCalledWith({ email: 'test@example.com' });
+      expect(userModel.findOne).toHaveBeenCalledWith({
+        email: 'test@example.com',
+      });
       expect(result).toEqual(mockUser);
     });
   });
@@ -67,7 +70,8 @@ describe('UsersService', () => {
     it('should hash the password and save a new user', async () => {
       const userDto = {
         email: 'test@example.com',
-        name: 'Test User',
+        firstName: 'Test',
+        lastName: 'User',
         password: 'password',
         role: 'registered',
       };
@@ -89,7 +93,10 @@ describe('UsersService', () => {
     it('should return true for valid passwords', async () => {
       jest.spyOn(bcrypt, 'compare').mockResolvedValue(true);
 
-      const result = await service.validatePassword('password', 'hashedPassword');
+      const result = await service.validatePassword(
+        'password',
+        'hashedPassword',
+      );
       expect(bcrypt.compare).toHaveBeenCalledWith('password', 'hashedPassword');
       expect(result).toBe(true);
     });
@@ -97,7 +104,10 @@ describe('UsersService', () => {
     it('should return false for invalid passwords', async () => {
       jest.spyOn(bcrypt, 'compare').mockResolvedValue(false);
 
-      const result = await service.validatePassword('password', 'hashedPassword');
+      const result = await service.validatePassword(
+        'password',
+        'hashedPassword',
+      );
       expect(result).toBe(false);
     });
   });

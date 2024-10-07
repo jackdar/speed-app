@@ -1,8 +1,7 @@
 "use client";
 
-import React from 'react';
-import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 const schema = z.object({
@@ -27,36 +26,32 @@ const PaperForm = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({
+  } = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
   });
 
-  const onSubmit = async (data) => {
-    
+  const onSubmit = async (data: z.infer<typeof schema>) => {
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/article/new`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        credentials: 'include', 
+        credentials: 'include',
         body: JSON.stringify(data),
       });
-  
+
       if (!response.ok) {
         const errorData = await response.json();
         console.error('Error submitting article:', errorData.message);
         return;
       }
-  
+
       console.log('Article submitted successfully');
     } catch (error) {
       console.error('Error:', error);
     }
   };
-  
-  
-
 
   return (
     <div className="min-h-screen">

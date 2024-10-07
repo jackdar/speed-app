@@ -21,7 +21,8 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     const user = await this.usersService.findByEmail(payload.email);
     return {
       userId: payload.sub,
-      name: user.name,
+      firstName: user.firstName,
+      lastName: user.lastName,
       email: payload.email,
       role: user.role,
     };
