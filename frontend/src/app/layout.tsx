@@ -1,5 +1,5 @@
 import Navbar from '@/components/navbar';
-import AuthProvider from '@/context/AuthContext';
+import AuthProvider from '@/context/authContext';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
