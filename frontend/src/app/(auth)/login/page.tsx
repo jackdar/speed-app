@@ -10,7 +10,9 @@ const LoginPage = () => {
   const router = useRouter();
   const { user, login, error } = useAuth();
 
-  if (user) router.push('articles');
+  useEffect(() => {
+    if (user) router.push('articles');
+  }, [user, router]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({
