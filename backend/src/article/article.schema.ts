@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
-class Moderation {
+export class Moderation {
   @Prop()
   moderatorId: string;
 
@@ -11,7 +11,7 @@ class Moderation {
   moderationPassed: boolean;
 }
 
-class Analysis {
+export class Analysis {
   @Prop()
   analystId: string;
 
