@@ -1,6 +1,5 @@
 "use client";
 
-import ArticleTable from "@/components/article-table";
 import withAuth from "@/lib/withAuth";
 
 function AnalyzePage() {
@@ -10,7 +9,7 @@ function AnalyzePage() {
         <h2 className=" text-2xl text-black mb-4 w-full text-start border-b border-black pb-2">
           Analysis Queue
         </h2>
-        <ArticleTable />
+        {/* <ArticleTable data /> */}
       </div>
     </div>
   );
