@@ -32,15 +32,14 @@ const PaperForm = () => {
   });
 
   const onSubmit = async (data) => {
-    // ... your code
     
     try {
-      const response = await fetch('http://localhost:8787/api/article/new', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/article/new`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        credentials: 'include', // Include if your backend expects credentials
+        credentials: 'include', 
         body: JSON.stringify(data),
       });
   
