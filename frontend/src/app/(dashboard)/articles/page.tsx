@@ -1,4 +1,4 @@
-import ArticleTable from '@/components/article-table/article-table';
+import ArticleTable from '@/components/article-table';
 import { Article } from '@/types';
 
 export default async function ArticlesPage() {
