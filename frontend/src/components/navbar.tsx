@@ -1,7 +1,7 @@
 'use client';
 
-import { useAuth } from '@/hooks/useAuth';
-import { roleHierarchy } from '@/lib/withAuth';
+import { useAuth } from '@/hooks/use-auth';
+import { roleHierarchy } from '@/lib/with-auth';
 import { User as UserIcon } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from './ui/button';
@@ -56,7 +56,7 @@ export default function Navbar() {
         {user && (
           <>
             <Button variant="outline" className="bg-transparent" asChild>
-              <Link href="/articles/submit">Submit Article</Link>
+              <Link href="/submission">Submit Article</Link>
             </Button>
             <Link
               href="/profile"

@@ -1,6 +1,6 @@
 "use client";
 
-import withAuth from "@/lib/withAuth";
+import withAuth from "@/lib/with-auth";
 
 function AnalyzePage() {
   return (

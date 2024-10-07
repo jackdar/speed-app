@@ -41,10 +41,16 @@ export class ArticleService {
 
   async createArticle(createArticleDto: CreateArticleDto): Promise<Article> {
     try {
-      const createResult = await this.articleModel.create(createArticleDto);
+      const currentDate = new Date();
+      const createResult = await this.articleModel.create({
+        ...createArticleDto,
+        dateCreated: createArticleDto.dateCreated || currentDate,
+        dateUpdated: createArticleDto.dateUpdated || currentDate,
+      });
       return createResult;
     } catch (error) {
       throw new BadRequestException('Failed to create new article. ' + error);
     }
   }
+  
 }

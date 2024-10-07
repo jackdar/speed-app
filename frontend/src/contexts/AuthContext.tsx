@@ -1,5 +1,6 @@
 'use client';
 
+import { toast } from '@/hooks/use-toast';
 import { User } from '@/types';
 import { useRouter } from 'next/navigation';
 import { createContext, ReactNode, useEffect, useState } from 'react';
@@ -87,6 +88,11 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     setUser(null);
     localStorage.removeItem('token');
     router.push('/login');
+    toast({
+      variant: 'default',
+      title: 'Logged out',
+      description: 'You have been logged out',
+    })
   };
 
   return (

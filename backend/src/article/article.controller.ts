@@ -12,6 +12,7 @@ export class ArticleController {
     return await this.articleService.getArticles();
   }
 
+  // GET /api/article/:id
   @Get('/article/:id')
   async getArticleById(@Param('id') id: string) {
     return await this.articleService.getArticleById(id);
