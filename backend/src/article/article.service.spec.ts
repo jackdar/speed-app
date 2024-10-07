@@ -1,18 +1,17 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { ArticleService } from './article.service';
-import { getModelToken } from '@nestjs/mongoose';
+import { BadRequestException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { getModelToken } from '@nestjs/mongoose';
+import { Test, TestingModule } from '@nestjs/testing';
 import { Model } from 'mongoose';
 import { Article } from './article.schema';
+import { ArticleService } from './article.service';
 import { CreateArticleDto } from './create-article.dto';
-import { BadRequestException } from '@nestjs/common';
-import { UpdateArticleDto } from './update-article.dto';
 
 const mockArticleModel = {
   find: jest.fn(),
   findById: jest.fn(),
   create: jest.fn(),
-  findByIdAndUpdate: jest.fn()
+  findByIdAndUpdate: jest.fn(),
 };
 
 describe('ArticleService', () => {
@@ -121,13 +120,13 @@ describe('ArticleService', () => {
 
   describe('updateArticle', () => {
     it('should update article and return article with new details', async () => {
-      const mockArticleId = "123";
+      const mockArticleId = '123';
 
       const mockNewArticle: any = {
-        title: "new title",
-        author: "new author",
-        publisher: "new publisher",
-        journal: "new journal",
+        title: 'new title',
+        author: 'new author',
+        publisher: 'new publisher',
+        journal: 'new journal',
         year: 2024,
         volume: 1,
         pagesStart: 10,
@@ -137,32 +136,34 @@ describe('ArticleService', () => {
         createDate: new Date(),
         lastUpdateDate: new Date(),
         moderationDetails: {
-          moderatorId: "mod id",
+          moderatorId: 'mod id',
           moderated: false,
-          moderationPassed: false
+          moderationPassed: false,
         },
         analysisDetails: {
-          analystId: "analyst id",
+          analystId: 'analyst id',
           analyzed: false,
-          analyzePassed: false
-        }
+          analyzePassed: false,
+        },
       };
 
       // Mocking the actual implemnetation of updating. Returned result is the details of the updated article.
-      jest.spyOn(service, "updateArticle").mockImplementation(async (id, data) => {
-        expect(id).toBe(mockArticleId);
-        expect(data).toEqual(mockNewArticle);
-        return {id: mockArticleId, ...data};
-      });
+      jest
+        .spyOn(service, 'updateArticle')
+        .mockImplementation(async (id, data) => {
+          expect(id).toBe(mockArticleId);
+          expect(data).toEqual(mockNewArticle);
+          return { id: mockArticleId, ...data };
+        });
 
-      const updatedResult = await service.updateArticle("123", mockNewArticle);
+      const updatedResult = await service.updateArticle('123', mockNewArticle);
 
-      expect(updatedResult).toEqual(expect.objectContaining({
-        id: mockArticleId,
-        ...mockNewArticle
-      }));
-
-     
-    })
-  })
+      expect(updatedResult).toEqual(
+        expect.objectContaining({
+          id: mockArticleId,
+          ...mockNewArticle,
+        }),
+      );
+    });
+  });
 });
