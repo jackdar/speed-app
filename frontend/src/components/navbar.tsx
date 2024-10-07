@@ -1,11 +1,42 @@
 'use client';
 
-import { useAuthContext } from '@/context/authContext';
+import { useAuth } from '@/hooks/useAuth';
+import { roleHierarchy } from '@/lib/withAuth';
 import { User as UserIcon } from 'lucide-react';
 import Link from 'next/link';
+import { Button } from './ui/button';
+
+const routes = [
+  {
+    name: 'Articles',
+    href: '/articles',
+    permissions: ['guest', 'registered', 'moderator', 'analyst', 'admin'],
+  },
+  {
+    name: 'Moderate',
+    href: '/moderate',
+    permissions: ['moderator', 'admin'],
+  },
+  {
+    name: 'Analyse',
+    href: '/analyse',
+    permissions: ['analyst', 'admin'],
+  },
+  {
+    name: 'Admin',
+    href: '/admin',
+    permissions: ['admin'],
+  },
+];
 
 export default function Navbar() {
-  const { user, logout } = useAuthContext();
+  const { user, logout } = useAuth();
+
+  const userLinks = roleHierarchy[user?.role || 'guest'];
+
+  const filteredRoutes = routes.filter((route) =>
+    userLinks.some((permission) => route.permissions.includes(permission)),
+  );
 
   return (
     <nav className="w-full bg-black p-4 flex items-center justify-between text-white">
@@ -14,27 +45,35 @@ export default function Navbar() {
           <p className="text-3xl font-light">Speed</p>
         </Link>
         <div className="flex flex-row gap-4">
-          <Link href="/articles">Articles</Link>
-          {user?.role === 'moderator' && <Link href="/moderate">Moderate</Link>}
+          {filteredRoutes.map((link) => (
+            <Link key={link.href} href={link.href}>
+              <p>{link.name}</p>
+            </Link>
+          ))}
         </div>
       </div>
       <div className="flex flex-row gap-4">
         {user && (
-          <Link href="/profile" className="bg-gray-700 p-2 rounded-full">
-            <UserIcon />
-          </Link>
+          <>
+            <Button variant="outline" className="bg-transparent" asChild>
+              <Link href="/articles/submit">Submit Article</Link>
+            </Button>
+            <Link
+              href="/profile"
+              className="bg-gray-700 rounded-full m-auto p-1.5"
+            >
+              <UserIcon />
+            </Link>
+          </>
         )}
         {user ? (
-          <button onClick={logout} className="px-4 py-2 rounded-md bg-red-500">
+          <Button onClick={logout} variant="destructive">
             Logout
-          </button>
+          </Button>
         ) : (
-          <Link
-            href="/login"
-            className="px-4 py-2 rounded-md border-2 border-white"
-          >
-            Login
-          </Link>
+          <Button variant="outline" className="bg-transparent" asChild>
+            <Link href="/login">Login</Link>
+          </Button>
         )}
       </div>
     </nav>

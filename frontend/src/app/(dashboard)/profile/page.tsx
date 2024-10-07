@@ -1,9 +1,9 @@
 'use client';
 
-import { useAuthContext } from '@/context/authContext';
+import { useAuth } from '@/hooks/useAuth';
 
 const ProfilePage = () => {
-  const { user, loading, error } = useAuthContext();
+  const { user, loading, error } = useAuth();
 
   {
     error && <p>{error}</p>;

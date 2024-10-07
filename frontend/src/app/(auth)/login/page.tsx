@@ -1,6 +1,6 @@
 'use client';
 
-import { useAuthContext } from '@/context/authContext';
+import { useAuth } from '@/hooks/useAuth';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
@@ -8,7 +8,7 @@ import React, { useEffect, useState } from 'react';
 const LoginPage = () => {
   const [form, setForm] = useState({ email: '', password: '' });
   const router = useRouter();
-  const { user, login, error } = useAuthContext();
+  const { user, login, error } = useAuth();
 
   if (user) router.push('articles');
 

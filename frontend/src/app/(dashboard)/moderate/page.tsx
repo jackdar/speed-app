@@ -3,7 +3,7 @@
 import ArticleTable from '@/components/article-table';
 import withAuth from '@/lib/withAuth';
 
-async function ModeratePage() {
+function ModeratePage() {
   //   const articles = await fetch(
   //     `${process.env.NEXT_PUBLIC_API_URL}/admin/moderate`,
   //     {
@@ -25,4 +25,4 @@ async function ModeratePage() {
   );
 }
 
-export default withAuth(ModeratePage, 'moderator');
+export default withAuth(ModeratePage, 'registered');
