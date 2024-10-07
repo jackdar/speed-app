@@ -31,6 +31,7 @@ describe('AdminService', () => {
 
   it('should be defined', () => {
     expect(adminService).toBeDefined();
+    expect(articleModel).toBeDefined();
   });
 
   describe('Admin Service', () => {
