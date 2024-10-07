@@ -1,8 +1,11 @@
 'use client';
 
+import { useToast } from '@/hooks/use-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+import { ToastAction } from '../ui/toast';
 
 const schema = z.object({
   title: z.string().nonempty('Title is required'),
@@ -32,6 +35,9 @@ const schema = z.object({
 });
 
 const PaperForm = () => {
+  const { toast } = useToast();
+  const router = useRouter();
+
   const {
     register,
     handleSubmit,
@@ -56,12 +62,35 @@ const PaperForm = () => {
 
       if (!response.ok) {
         const errorData = await response.json();
+        toast({
+          variant: 'destructive',
+          title: 'Uh oh! Something went wrong.',
+          description: 'There was a problem with your request.',
+          action: (
+            <ToastAction altText="Try again" onClick={() => onSubmit(data)}>
+              Try again
+            </ToastAction>
+          ),
+        });
         console.error('Error submitting article:', errorData.message);
         return;
       }
 
+      toast({
+        variant: 'default',
+        title: 'Article submitted successfully!.',
+        description:
+          'Your article has been submitted for review. Please check back later.',
+      });
       console.log('Article submitted successfully');
+
+      router.push('/submission/complete');
     } catch (error) {
+      toast({
+        variant: 'destructive',
+        title: 'Uh oh! Something went wrong.',
+        description: 'There was a problem with your request.',
+      });
       console.error('Error:', error);
     }
   };

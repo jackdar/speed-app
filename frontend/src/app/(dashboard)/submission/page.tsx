@@ -1,6 +1,6 @@
 'use client';
 
-import PaperForm from '@/components/submissionForm';
+import PaperForm from '@/components/submission/submission-form';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
 

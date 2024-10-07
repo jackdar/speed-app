@@ -1,7 +1,7 @@
 'use client';
 
 import Unauthorised from '@/components/unauthorised';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from '@/hooks/use-auth';
 import { User } from '@/types';
 import { useRouter } from 'next/navigation';
 import { FunctionComponent } from 'react';

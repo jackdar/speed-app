@@ -1,7 +1,7 @@
 'use client';
 
-import { useAuth } from '@/hooks/useAuth';
-import { roleHierarchy } from '@/lib/withAuth';
+import { useAuth } from '@/hooks/use-auth';
+import { roleHierarchy } from '@/lib/with-auth';
 import { User as UserIcon } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from './ui/button';
