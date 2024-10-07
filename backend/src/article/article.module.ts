@@ -3,6 +3,7 @@ import { ArticleController } from './article.controller';
 import { ArticleService } from './article.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Article, ArticleSchema } from './article.schema';
+import { NotificationModule } from 'src/notification/notification.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { Article, ArticleSchema } from './article.schema';
         schema: ArticleSchema,
       },
     ]),
+    NotificationModule,
   ],
   controllers: [ArticleController],
   providers: [ArticleService],

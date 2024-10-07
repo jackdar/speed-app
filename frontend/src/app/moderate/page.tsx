@@ -1,14 +1,15 @@
 import ArticleTable from '@/components/article-table';
+import { useState } from 'react';
 
 export default async function ModeratePage() {
-  //   const articles = await fetch(
-  //     `${process.env.NEXT_PUBLIC_API_URL}/admin/moderate`,
-  //     {
-  //       cache: 'no-store',
-  //     },
-  //   )
-  //     .then((res) => res.json())
-  //     .catch(console.error);
+  // const articles = await fetch(
+  //   `${process.env.NEXT_PUBLIC_API_URL}/admin/moderate`,
+  //   {
+  //     cache: 'no-store',
+  //   },
+  // )
+  //   .then((res) => res.json())
+  //   .catch(console.error);
 
   return (
     <div className="flex-1 flex justify-center items-start bg-[#8D8D8D] p-8">

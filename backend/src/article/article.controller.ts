@@ -1,10 +1,15 @@
 import { Controller, Get, Post, Param, Body } from '@nestjs/common';
 import { ArticleService } from './article.service';
 import { CreateArticleDto } from './create-article.dto';
+import { NotificationService } from 'src/notification/notification.service';
 
 @Controller()
 export class ArticleController {
-  constructor(private readonly articleService: ArticleService) {}
+  constructor(
+    private readonly articleService: ArticleService,
+    private readonly notificationSerivce: NotificationService
+  ) {}
+  
 
   @Get('articles')
   async getArticles() {

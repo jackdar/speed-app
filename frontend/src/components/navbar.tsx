@@ -3,9 +3,23 @@
 import { useAuth } from "../app/hooks/useAuth";
 import { User as UserIcon } from "lucide-react";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import NotificationDropdown from "./notification/notification-dropdown";
 
 export default function Navbar() {
   const { user, logout } = useAuth();
+
+  // const [notifications, setNotifications] = useState([]);
+
+  // useEffect(() => {
+  //   const fetchNoti = async () => {
+  //     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/notifications/moderator`);
+  //     const data = await response.json();
+  //     setNotifications(data);
+  //   }
+
+  //   fetchNoti();
+  // }, []);
 
   return (
     <nav className="w-full bg-black p-4 flex items-center justify-between text-white">
@@ -18,6 +32,8 @@ export default function Navbar() {
           <Link href="/moderate">Moderate</Link>
         </div>
       </div>
+      {/* <p>Notifications ({notifications.length})</p> */}
+      <NotificationDropdown/>
       <div className="flex flex-row gap-4">
         {user && (
           <Link href="/profile" className="bg-gray-700 p-2 rounded-full">
