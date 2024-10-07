@@ -25,4 +25,4 @@ function ModeratePage() {
   );
 }
 
-export default withAuth(ModeratePage, 'registered');
+export default withAuth(ModeratePage, 'moderator');

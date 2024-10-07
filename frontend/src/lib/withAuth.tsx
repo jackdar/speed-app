@@ -4,7 +4,7 @@ import Unauthorised from '@/components/unauthorised';
 import { useAuth } from '@/hooks/useAuth';
 import { User } from '@/types';
 import { useRouter } from 'next/navigation';
-import { FunctionComponent, useEffect } from 'react';
+import { FunctionComponent } from 'react';
 
 // Define role hierarchy with access arrays
 export const roleHierarchy: Record<User['role'], User['role'][]> = {
@@ -23,24 +23,15 @@ const withAuth = (
     const { user } = useAuth();
     const router = useRouter();
 
-    useEffect(() => {
-      console.log('Checking user role - user: ', user);
-      // If the user is not authenticated, redirect them to the login page
-      if (!user) {
-        router.push('/login');
-        return;
-      }
-    }, [user, router]);
-
     // Check if the user's role is sufficient for the required role
     const userRole = user?.role || 'guest';
     const userPermissions = roleHierarchy[userRole];
 
     if (userPermissions.includes(requiredRole)) {
       return <WrappedComponent {...props} />;
+    } else {
+      return <Unauthorised />;
     }
-
-    return <Unauthorised />;
   };
 };
 
