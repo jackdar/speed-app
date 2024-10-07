@@ -9,9 +9,11 @@ import {
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
+  getSortedRowModel,
   SortingState,
-  useReactTable,
+  useReactTable
 } from '@tanstack/react-table';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { Suspense, useMemo, useRef, useState } from 'react';
 import { Button } from '../ui/button';
@@ -40,12 +42,6 @@ export default function ArticleTable({ data }: { data: Article[] }) {
       {
         header: 'Title',
         accessorKey: 'title',
-        cell: ({ row }) => (
-          <div className="flex flex-col space-y-1.5">
-            <p className="font-medium">{row.original.title}</p>
-            <p className="text-sm text-gray-500">{row.original.publisher}</p>
-          </div>
-        ),
       },
       {
         header: 'Author',
@@ -58,9 +54,12 @@ export default function ArticleTable({ data }: { data: Article[] }) {
       {
         header: 'Year',
         accessorKey: 'year',
+        filterFn: (row, columnId, filterValue) => {
+          return row.getValue<number | string>(columnId).toString().toLowerCase().trim().startsWith(filterValue) ? true : false;
+        },
       },
       {
-        header: 'Source',
+        header: 'DOI',
         accessorKey: 'doi',
       },
       {
@@ -78,9 +77,12 @@ export default function ArticleTable({ data }: { data: Article[] }) {
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     onColumnFiltersChange: setColumnFilters,
+    getSortedRowModel: getSortedRowModel(),
+    onSortingChange: setSorting,
     getFilteredRowModel: getFilteredRowModel(),
     state: {
       columnFilters,
+      sorting,
     },
     initialState: {
       columnVisibility: {
@@ -104,6 +106,7 @@ export default function ArticleTable({ data }: { data: Article[] }) {
                 table.getColumn(selectedFilter)?.getFilterValue() as string
               }
               onChange={(event) => {
+                console.log(event.target.value);
                 setColumnFilters([]);
                 table
                   .getColumn(selectedFilter)
@@ -114,6 +117,7 @@ export default function ArticleTable({ data }: { data: Article[] }) {
               defaultValue="Title"
               className="flex flex-row"
               onValueChange={(value) => {
+                console.log(value);
                 setSelectedFilter(value.toLowerCase());
                 table
                   .getColumn(value.toLowerCase())
@@ -149,12 +153,25 @@ export default function ArticleTable({ data }: { data: Article[] }) {
                             <TableHead key={header.id} className="text-nowrap">
                               {header.isPlaceholder
                                 ? null
-                                : flexRender(
+                                : (<div
+                                  {...{
+                                    className: header.column.getCanSort()
+                                      ? 'flex flex-row gap-1 items-center cursor-pointer select-none'
+                                      : '',
+                                    onClick: header.column.getToggleSortingHandler(),
+                                  }}
+                                >
+                                  {flexRender(
                                     header.column.columnDef.header,
-                                    header.getContext(),
+                                    header.getContext()
                                   )}
-                            </TableHead>
-                          );
+                                  {{
+                                    asc: <ChevronUp size={16} />,
+                                    desc: <ChevronDown size={16} />,
+                                  }[header.column.getIsSorted() as string] ?? null}
+                                </div>)
+                              }
+                            </TableHead>)
                         })}
                       </TableRow>
                     ))}

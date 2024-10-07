@@ -1,11 +1,10 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { Button } from './ui/button';
 
 export default function Unauthorised() {
-  const goBack = () => {
-    window.history.back();
-  };
+  const router = useRouter();
 
   return (
     <div className="flex-1 flex justify-center items-center bg-[#8D8D8D]">
@@ -14,7 +13,7 @@ export default function Unauthorised() {
           Unauthorised
         </h1>
         <p>You do not have permission to view this content.</p>
-        <Button className="w-full mt-4" onClick={goBack}>
+        <Button className="w-full mt-4" onClick={() => router.back()}>
           Back
         </Button>
       </div>
