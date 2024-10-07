@@ -56,7 +56,7 @@ export default function Navbar() {
         {user && (
           <>
             <Button variant="outline" className="bg-transparent" asChild>
-              <Link href="/articles/submit">Submit Article</Link>
+              <Link href="/submission">Submit Article</Link>
             </Button>
             <Link
               href="/profile"
