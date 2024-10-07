@@ -3,18 +3,17 @@ import { ArticleService } from './article.service';
 import { CreateArticleDto } from './create-article.dto';
 import { UpdateArticleDto } from './update-article.dto';
 
-@Controller('api/article')
+@Controller()
 export class ArticleController {
   constructor(private readonly articleService: ArticleService) {}
 
-  // GET /api/article
-  @Get()
+  @Get('/articles')
   async getArticles() {
     return await this.articleService.getArticles();
   }
 
   // GET /api/article/:id
-  @Get(':id')
+  @Get('/article/:id')
   async getArticleById(@Param('id') id: string) {
     return await this.articleService.getArticleById(id);
   }
@@ -27,7 +26,7 @@ export class ArticleController {
     return await this.articleService.updateArticle(id, updatedArticle);
   }
 
-  @Post('article/new')
+  @Post('/article/new')
   async addArticle(@Body() createArticleDto: CreateArticleDto) {
     return await this.articleService.createArticle(createArticleDto);
   }

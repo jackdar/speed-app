@@ -1,23 +1,22 @@
-import { Module } from "@nestjs/common";
-import { AdminController } from "./admin.controller";
-import { AdminService } from "./admin.service";
-import { MongooseModule } from "@nestjs/mongoose";
-import { Article, ArticleSchema } from "../article/article.schema";
-import { ArticleModule } from "src/article/article.module";
+import { Module } from '@nestjs/common';
+import { MongooseModule } from '@nestjs/mongoose';
+import { ArticleModule } from 'src/article/article.module';
+import { Article, ArticleSchema } from '../article/article.schema';
+import { AdminController } from './admin.controller';
+import { AdminService } from './admin.service';
 
 @Module({
-    imports: [
-        MongooseModule.forFeature([
-            {
-                name: Article.name,
-                schema: ArticleSchema,
-            },
-        ]),
-        ArticleModule
-    ],
-    controllers: [AdminController],
-    providers: [AdminService],
-    exports: [AdminService],
+  imports: [
+    MongooseModule.forFeature([
+      {
+        name: Article.name,
+        schema: ArticleSchema,
+      },
+    ]),
+    ArticleModule,
+  ],
+  controllers: [AdminController],
+  providers: [AdminService],
+  exports: [AdminService],
 })
-
-export class AdminModule { };
+export class AdminModule {}
