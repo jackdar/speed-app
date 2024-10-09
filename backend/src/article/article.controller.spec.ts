@@ -3,6 +3,7 @@ import { ArticleController } from './article.controller';
 import { ArticleService } from './article.service';
 import { CreateArticleDto } from './create-article.dto';
 import { Article } from './article.schema';
+import { NotificationService } from 'src/notification/notification.service';
 
 const mockArticleService = {
   getArticles: jest.fn(),
@@ -162,7 +163,7 @@ describe('ArticleController', () => {
         },
       };
 
-      jest.spyOn(service, 'createArticle').mockResolvedValue(mockArticle);
+      jest.spyOn(service, 'createArticle').mockResolvedValue(mockArticle as any);
 
       const result = await controller.addArticle(createArticleDto);
       expect(service.createArticle).toHaveBeenCalledWith(createArticleDto);

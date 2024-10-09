@@ -4,17 +4,19 @@ import { AdminNotification, AdminNotificationSchema } from "./admin-notification
 import { NotificationController } from "./notification.controller";
 import { NotificationService } from "./notification.service";
 import { UserNotification, UserNotificationSchema } from "./user-notification.schema";
+import { AuthModule } from "../auth/auth.module";
 
 @Module({
     imports: [
         MongooseModule.forFeature([
-            { name: AdminNotification.name, schema: AdminNotificationSchema},
+            { name: AdminNotification.name, schema: AdminNotificationSchema },
             { name: UserNotification.name, schema: UserNotificationSchema },
         ]),
+        AuthModule
     ],
     controllers: [NotificationController],
     providers: [NotificationService],
     exports: [NotificationService],
 })
 
-export class NotificationModule {};
+export class NotificationModule { };

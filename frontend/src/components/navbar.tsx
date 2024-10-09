@@ -8,19 +8,7 @@ import NotificationDropdown from "./notification/notification-dropdown";
 
 export default function Navbar() {
   const { user, logout } = useAuth();
-
-  // const [notifications, setNotifications] = useState([]);
-
-  // useEffect(() => {
-  //   const fetchNoti = async () => {
-  //     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/notifications/moderator`);
-  //     const data = await response.json();
-  //     setNotifications(data);
-  //   }
-
-  //   fetchNoti();
-  // }, []);
-
+  console.log(user?.userId)
   return (
     <nav className="w-full bg-black p-4 flex items-center justify-between text-white">
       <div className="flex flex-row gap-6 items-center">
@@ -33,11 +21,11 @@ export default function Navbar() {
         </div>
       </div>
       {/* <p>Notifications ({notifications.length})</p> */}
-      <NotificationDropdown/>
+      <NotificationDropdown />
       <div className="flex flex-row gap-4">
         {user && (
           <Link href="/profile" className="bg-gray-700 p-2 rounded-full">
-            <UserIcon />  
+            <UserIcon />
           </Link>
         )}
         {user ? (

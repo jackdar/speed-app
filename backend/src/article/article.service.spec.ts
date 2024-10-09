@@ -6,6 +6,9 @@ import { Model } from 'mongoose';
 import { Article } from './article.schema';
 import { CreateArticleDto } from './create-article.dto';
 import { BadRequestException } from '@nestjs/common';
+import { NotificationService } from '../notification/notification.service';
+import { AdminNotification } from '../notification/admin-notification.schema';
+import { UserNotification } from '../notification/user-notification.schema';
 
 const mockArticleModel = {
   find: jest.fn(),
@@ -13,17 +16,36 @@ const mockArticleModel = {
   create: jest.fn(),
 };
 
+const mockAdminNotiModel = {
+
+}
+
+const mockUserNotiModel = {
+
+}
+
 describe('ArticleService', () => {
   let service: ArticleService;
   let articleModel: Model<Article>;
+  let adminNotiModel: Model<AdminNotification>;
+  let userNotiModel: Model<UserNotification>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         ArticleService,
+        NotificationService,
         {
           provide: getModelToken(Article.name),
           useValue: mockArticleModel,
+        },
+        {
+          provide: getModelToken(AdminNotification.name),
+          useValue: mockAdminNotiModel,
+        },
+        {
+          provide: getModelToken(UserNotification.name),
+          useValue: mockUserNotiModel,
         },
         {
           provide: ConfigService,
@@ -34,6 +56,8 @@ describe('ArticleService', () => {
 
     service = module.get<ArticleService>(ArticleService);
     articleModel = module.get<Model<Article>>(getModelToken(Article.name));
+    adminNotiModel = module.get<Model<AdminNotification>>(getModelToken(AdminNotification.name));
+    userNotiModel = module.get<Model<UserNotification>>(getModelToken(UserNotification.name));
   });
 
   it('should be defined', () => {

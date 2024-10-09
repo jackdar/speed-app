@@ -7,7 +7,7 @@ export class AuthService {
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,
-  ) {}
+  ) { }
 
   async register(userDto: any): Promise<any> {
     return this.usersService.register(userDto);
@@ -15,6 +15,7 @@ export class AuthService {
 
   async login(email: string, password: string): Promise<any> {
     const user = await this.usersService.findByEmail(email);
+
     if (!user) {
       throw new UnauthorizedException('Invalid credentials');
     }

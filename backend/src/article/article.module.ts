@@ -3,7 +3,8 @@ import { ArticleController } from './article.controller';
 import { ArticleService } from './article.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Article, ArticleSchema } from './article.schema';
-import { NotificationModule } from 'src/notification/notification.module';
+import { NotificationModule } from '../notification/notification.module';
+import { AuthModule } from '../auth/auth.module';
 
 @Module({
   imports: [
@@ -14,9 +15,10 @@ import { NotificationModule } from 'src/notification/notification.module';
       },
     ]),
     NotificationModule,
+    AuthModule
   ],
   controllers: [ArticleController],
   providers: [ArticleService],
   exports: [ArticleService],
 })
-export class ArticleModule {}
+export class ArticleModule { }
