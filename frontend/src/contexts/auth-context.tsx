@@ -7,6 +7,7 @@ import { createContext, ReactNode, useEffect, useState } from 'react';
 
 interface AuthContextType {
   user: User | null;
+  token: string | null;
   error: string | null;
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
@@ -18,6 +19,7 @@ export const AuthContext = createContext<AuthContextType | undefined>(
 
 const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [token, setToken] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
@@ -28,9 +30,9 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
   const fetchProfile = async () => {
     const token = localStorage.getItem('token');
 
-    if (!token) {
-      return;
-    }
+    if (!token) return;
+
+    setToken(token);
 
     try {
       const res = await fetch(
@@ -47,9 +49,11 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
         const data = await res.json();
         setUser(data);
       } else {
+        localStorage.removeItem('token');
         setError('Failed to load profile');
       }
     } catch (err) {
+      localStorage.removeItem('token');
       setError('An error occurred');
     }
   };
@@ -91,7 +95,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, error, login, logout }}>
+    <AuthContext.Provider value={{ user, token, error, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

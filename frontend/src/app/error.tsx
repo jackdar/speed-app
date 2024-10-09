@@ -3,8 +3,9 @@
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
 
-export default function Error() {
+export default function Error({ message }: { message?: string }) {
   const router = useRouter();
+
   return (
     <div className="flex-1 flex justify-center items-center bg-[#8D8D8D]">
       <div className="bg-gray-100 p-8 rounded shadow-md w-full max-w-md">
@@ -12,9 +13,8 @@ export default function Error() {
           An Error Has Occurred
         </h1>
         <p>
-          An unexpected error has occurred. You are being shown this page to
-          limit the amount of unexpected behaviour that can take place. The
-          system administrator has been notified.
+          {message ||
+            'An unexpected error has occurred. You are being shown this page to limit the amount of unexpected behaviour that can take place. The system administrator has been notified.'}
         </p>
         <Button className="w-full mt-4" onClick={() => router.back()}>
           Back
