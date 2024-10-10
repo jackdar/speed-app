@@ -28,6 +28,8 @@ database of evidence of different claims about different SE practices.</i>
 ## Product Overview
 The SPEED application is designed to host a searchable database in the form of a web application. The platform hosts key findings and claims from many different articles and allows easy access to summaries of these articles.
 
+<br />
+
 ## Stack
 For our application stack we are using the following technologies:
  - **Frontend:** React, Next.js
@@ -38,6 +40,18 @@ Key packages and tools used include:
  - **Styling:** TailwindCSS, RadixUI, ShadcnUI
  - **Forms:** React Hook Form, Zod
  - **Tables:** React Table
+
+<br />
+
+## Hosting
+The official production version of the SPEED app is hosted and available at [https://speed-app-nu.vercel.app](https://speed-app-nu.vercel.app)
+
+The following infrastructure is being used:
+ - **Vercel:** Ephemeral serverless hosting the Next.js frontend
+ - **Railway:** Long-lived service hosting the Nest.js backend
+ - **MongoDB Atlas:** MongoDB M0 cluster hosted on AWS
+
+<br />
 
 ## Installation
 To install and run SPEED on your local machine follow the steps listed below:
