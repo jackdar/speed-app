@@ -65,6 +65,12 @@ export default function ArticleTable({ data }: { data: Article[] }) {
       {
         header: 'Rating',
         accessorKey: 'rating',
+        
+      },
+      {
+        header: 'Methdology',
+        accessorKey: 'methdology',
+        
       },
     ],
     [],
