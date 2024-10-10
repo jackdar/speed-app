@@ -20,6 +20,7 @@ database of evidence of different claims about different SE practices.</i>
   - [Product Overview](#product-overview)
   - [Stack](#stack)
   - [Installation](#installation)
+  - [Usage](#usage)
   - [License and Disclaimer](#license-and-disclaimer)
 
 <br/>
