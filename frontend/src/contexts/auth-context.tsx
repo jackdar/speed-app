@@ -11,11 +11,10 @@ interface AuthContextType {
   error: string | null;
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
+  fetchProfile: () => Promise<void>;
 }
 
-export const AuthContext = createContext<AuthContextType | undefined>(
-  undefined,
-);
+export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
@@ -35,15 +34,12 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     setToken(token);
 
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/auth/profile`,
-        {
-          method: 'GET',
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/profile`, {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${token}`,
         },
-      );
+      });
 
       if (res.ok) {
         const data = await res.json();
@@ -94,11 +90,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
-  return (
-    <AuthContext.Provider value={{ user, token, error, login, logout }}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={{ user, token, error, login, logout, fetchProfile }}>{children}</AuthContext.Provider>;
 };
 
 export default AuthProvider;
