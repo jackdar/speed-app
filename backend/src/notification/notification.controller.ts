@@ -1,8 +1,7 @@
 import { Controller, Get, Param, UseGuards, Request, Headers, ExecutionContext, Put, Body } from "@nestjs/common";
 import { NotificationService } from "./notification.service";
 import { JwtAuthGuard } from "../auth/jwt-auth.guard";
-import { AuthModule } from "../auth/auth.module";
-import { AuthService } from "src/auth/auth.service";
+import { AuthService } from "../auth/auth.service";
 import { UpdateUserNotificationDto } from "./dto/update-user-notification.dto";
 
 @UseGuards(JwtAuthGuard)
