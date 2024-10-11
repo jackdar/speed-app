@@ -36,4 +36,17 @@ export class NotificationService {
         return await this.userNotiModel.find({ user_id: id })
 
     }
+
+    async getNotificationsNew(decoded: any) {
+        console.log(decoded);
+        var notifications = await this.userNotiModel.find({ user_id: decoded.uid });
+        let adminNoti = {};
+        if (decoded.role == "moderator" || decoded.role == "analyst") {
+            adminNoti = await this.adminNotiModel.find({ role: decoded.role, assigned: false });
+        } else if (decoded.role == "admin") {
+            adminNoti = await this.adminNotiModel.find({ assigned: false });
+        }
+        console.log(adminNoti);
+        return adminNoti;
+    }
 }

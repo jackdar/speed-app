@@ -6,13 +6,19 @@ import { useEffect, useState } from "react";
 import NotificationItem from "./notification-item";
 import { Separator } from "../ui/separator";
 
-const NotificationDropdown = ({ token }) => {
-
+const NotificationDropdown = ({ user }: any) => {
+    // console.log(user);
     const [notifications, setNotifications] = useState<any>();
     const [userNotifications, setUserNotifications] = useState<any>();
+
     useEffect(() => {
         const fetchNotification = async () => {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/notifications/moderator`);
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/notifications/moderator`, {
+                method: "GET",
+                headers: {
+                    "Authorization": "Bearer " + localStorage.getItem("token")
+                }
+            });
             const data = await response.json();
             setNotifications(data);
         }
@@ -23,11 +29,9 @@ const NotificationDropdown = ({ token }) => {
             const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/notifications`, {
                 method: "GET",
                 headers: {
-                    "Authorization": "Bearer " + token
+                    "Authorization": "Bearer " + localStorage.getItem("token")
                 }
-            }
-
-            );
+            });
             const data = await response.json();
             setUserNotifications(data);
         }

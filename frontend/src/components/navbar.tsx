@@ -21,7 +21,10 @@ export default function Navbar() {
         </div>
       </div>
       {/* <p>Notifications ({notifications.length})</p> */}
-      <NotificationDropdown />
+      {user != null ? (
+        <NotificationDropdown user={user} />
+      ) : ""
+      }
       <div className="flex flex-row gap-4">
         {user && (
           <Link href="/profile" className="bg-gray-700 p-2 rounded-full">
