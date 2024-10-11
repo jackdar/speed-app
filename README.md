@@ -124,6 +124,7 @@ Make sure the following dependencies have been installed:
 ## Usage
 The full application can be run with one script in the repository root directory:
 
+### Running the full application
 ```
 npm start
 # or
