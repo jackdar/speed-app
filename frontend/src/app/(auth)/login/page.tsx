@@ -1,14 +1,18 @@
-"use client";
+'use client';
 
-import { useAuth } from "../hooks/useAuth";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import { useAuth } from '@/hooks/use-auth';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
 
 const LoginPage = () => {
-  const [form, setForm] = useState({ email: "", password: "" });
+  const [form, setForm] = useState({ email: '', password: '' });
   const router = useRouter();
-  const { login, error } = useAuth();
+  const { user, login, error } = useAuth();
+
+  useEffect(() => {
+    if (user) router.push('articles');
+  }, [user, router]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({
@@ -24,10 +28,10 @@ const LoginPage = () => {
 
   useEffect(() => {
     const checkAuth = () => {
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem('token');
 
       if (token != null) {
-        router.push("articles");
+        router.push('articles');
       }
     };
 
@@ -63,10 +67,10 @@ const LoginPage = () => {
           >
             Login
           </button>
-          {error && <p style={{ color: "red" }}>{error}</p>}
+          {error && <p style={{ color: 'red' }}>{error}</p>}
         </form>
         <p className="text-center text-sm mt-4">
-          Haven&apos;t got an account?{" "}
+          Haven&apos;t got an account?{' '}
           <Link href="/register" className="font-medium">
             Register
           </Link>

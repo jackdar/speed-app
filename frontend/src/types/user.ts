@@ -3,7 +3,8 @@ export interface User {
   firstName: string;
   lastName: string;
   email: string;
-  role: "guest" | "registered" | "moderator" | "analyst" | "admin";
+  role: 'guest' | 'registered' | 'moderator' | 'analyst' | 'admin';
+  bio: string;
   articlesPublished: string[];
   articlesModerated: string[];
   articlesAnalysed: string[];

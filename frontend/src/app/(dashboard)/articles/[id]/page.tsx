@@ -1,4 +1,3 @@
-import { Article } from '@/app/types';
 import {
   Card,
   CardContent,
@@ -6,6 +5,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import { Article } from '@/types';
 import { ChevronLeft } from 'lucide-react';
 import Link from 'next/link';
 
@@ -19,8 +19,6 @@ export default async function ArticlePage({
   )
     .then((res) => res.json())
     .catch(console.error);
-
-  console.log(article);
 
   return (
     <div className="flex-1 flex justify-center items-start bg-[#8D8D8D] p-8">

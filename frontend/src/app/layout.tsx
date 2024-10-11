@@ -1,4 +1,6 @@
 import Navbar from '@/components/navbar';
+import { Toaster } from '@/components/ui/toaster';
+import AuthProvider from '@/contexts/auth-context';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
@@ -17,12 +19,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-        <div className="min-h-screen flex flex-col">
-          <Navbar />
-          {children}
-        </div>
-      </body>
+      <AuthProvider>
+        <body className={inter.className}>
+          <div className="min-h-screen flex flex-col">
+            <Navbar />
+            {children}
+            <Toaster />
+          </div>
+        </body>
+      </AuthProvider>
     </html>
   );
 }

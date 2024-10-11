@@ -1,7 +1,25 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { cn } from '@/lib/utils';
+import { Article } from '@/types';
+import {
+  ColumnDef,
+  ColumnFiltersState,
+  flexRender,
+  getCoreRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  SortingState,
+  useReactTable
+} from '@tanstack/react-table';
+import { ChevronDown, ChevronUp } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { Suspense, useMemo, useRef, useState } from 'react';
+import { Button } from './ui/button';
+import { Input } from './ui/input';
+import { Label } from './ui/label';
+import { RadioGroup, RadioGroupItem } from './ui/radio-group';
 import {
   Table,
   TableBody,
@@ -9,199 +27,223 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
-import {
-  ColumnDef,
-  flexRender,
-  getCoreRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  SortingState,
-  useReactTable,
-} from '@tanstack/react-table';
-import { ChevronDown, ChevronsUpDown, ChevronUp } from 'lucide-react';
-import React from 'react';
+} from './ui/table';
 
-interface Article {
-  id: string;
-  title: string;
-  author: string;
-  publisher: string;
-  dateAdded: string;
-  moderated: boolean;
-}
+export default function ArticleTable({ data }: { data: Article[] }) {
+  const router = useRouter();
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [selectedFilter, setSelectedFilter] = useState<string>('title');
 
-const columns: ColumnDef<Article>[] = [
-  {
-    header: 'Title',
-    accessorKey: 'title',
-  },
-  {
-    header: 'Author',
-    accessorKey: 'author',
-  },
-  {
-    header: 'Publisher',
-    accessorKey: 'publisher',
-  },
-  {
-    header: 'Date Added',
-    accessorKey: 'dateAdded',
-  },
-  {
-    header: 'Moderated',
-    accessorKey: 'moderated',
-    cell: ({ row }) => {
-      const value = row.original.moderated;
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
-      return <>{value ? 'Yes' : 'No'}</>;
-    },
-  },
-];
-
-export default function ArticleTable() {
-  const [sorting, setSorting] = React.useState<SortingState>([]);
-  const data: Article[] = [
-    {
-      id: '66ed0e152e7fe9d82dccca59',
-      title: 'Test article',
-      author: 'Test author',
-      publisher: 'Test publisher',
-      dateAdded: '2024',
-      moderated: false,
-    },
-  ];
+  const columns = useMemo<ColumnDef<Article>[]>(
+    () => [
+      {
+        header: 'Title',
+        accessorKey: 'title',
+      },
+      {
+        header: 'Author',
+        accessorKey: 'author',
+      },
+      {
+        header: 'Journal',
+        accessorKey: 'journal',
+      },
+      {
+        header: 'Year',
+        accessorKey: 'year',
+        filterFn: (row, columnId, filterValue) => {
+          return row.getValue<number | string>(columnId).toString().toLowerCase().trim().startsWith(filterValue) ? true : false;
+        },
+      },
+      {
+        header: 'DOI',
+        accessorKey: 'doi',
+      },
+      {
+        header: 'Rating',
+        accessorKey: 'rating',
+      },
+    ],
+    [],
+  );
 
   const table = useReactTable({
     data,
     columns,
+    getRowId: (row) => row._id,
     getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    onColumnFiltersChange: setColumnFilters,
+    getSortedRowModel: getSortedRowModel(),
     onSortingChange: setSorting,
+    getFilteredRowModel: getFilteredRowModel(),
     state: {
+      columnFilters,
       sorting,
+    },
+    initialState: {
+      columnVisibility: {
+        id: false,
+      },
     },
   });
 
   return (
-    <div className="w-full">
-      <div className="rounded-md border">
-        <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id} className="font-bold">
-                    {header.isPlaceholder ? null : (
-                      <div
-                        className={`flex items-center ${
-                          header.column.getCanSort()
-                            ? 'cursor-pointer select-none'
-                            : ''
-                        }`}
-                        onClick={header.column.getToggleSortingHandler()}
-                      >
-                        {flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
-                        <span className="ml-2">
-                          {{
-                            asc: <ChevronUp className="h-4 w-4" />,
-                            desc: <ChevronDown className="h-4 w-4" />,
-                          }[header.column.getIsSorted() as string] ?? (
-                            <ChevronsUpDown className="h-4 w-4" />
-                          )}
-                        </span>
-                      </div>
-                    )}
-                  </TableHead>
-                ))}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows.map((row) => (
-              <TableRow key={row.id}>
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
-      <div className="flex items-center justify-between space-x-2 py-4">
-        <div className="flex items-center space-x-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.setPageIndex(0)}
-            disabled={!table.getCanPreviousPage()}
-          >
-            {'<<'}
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-          >
-            {'<'}
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-          >
-            {'>'}
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-            disabled={!table.getCanNextPage()}
-          >
-            {'>>'}
-          </Button>
+    <>
+      <div className="flex justify-center items-start bg-[#8D8D8D] p-8">
+        <div className="bg-gray-100 p-8 rounded shadow-md w-full">
+          <h2 className=" text-2xl text-black mb-4 w-full text-start border-b border-black pb-2">
+            Articles
+          </h2>
+          <div className="flex flex-col gap-4">
+            <Input
+              ref={searchInputRef}
+              placeholder="Search..."
+              value={
+                table.getColumn(selectedFilter)?.getFilterValue() as string
+              }
+              onChange={(event) => {
+                console.log(event.target.value);
+                setColumnFilters([]);
+                table
+                  .getColumn(selectedFilter)
+                  ?.setFilterValue(event.target.value);
+              }}
+            />
+            <RadioGroup
+              defaultValue="Title"
+              className="flex flex-row"
+              onValueChange={(value) => {
+                console.log(value);
+                setSelectedFilter(value.toLowerCase());
+                table
+                  .getColumn(value.toLowerCase())
+                  ?.setFilterValue(searchInputRef.current?.value);
+              }}
+            >
+              {columns.map((column, index) => (
+                <div className="flex items-center space-x-2" key={index}>
+                  <RadioGroupItem
+                    value={column.header?.toString() || ''}
+                    id={column.header?.toString() || `column-${index}`}
+                  />
+                  <Label
+                    htmlFor={column.header?.toString() || `column-${index}`}
+                  >{`${column.header?.toString() || 'Unnamed Column'}`}</Label>
+                </div>
+              ))}
+            </RadioGroup>
+          </div>
         </div>
-        <span className="flex items-center gap-1">
-          <div>Page</div>
-          <strong>
-            {table.getState().pagination.pageIndex + 1} of{' '}
-            {table.getPageCount()}
-          </strong>
-        </span>
-        <span className="flex items-center gap-1">
-          | Go to page:
-          <Input
-            type="number"
-            defaultValue={table.getState().pagination.pageIndex + 1}
-            onChange={(e) => {
-              const page = e.target.value ? Number(e.target.value) - 1 : 0;
-              table.setPageIndex(page);
-            }}
-            className="w-16"
-          />
-        </span>
-        <select
-          value={table.getState().pagination.pageSize}
-          onChange={(e) => {
-            table.setPageSize(Number(e.target.value));
-          }}
-          className="rounded-md border p-1"
-        >
-          {[5, 10, 20].map((pageSize) => (
-            <option key={pageSize} value={pageSize}>
-              Show {pageSize}
-            </option>
-          ))}
-        </select>
       </div>
-    </div>
+      <div className="flex flex-1 flex-col p-8">
+        <Suspense>
+          <div className="w-full">
+            <div>
+              <div className="rounded-md border">
+                <Table>
+                  <TableHeader>
+                    {table.getHeaderGroups().map((headerGroup) => (
+                      <TableRow key={headerGroup.id}>
+                        {headerGroup.headers.map((header) => {
+                          return (
+                            <TableHead key={header.id} className="text-nowrap">
+                              {header.isPlaceholder
+                                ? null
+                                : (<div
+                                  {...{
+                                    className: header.column.getCanSort()
+                                      ? 'flex flex-row gap-1 items-center cursor-pointer select-none'
+                                      : '',
+                                    onClick: header.column.getToggleSortingHandler(),
+                                  }}
+                                >
+                                  {flexRender(
+                                    header.column.columnDef.header,
+                                    header.getContext()
+                                  )}
+                                  {{
+                                    asc: <ChevronUp size={16} />,
+                                    desc: <ChevronDown size={16} />,
+                                  }[header.column.getIsSorted() as string] ?? null}
+                                </div>)
+                              }
+                            </TableHead>)
+                        })}
+                      </TableRow>
+                    ))}
+                  </TableHeader>
+                  <TableBody>
+                    {table.getRowModel().rows?.length ? (
+                      table.getRowModel().rows.map((row) => (
+                        <TableRow
+                          key={row.id}
+                          className="cursor-pointer"
+                          data-state={row.getIsSelected() && 'selected'}
+                          onClick={() => {
+                            row.toggleSelected();
+                            if (row.getIsSelected()) {
+                              router.push('/articles', { scroll: false });
+                            } else {
+                              router.push(`/articles/${row.original._id}`, {
+                                scroll: false,
+                              });
+                            }
+                          }}
+                        >
+                          {row.getVisibleCells().map((cell) => (
+                            <TableCell key={cell.id}>
+                              {flexRender(
+                                cell.column.columnDef.cell,
+                                cell.getContext(),
+                              )}
+                            </TableCell>
+                          ))}
+                        </TableRow>
+                      ))
+                    ) : (
+                      <TableRow>
+                        <TableCell
+                          colSpan={columns.length}
+                          className="h-24 text-center"
+                        >
+                          No results.
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </Table>
+              </div>
+              <div
+                className={cn(
+                  'flex items-center justify-end space-x-2 py-4',
+                  table.getPageCount() < 2 && 'hidden',
+                )}
+              >
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => table.previousPage()}
+                  disabled={!table.getCanPreviousPage()}
+                >
+                  Previous
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => table.nextPage()}
+                  disabled={!table.getCanNextPage()}
+                >
+                  Next
+                </Button>
+              </div>
+            </div>
+          </div>
+        </Suspense>
+      </div>
+    </>
   );
 }

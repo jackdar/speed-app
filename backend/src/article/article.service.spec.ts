@@ -4,7 +4,7 @@ import { getModelToken } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Model } from 'mongoose';
 import { Article } from './article.schema';
-import { CreateArticleDto } from './create-article.dto';
+import { CreateArticleDto } from './dto/create-article.dto';
 import { BadRequestException } from '@nestjs/common';
 import { NotificationService } from '../notification/notification.service';
 import { AdminNotification } from '../notification/admin-notification.schema';
@@ -12,10 +12,12 @@ import { UserNotification } from '../notification/user-notification.schema';
 import { AuthService } from '../auth/auth.service';
 import { CreateAdminNotifcationDto } from '../notification/dto/create-admin-notification.dto';
 
+
 const mockArticleModel = {
   find: jest.fn(),
   findById: jest.fn(),
   create: jest.fn(),
+  findByIdAndUpdate: jest.fn(),
 };
 
 const mockAuthService = {
@@ -153,6 +155,55 @@ describe('ArticleService', () => {
 
       await expect(service.createArticle("123", createArticleDto)).rejects.toThrow(
         BadRequestException,
+      );
+    });
+  });
+
+  describe('updateArticle', () => {
+    it('should update article and return article with new details', async () => {
+      const mockArticleId = '123';
+
+      const mockNewArticle: any = {
+        title: 'new title',
+        author: 'new author',
+        publisher: 'new publisher',
+        journal: 'new journal',
+        year: 2024,
+        volume: 1,
+        pagesStart: 10,
+        pagesEnd: 20,
+        doi: '10.1234/test.doi',
+        isPosted: true,
+        createDate: new Date(),
+        lastUpdateDate: new Date(),
+        moderationDetails: {
+          moderatorId: 'mod id',
+          moderated: false,
+          moderationPassed: false,
+        },
+        analysisDetails: {
+          analystId: 'analyst id',
+          analyzed: false,
+          analyzePassed: false,
+        },
+      };
+
+      // Mocking the actual implemnetation of updating. Returned result is the details of the updated article.
+      jest
+        .spyOn(service, 'updateArticle')
+        .mockImplementation(async (id, data) => {
+          expect(id).toBe(mockArticleId);
+          expect(data).toEqual(mockNewArticle);
+          return { id: mockArticleId, ...data };
+        });
+
+      const updatedResult = await service.updateArticle('123', mockNewArticle);
+
+      expect(updatedResult).toEqual(
+        expect.objectContaining({
+          id: mockArticleId,
+          ...mockNewArticle,
+        }),
       );
     });
   });

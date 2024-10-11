@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
-import { ArticleController } from './article.controller';
-import { ArticleService } from './article.service';
 import { MongooseModule } from '@nestjs/mongoose';
+import { ArticleController } from './article.controller';
 import { Article, ArticleSchema } from './article.schema';
 import { NotificationModule } from '../notification/notification.module';
 import { AuthModule } from '../auth/auth.module';
+import { ArticleService } from './article.service';
 
 @Module({
   imports: [
