@@ -33,12 +33,17 @@ const routes = [
 export default function Navbar() {
   const { user, logout } = useAuth();
 
-  const userLinks = roleHierarchy[user?.role || 'guest'];
-
+ 
+  let userLinks: ("guest" | "registered" | "moderator" | "analyst" | "admin")[];
+  if(user) {
+    userLinks = roleHierarchy[user.role as keyof typeof roleHierarchy];
+  } else {
+    userLinks = roleHierarchy["guest"];
+  }
   const filteredRoutes = routes.filter((route) =>
     userLinks.some((permission: string) => route.permissions.includes(permission)),
   );
-
+ 
   return (
     <nav className="w-full bg-black p-4 flex items-center justify-between text-white">
       <div className="flex flex-row gap-6 items-center">

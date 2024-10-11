@@ -35,7 +35,7 @@ export class NotificationController {
         @Body() body: UpdateUserNotificationDto) {
             let token = headers["authorization"].replace("Bearer ", "");
             let decoded = await this.authService.verify(token);
-            console.log(body);
+            // console.log(body);
             return await this.notificationService.readUserNotification(decoded.uid, body);
     }
 
