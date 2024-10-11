@@ -1,5 +1,5 @@
 export class CreateAdminNotifcationDto {
-    user_email: string;
+    user_id: string;
     role: string;
     article_id: string;
     title: string;

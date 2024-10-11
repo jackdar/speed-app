@@ -1,26 +1,36 @@
-import { Controller, Get, Post, Param, Body, Request } from '@nestjs/common';
+import { Controller, Get, Post, Param, Body, Headers } from '@nestjs/common';
 import { ArticleService } from './article.service';
 import { CreateArticleDto } from './create-article.dto';
+import { AuthService } from '../auth/auth.service';
 
 @Controller()
 export class ArticleController {
   constructor(
     private readonly articleService: ArticleService,
+    private readonly authService: AuthService
   ) { }
-
 
   @Get('articles')
   async getArticles() {
     return await this.articleService.getArticles();
   }
 
-  @Get('/article/:id')
+  @Get('/articles/:id')
   async getArticleById(@Param('id') id: string) {
     return await this.articleService.getArticleById(id);
   }
 
-  @Post('article/new')
-  async addArticle(@Body() article: CreateArticleDto) {
-    return await this.articleService.createArticle(article);
+  @Post('articles/new')
+  async addArticle(
+    @Headers() headers, 
+    @Body() article: CreateArticleDto) {
+    let token = headers["authorization"];
+    let decoded = null;
+    if(token) {
+      token = token.replace("Bearer ", "");
+      decoded = await this.authService.verify(token);
+    }
+
+    return await this.articleService.createArticle(decoded?.uid, article);
   }
 }

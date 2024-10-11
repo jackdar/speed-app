@@ -22,33 +22,24 @@ export class ArticleService {
     return await this.articleModel.findById(id);
   }
 
-  async createArticle(article: CreateArticleDto): Promise<Article> {
+  async createArticle(uid: string ="no user", article: CreateArticleDto): Promise<Article> {
     try {
       const createResult = await this.articleModel.create(article);
-      // console.log(createResult);
-
+      console.log(uid);
       // Need to replace user_email with one retrieved from submitter
-      let temp: CreateAdminNotifcationDto = {
-        user_email: "123",
+      let adminNotification: CreateAdminNotifcationDto = {
+        user_id: uid,
         role: "moderator",
         article_id: createResult._id.toString(),
         article_title: createResult.title.toString(),
         title: "New article submitted",
         message: "View to get assigned",
         assigned: false,
-        assignee_id: "321"
+        assignee_id: ""
       }
-
-      // let temp2: CreateUserNotificationDto = {
-      //   user_email: "66f63c2eef9860fbca28953c",
-      //   article_id: createResult._id.toString(),
-      //   article_title: createResult.title.toString(),
-      //   title: "Article Approved",
-      //   message: "Your submitted article has been approved.",
-      //   read: false
-      // }
-      // console.log(temp2);
-      await this.notificationService.sendNotification(temp);
+      if(createResult){
+        await this.notificationService.sendNotification(adminNotification);
+      }
       return createResult;
     } catch (error) {
       throw new BadRequestException("Failed to create new article. " + error);

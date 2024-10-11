@@ -3,7 +3,7 @@ import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 @Schema()
 export class AdminNotification {
     @Prop({ required: true })
-    user_email: string;
+    user_id: string;
 
     @Prop({ required: true })
     article_id: string;
