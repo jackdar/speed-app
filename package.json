@@ -1,0 +1,19 @@
+{
+  "name": "speed-app",
+  "version": "1.0.0",
+  "license": "MIT",
+  "private": true,
+  "workspaces": [
+    "*"
+  ],
+  "scripts": {
+    "app": "npm run dev --workspace=frontend",
+    "server": "npm run start:dev --workspace=backend",
+    "build-app": "npm run build --workspace=frontend",
+    "build-server": "npm run build --workspace=backend",
+    "start": "concurrently --kill-others-on-fail \"npm run app\" \"npm run server\""
+  },
+  "dependencies": {
+    "concurrently": "^9.0.1"
+  }
+}
