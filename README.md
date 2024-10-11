@@ -69,19 +69,25 @@ Make sure the following dependencies have been installed:
    git clone https://github.com/pink-cute-scotland-donkeys/speed-app.git
    ```
 
-2. Move into the `frontend/` directory:
-
-   ```
-   cd frontend
-   ```
-
-3. Install the required packages for the Next.js frontend using your package manager of choice (here I used `npm`):
+2. Install the monorepo dependencies
 
    ```
    npm install
    ```
 
-4. A single environment variable must be setup for the frontend to be able to make requests to the backend:
+3. Move into the `frontend/` directory:
+
+   ```
+   cd frontend
+   ```
+
+4. Install the required packages for the Next.js frontend using your package manager of choice (here I used `npm`):
+
+   ```
+   npm install
+   ```
+
+5. A single environment variable must be setup for the frontend to be able to make requests to the backend:
 
    ```
    echo "NEXT_PUBLIC_API_URL=http://localhost:8787" >> .env
@@ -116,6 +122,13 @@ Make sure the following dependencies have been installed:
 <br />
 
 ## Usage
+The full application can be run with one script in the repository root directory:
+
+```
+npm start
+# or
+npm run start
+```
 
 ### Running the Next.js frontend
 ```
