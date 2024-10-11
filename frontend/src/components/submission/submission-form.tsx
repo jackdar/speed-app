@@ -49,11 +49,12 @@ const PaperForm = () => {
   const onSubmit = async (data: z.infer<typeof schema>) => {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/article/new`,
+        `${process.env.NEXT_PUBLIC_API_URL}/articles/new`,
         {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'Authorization': "Bearer " + localStorage.getItem("token")
           },
           credentials: 'include',
           body: JSON.stringify(data),

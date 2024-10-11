@@ -36,7 +36,7 @@ export default function Navbar() {
   const userLinks = roleHierarchy[user?.role || 'guest'];
 
   const filteredRoutes = routes.filter((route) =>
-    userLinks.some((permission) => route.permissions.includes(permission)),
+    userLinks.some((permission: string) => route.permissions.includes(permission)),
   );
 
   return (

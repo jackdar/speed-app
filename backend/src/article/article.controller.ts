@@ -1,11 +1,8 @@
 
-import { Controller, Get, Post, Param, Body, Headers } from '@nestjs/common';
-import { ArticleService } from './article.service';
-import { CreateArticleDto } from './create-article.dto';
-import { AuthService } from '../auth/auth.service';
-import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
+import { Controller, Get, Post, Put, Param, Body, Headers } from '@nestjs/common';
 import { ArticleService } from './article.service';
 import { CreateArticleDto } from './dto/create-article.dto';
+import { AuthService } from '../auth/auth.service';
 import { RatingDto } from './dto/rating.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
 
@@ -25,7 +22,6 @@ export class ArticleController {
   async getArticleById(@Param('id') id: string) {
     return await this.articleService.getArticleById(id);
   }
-
 
   @Put('/article/:id')
   async updateArticleStatus(
@@ -56,7 +52,8 @@ export class ArticleController {
     if(token) {
       token = token.replace("Bearer ", "");
       decoded = await this.authService.verify(token);
+      console.log(decoded);
     }
-
     return await this.articleService.createArticle(decoded?.uid, article);
+  }
 }

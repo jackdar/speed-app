@@ -43,7 +43,7 @@ export class ArticleService {
     }
   }
 
-  async createArticle(uid: string, createArticleDto: CreateArticleDto): Promise<Article> {
+  async createArticle(uid: string = "no user", createArticleDto: CreateArticleDto): Promise<Article> {
     try {
       const currentDate = new Date();
       const createResult = await this.articleModel.create({

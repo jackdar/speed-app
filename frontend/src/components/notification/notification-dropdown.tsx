@@ -40,7 +40,6 @@ const NotificationDropdown = ({user}: UserProps) => {
                 }
             });
             const data = await response.json();
-            console.log(data.reverse());
             setUserNotifications(data);
         }
 
