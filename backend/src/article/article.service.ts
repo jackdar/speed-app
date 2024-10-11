@@ -5,6 +5,7 @@ import { Model } from 'mongoose';
 import { Article } from './article.schema';
 import { CreateArticleDto } from './dto/create-article.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
+import { RatingDto } from './dto/rating.dto';
 
 @Injectable()
 export class ArticleService {
@@ -50,6 +51,48 @@ export class ArticleService {
       return createResult;
     } catch (error) {
       throw new BadRequestException('Failed to create new article. ' + error);
+    }
+  }
+
+  async rateArticle(id: string, ratingDto: RatingDto): Promise<Article> {
+    try {
+      const { userId, rating } = ratingDto;
+      const currentDate = new Date();
+
+      if (rating === 0) {
+        return await this.articleModel.findOneAndUpdate(
+          { _id: id, 'ratings.raterId': userId },
+          { $pull: { ratings: { raterId: userId } } },
+          { new: true },
+        );
+      }
+
+      const article = await this.articleModel.findOneAndUpdate(
+        { _id: id, 'ratings.raterId': userId },
+        {
+          $set: {
+            'ratings.$.rating': rating,
+            'ratings.$.ratedDate': currentDate,
+          },
+        },
+        { upsert: false, new: true },
+      );
+
+      if (!article) {
+        return await this.articleModel.findByIdAndUpdate(
+          id,
+          {
+            $push: {
+              ratings: { raterId: userId, rating, ratedDate: currentDate },
+            },
+          },
+          { new: true },
+        );
+      }
+
+      return article;
+    } catch (error) {
+      throw new BadRequestException('Failed to rate article. ' + error);
     }
   }
 }
