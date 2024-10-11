@@ -130,6 +130,12 @@ npm start
 # or
 npm run start
 ```
+The frontend and backend will now be running concurrently in the same terminal using the ports 3000 and 8787 respectively.
+
+**Frontend:** [http://localhost:3000](http://localhost:3000)
+**Backend:** [http://localhost:8787](http://localhost:8787)
+
+Otherwise the frontend and backend can be run separately with the following commands:
 
 ### Running the Next.js frontend
 ```
@@ -137,7 +143,6 @@ npm run dev
 # or
 next dev
 ```
-The frontend is now running on [http://localhost:3000](http://localhost:3000) (port 3000 by default)
 
 ### Running the Nest.js backend
 ```
@@ -145,7 +150,6 @@ npm start:dev
 # or
 nest start --watch
 ```
-The backend is now running on [http://localhost:8787](http://localhost:8787) (port 8787 by default)
 
 <br />
 
