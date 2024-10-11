@@ -133,7 +133,7 @@ npm run start
 ```
 The frontend and backend will now be running concurrently in the same terminal using the ports 3000 and 8787 respectively.
 
-**Frontend:** [http://localhost:3000](http://localhost:3000)
+**Frontend:** [http://localhost:3000](http://localhost:3000)<br />
 **Backend:** [http://localhost:8787](http://localhost:8787)
 
 Otherwise the frontend and backend can be run separately with the following commands:
