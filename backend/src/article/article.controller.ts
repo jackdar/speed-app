@@ -3,7 +3,6 @@ import { ArticleService } from './article.service';
 import { CreateArticleDto } from './dto/create-article.dto';
 import { RatingDto } from './dto/rating.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
-import { RatingDto } from './dto/rating.dto';
 
 @Controller()
 export class ArticleController {
