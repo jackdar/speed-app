@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { User } from 'src/user/user.schema';
+import { User } from '../user/user.schema';
 
 export class Rating {
   @Prop()

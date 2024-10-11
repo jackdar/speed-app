@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { User } from 'src/user/user.schema';
+import { User } from '../user/user.schema';
 import { ArticleController } from './article.controller';
 import { Article } from './article.schema';
 import { ArticleService } from './article.service';

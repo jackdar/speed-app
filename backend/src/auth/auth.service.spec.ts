@@ -1,8 +1,11 @@
 import { UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
+import { CreateUserDto } from 'src/user/dto/create-user.dto';
+import { UserDto } from 'src/user/dto/user.dto';
 import { UsersService } from '../user/user.service';
 import { AuthService } from './auth.service';
+import { LoginDto } from './dto/login.dto';
 
 const mockUsersService = {
   findByEmail: jest.fn(),
@@ -45,7 +48,8 @@ describe('AuthService', () => {
 
   describe('login', () => {
     it('should return a token if login is successful', async () => {
-      const mockUser = {
+      const mockUser: UserDto = {
+        _id: 'testid',
         email: 'test@example.com',
         password: 'hashedPassword',
         role: 'registered',
@@ -57,7 +61,7 @@ describe('AuthService', () => {
         articlesRated: [],
       };
 
-      const login = {
+      const login: LoginDto = {
         email: 'test@example.com',
         password: 'strongPassword',
       };
@@ -80,7 +84,7 @@ describe('AuthService', () => {
     });
 
     it('should throw an UnauthorizedException if user not found', async () => {
-      const login = {
+      const login: LoginDto = {
         email: 'test@example.com',
         password: 'strongPassword',
       };
@@ -93,7 +97,8 @@ describe('AuthService', () => {
     });
 
     it('should throw an UnauthorizedException if password is invalid', async () => {
-      const mockUser = {
+      const mockUser: UserDto = {
+        _id: 'testid',
         email: 'test@example.com',
         password: 'hashedPassword',
         role: 'registered',
@@ -120,7 +125,8 @@ describe('AuthService', () => {
 
   describe('register', () => {
     it('should register a user successfully', async () => {
-      const mockUser = {
+      const mockUser: UserDto = {
+        _id: 'testid',
         email: 'test@example.com',
         password: 'hashedPassword',
         role: 'registered',
@@ -132,11 +138,11 @@ describe('AuthService', () => {
         articlesRated: [],
       };
 
-      const user = {
+      const user: CreateUserDto = {
+        firstName: 'Test',
+        lastName: 'User',
         email: 'test@example.com',
         password: 'strongPassword',
-        name: 'Test User',
-        role: 'registered',
       };
 
       jest.spyOn(usersService, 'register').mockResolvedValue(mockUser);
