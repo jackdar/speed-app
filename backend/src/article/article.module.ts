@@ -15,8 +15,9 @@ import { AuthModule } from '../auth/auth.module';
       },
     ]),
     NotificationModule,
-    AuthModule
+    AuthModule,
   ],
+  
   controllers: [ArticleController],
   providers: [ArticleService],
   exports: [ArticleService],

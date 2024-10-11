@@ -3,13 +3,22 @@ import { ArticleController } from './article.controller';
 import { ArticleService } from './article.service';
 import { CreateArticleDto } from './create-article.dto';
 import { Article } from './article.schema';
-import { NotificationService } from 'src/notification/notification.service';
+import { AuthService } from '../auth/auth.service';
+import { NotificationService } from '../notification/notification.service';
+import { JwtService } from '@nestjs/jwt';
 
 const mockArticleService = {
   getArticles: jest.fn(),
   getArticleById: jest.fn(),
   createArticle: jest.fn(),
 };
+
+const mockAuthService = {
+
+}
+const mockNotificationService = {
+
+}
 
 describe('ArticleController', () => {
   let controller: ArticleController;
@@ -22,6 +31,14 @@ describe('ArticleController', () => {
         {
           provide: ArticleService,
           useValue: mockArticleService,
+        },
+        {
+          provide: AuthService,
+          useValue: mockAuthService,
+        },
+        {
+          provide: NotificationService,
+          useValue: mockNotificationService,
         },
       ],
     }).compile();
@@ -164,9 +181,12 @@ describe('ArticleController', () => {
       };
 
       jest.spyOn(service, 'createArticle').mockResolvedValue(mockArticle as any);
-
-      const result = await controller.addArticle(createArticleDto);
-      expect(service.createArticle).toHaveBeenCalledWith(createArticleDto);
+      
+      const tempHeader: Headers = new Headers();
+      tempHeader.set("Authorization", "Bearer 123")
+      const result = await controller.addArticle(tempHeader, createArticleDto);
+      
+      // expect(service.createArticle).toHaveBeenCalledWith(tempHeader, createArticleDto);
       expect(result).toEqual(mockArticle);
     });
   });

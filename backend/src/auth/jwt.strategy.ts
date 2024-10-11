@@ -22,7 +22,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     // console.log(user);
     // console.log(payload);
     return {
-      userId: user._id.toString(),
       firstName: user.firstName,
       lastName: user.lastName,
       email: payload.email,

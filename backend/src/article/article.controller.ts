@@ -22,7 +22,7 @@ export class ArticleController {
 
   @Post('articles/new')
   async addArticle(
-    @Headers() headers, 
+    @Headers() headers: Headers, 
     @Body() article: CreateArticleDto) {
     let token = headers["authorization"];
     let decoded = null;

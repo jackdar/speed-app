@@ -24,6 +24,7 @@ import { NotificationModule } from './notification/notification.module';
     ArticleModule,
     AuthModule,
     UserModule,
+    NotificationModule
   ],
   controllers: [AppController],
   providers: [AppService],

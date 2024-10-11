@@ -22,16 +22,16 @@ export class ArticleService {
     return await this.articleModel.findById(id);
   }
 
-  async createArticle(uid: string ="no user", article: CreateArticleDto): Promise<Article> {
+  async createArticle(uid: string = "no user", article: CreateArticleDto): Promise<Article> {
     try {
       const createResult = await this.articleModel.create(article);
-      console.log(uid);
+      // console.log(createResult._id.toString());
       // Need to replace user_email with one retrieved from submitter
       let adminNotification: CreateAdminNotifcationDto = {
         user_id: uid,
         role: "moderator",
         article_id: createResult._id.toString(),
-        article_title: createResult.title.toString(),
+        article_title: createResult.title,
         title: "New article submitted",
         message: "View to get assigned",
         assigned: false,
@@ -40,12 +40,12 @@ export class ArticleService {
       let temp2: CreateUserNotificationDto = {
         user_id: uid,
         article_id: createResult._id.toString(),
-        article_title: createResult.title.toString(),
+        article_title: createResult.title,
         title: "Article Approved",
         message: "Your submitted article has been approved.",
         read: false
       }
-      console.log(temp2);
+     
       if(createResult){
         await this.notificationService.sendNotification(adminNotification);
         await this.notificationService.sendNotification(temp2);
