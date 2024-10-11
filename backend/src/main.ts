@@ -9,7 +9,10 @@ async function bootstrap() {
   const port = configService.get<number>('PORT') || 8787;
 
   app.enableCors({
-    origin: process.env.FRONTEND_URL,
+    origin: [
+      process.env.FRONTEND_URL,
+      /pink-cute-scotland-donkeys\.vercel\.app$/,
+    ],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
   });

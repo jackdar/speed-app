@@ -1,9 +1,8 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { User } from '../user/user.schema';
 
 export class Rating {
   @Prop()
-  ratedBy: User;
+  raterId: string;
 
   @Prop()
   rating: number;
@@ -14,7 +13,7 @@ export class Rating {
 
 export class Moderation {
   @Prop()
-  moderatedBy: User;
+  moderatorId: string;
 
   @Prop()
   moderated: boolean;
@@ -31,7 +30,7 @@ export class Moderation {
 
 export class Analysis {
   @Prop()
-  analysedBy: User;
+  analyserId: string;
 
   @Prop()
   analysed: boolean;
@@ -84,19 +83,19 @@ export class Article {
   @Prop()
   isPosted: boolean;
 
-  @Prop()
+  @Prop({ type: Array, default: [] })
   ratings: Rating[];
 
-  @Prop({ type: Date })
+  @Prop({ type: Date, default: Date.now })
   createDate: Date;
 
   @Prop({ type: Date, default: Date.now })
   lastUpdateDate: Date;
 
-  @Prop()
+  @Prop({ type: Moderation, default: {} })
   moderation: Moderation;
 
-  @Prop()
+  @Prop({ type: Analysis, default: {} })
   analysis: Analysis;
 }
 
