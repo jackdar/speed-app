@@ -37,8 +37,18 @@ export class ArticleService {
         assigned: false,
         assignee_id: ""
       }
+      let temp2: CreateUserNotificationDto = {
+        user_id: uid,
+        article_id: createResult._id.toString(),
+        article_title: createResult.title.toString(),
+        title: "Article Approved",
+        message: "Your submitted article has been approved.",
+        read: false
+      }
+      console.log(temp2);
       if(createResult){
         await this.notificationService.sendNotification(adminNotification);
+        await this.notificationService.sendNotification(temp2);
       }
       return createResult;
     } catch (error) {

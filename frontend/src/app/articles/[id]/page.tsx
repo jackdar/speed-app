@@ -15,7 +15,7 @@ export default async function ArticlePage({
   params: { id: string };
 }) {
   const article: Article = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/article/${params.id}`,
+    `${process.env.NEXT_PUBLIC_API_URL}/articles/${params.id}`,
   )
     .then((res) => res.json())
     .catch(console.error);

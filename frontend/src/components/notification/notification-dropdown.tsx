@@ -27,7 +27,7 @@ const NotificationDropdown = ({user}: UserProps) => {
                 }
             });
             const data = await response.json();
-            setQueueNotifications(data);
+            setQueueNotifications(data.reverse());
         }
 
         fetchRoleNotification();
@@ -40,13 +40,13 @@ const NotificationDropdown = ({user}: UserProps) => {
                 }
             });
             const data = await response.json();
+            console.log(data.reverse());
             setUserNotifications(data);
         }
 
         fetchUserNotification();
 
     }, []);
-    
     return (
         <div>
             {user.role == "admin" || user.role == "moderator" || user.role == "analyst" ? (
@@ -61,7 +61,7 @@ const NotificationDropdown = ({user}: UserProps) => {
                     <DropdownMenuContent className="w-90 max-h-[400px] overflow-auto">
                         <div className="grid gap-4 p-4">
                             <h4 className="font-medium leading-none">Article Queue</h4>
-                            {queueNotifications.length != 0 ? queueNotifications.reverse().map((notification, index) => (
+                            {queueNotifications.length != 0 ? queueNotifications.map((notification, index) => (
                                 <div key={index}>
                                     <NotificationItem notification={notification} />
                                 <Separator />
@@ -84,7 +84,7 @@ const NotificationDropdown = ({user}: UserProps) => {
                 <DropdownMenuContent className="w-90 max-h-[400px] overflow-auto">
                     <div className="grid gap-4 p-4">
                         <h4 className="font-medium leading-none">Notifications</h4>
-                        {userNotifications.length != 0 ? userNotifications.reverse().map((notification, index) => (
+                        {userNotifications.length != 0 ? userNotifications.map((notification, index) => (
                             <div key={index}>
                                 <NotificationItem notification={notification} />
                             <Separator />
