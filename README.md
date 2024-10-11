@@ -48,8 +48,7 @@ Key packages and tools used include:
 The official production version of the SPEED app is hosted and available at [https://speed-app-nu.vercel.app](https://speed-app-nu.vercel.app)
 
 The following infrastructure is being used:
- - **Vercel:** Ephemeral serverless hosting the Next.js frontend
- - **Railway:** Long-lived service hosting the Nest.js backend
+ - **Vercel:** Ephemeral serverless hosting both the frontend and backend
  - **MongoDB Atlas:** MongoDB M0 cluster hosted on AWS
 
 <br />
