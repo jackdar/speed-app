@@ -1,5 +1,4 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { User } from '../user/user.schema';
 import { ArticleController } from './article.controller';
 import { Article } from './article.schema';
 import { ArticleService } from './article.service';
@@ -50,12 +49,12 @@ describe('ArticleController', () => {
           isPosted: true,
           ratings: [
             {
-              ratedBy: new User(),
+              raterId: '1',
               rating: 4,
               ratedDate: new Date(),
             },
             {
-              ratedBy: new User(),
+              raterId: '1',
               rating: 5,
               ratedDate: new Date(),
             },
@@ -63,14 +62,14 @@ describe('ArticleController', () => {
           createDate: new Date(),
           lastUpdateDate: new Date(),
           moderation: {
-            moderatedBy: new User(),
+            moderatorId: '1',
             moderated: true,
             status: 'approved',
             comments: 'well done',
             moderatedDate: new Date(),
           },
           analysis: {
-            analysedBy: new User(),
+            analyserId: '1',
             analysed: false,
             status: 'pending',
             summary: '',
@@ -92,12 +91,12 @@ describe('ArticleController', () => {
           isPosted: true,
           ratings: [
             {
-              ratedBy: new User(),
+              raterId: '1',
               rating: 4,
               ratedDate: new Date(),
             },
             {
-              ratedBy: new User(),
+              raterId: '1',
               rating: 5,
               ratedDate: new Date(),
             },
@@ -105,14 +104,14 @@ describe('ArticleController', () => {
           createDate: new Date(),
           lastUpdateDate: new Date(),
           moderation: {
-            moderatedBy: new User(),
+            moderatorId: '1',
             moderated: true,
             status: 'approved',
             comments: 'well done',
             moderatedDate: new Date(),
           },
           analysis: {
-            analysedBy: new User(),
+            analyserId: '1',
             analysed: false,
             status: 'pending',
             summary: '',
@@ -146,12 +145,12 @@ describe('ArticleController', () => {
         isPosted: true,
         ratings: [
           {
-            ratedBy: new User(),
+            raterId: '1',
             rating: 4,
             ratedDate: new Date(),
           },
           {
-            ratedBy: new User(),
+            raterId: '1',
             rating: 5,
             ratedDate: new Date(),
           },
@@ -159,14 +158,14 @@ describe('ArticleController', () => {
         createDate: new Date(),
         lastUpdateDate: new Date(),
         moderation: {
-          moderatedBy: new User(),
+          moderatorId: '1',
           moderated: true,
           status: 'approved',
           comments: 'well done',
           moderatedDate: new Date(),
         },
         analysis: {
-          analysedBy: new User(),
+          analyserId: '1',
           analysed: false,
           status: 'pending',
           summary: '',
@@ -205,12 +204,12 @@ describe('ArticleController', () => {
         ...createArticleDto,
         ratings: [
           {
-            ratedBy: new User(),
+            raterId: '1',
             rating: 4,
             ratedDate: new Date(),
           },
           {
-            ratedBy: new User(),
+            raterId: '1',
             rating: 5,
             ratedDate: new Date(),
           },
@@ -218,14 +217,14 @@ describe('ArticleController', () => {
         createDate: new Date(),
         lastUpdateDate: new Date(),
         moderation: {
-          moderatedBy: new User(),
+          moderatorId: '1',
           moderated: true,
           status: 'approved',
           comments: 'well done',
           moderatedDate: new Date(),
         },
         analysis: {
-          analysedBy: new User(),
+          analyserId: '1',
           analysed: false,
           status: 'pending',
           summary: '',
