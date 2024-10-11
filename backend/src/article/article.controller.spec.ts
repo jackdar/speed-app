@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ArticleController } from './article.controller';
 import { Article } from './article.schema';
 import { ArticleService } from './article.service';
-import { CreateArticleDto } from './create-article.dto';
+import { CreateArticleDto } from './dto/create-article.dto';
 
 const mockArticleService = {
   getArticles: jest.fn(),
@@ -47,17 +47,35 @@ describe('ArticleController', () => {
           pagesEnd: 10,
           doi: '10.1234/test.doi',
           isPosted: true,
+          ratings: [
+            {
+              raterId: '1',
+              rating: 4,
+              ratedDate: new Date(),
+            },
+            {
+              raterId: '1',
+              rating: 5,
+              ratedDate: new Date(),
+            },
+          ],
           createDate: new Date(),
           lastUpdateDate: new Date(),
-          moderationDetails: {
-            moderatorId: '123',
+          moderation: {
+            moderatorId: '1',
             moderated: true,
-            moderationPassed: true,
+            status: 'approved',
+            comments: 'well done',
+            moderatedDate: new Date(),
           },
-          analysisDetails: {
-            analystId: '123',
-            analyzed: true,
-            analyzePassed: true,
+          analysis: {
+            analyserId: '1',
+            analysed: false,
+            status: 'pending',
+            summary: '',
+            keyFindings: [],
+            methodology: '',
+            analysedDate: new Date(),
           },
         },
         {
@@ -71,17 +89,35 @@ describe('ArticleController', () => {
           pagesEnd: 20,
           doi: '10.1234/test2.doi',
           isPosted: true,
+          ratings: [
+            {
+              raterId: '1',
+              rating: 4,
+              ratedDate: new Date(),
+            },
+            {
+              raterId: '1',
+              rating: 5,
+              ratedDate: new Date(),
+            },
+          ],
           createDate: new Date(),
           lastUpdateDate: new Date(),
-          moderationDetails: {
-            moderatorId: '321',
-            moderated: false,
-            moderationPassed: false,
+          moderation: {
+            moderatorId: '1',
+            moderated: true,
+            status: 'approved',
+            comments: 'well done',
+            moderatedDate: new Date(),
           },
-          analysisDetails: {
-            analystId: '321',
-            analyzed: false,
-            analyzePassed: false,
+          analysis: {
+            analyserId: '1',
+            analysed: false,
+            status: 'pending',
+            summary: '',
+            keyFindings: [],
+            methodology: '',
+            analysedDate: new Date(),
           },
         },
       ];
@@ -107,17 +143,35 @@ describe('ArticleController', () => {
         pagesEnd: 10,
         doi: '10.1234/test.doi',
         isPosted: true,
+        ratings: [
+          {
+            raterId: '1',
+            rating: 4,
+            ratedDate: new Date(),
+          },
+          {
+            raterId: '1',
+            rating: 5,
+            ratedDate: new Date(),
+          },
+        ],
         createDate: new Date(),
         lastUpdateDate: new Date(),
-        moderationDetails: {
-          moderatorId: '123',
+        moderation: {
+          moderatorId: '1',
           moderated: true,
-          moderationPassed: true,
+          status: 'approved',
+          comments: 'well done',
+          moderatedDate: new Date(),
         },
-        analysisDetails: {
-          analystId: '123',
-          analyzed: true,
-          analyzePassed: true,
+        analysis: {
+          analyserId: '1',
+          analysed: false,
+          status: 'pending',
+          summary: '',
+          keyFindings: [],
+          methodology: '',
+          analysedDate: new Date(),
         },
       };
 
@@ -148,17 +202,35 @@ describe('ArticleController', () => {
 
       const mockArticle: Article = {
         ...createArticleDto,
+        ratings: [
+          {
+            raterId: '1',
+            rating: 4,
+            ratedDate: new Date(),
+          },
+          {
+            raterId: '1',
+            rating: 5,
+            ratedDate: new Date(),
+          },
+        ],
         createDate: new Date(),
         lastUpdateDate: new Date(),
-        moderationDetails: {
-          moderatorId: '123',
-          moderated: false,
-          moderationPassed: false,
+        moderation: {
+          moderatorId: '1',
+          moderated: true,
+          status: 'approved',
+          comments: 'well done',
+          moderatedDate: new Date(),
         },
-        analysisDetails: {
-          analystId: '123',
-          analyzed: false,
-          analyzePassed: false,
+        analysis: {
+          analyserId: '1',
+          analysed: false,
+          status: 'pending',
+          summary: '',
+          keyFindings: [],
+          methodology: '',
+          analysedDate: new Date(),
         },
       };
 

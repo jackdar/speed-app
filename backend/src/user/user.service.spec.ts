@@ -6,12 +6,13 @@ import { User, UserDocument } from './user.schema';
 import { UsersService } from './user.service';
 
 const mockUser: any = {
-  _id: '1',
+  id: undefined,
+  firstName: 'Test',
+  lastName: 'User',
   email: 'test@example.com',
   password: 'hashedPassword',
   role: 'registered',
-  firstName: 'Test',
-  lastName: 'User',
+  bio: '',
   articlesPublished: [],
   articlesModerated: [],
   articlesAnalysed: [],

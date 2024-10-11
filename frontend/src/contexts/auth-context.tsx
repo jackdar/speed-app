@@ -7,19 +7,18 @@ import { createContext, ReactNode, useEffect, useState } from 'react';
 
 interface AuthContextType {
   user: User | null;
-  loading: boolean;
+  token: string | null;
   error: string | null;
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
+  fetchProfile: () => Promise<void>;
 }
 
-export const AuthContext = createContext<AuthContextType | undefined>(
-  undefined,
-);
+export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [token, setToken] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
@@ -30,32 +29,28 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
   const fetchProfile = async () => {
     const token = localStorage.getItem('token');
 
-    if (!token) {
-      setLoading(false);
-      return;
-    }
+    if (!token) return;
+
+    setToken(token);
 
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/auth/profile`,
-        {
-          method: 'GET',
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/profile`, {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${token}`,
         },
-      );
+      });
 
       if (res.ok) {
         const data = await res.json();
         setUser(data);
       } else {
+        localStorage.removeItem('token');
         setError('Failed to load profile');
       }
     } catch (err) {
+      localStorage.removeItem('token');
       setError('An error occurred');
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -92,14 +87,10 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
       variant: 'default',
       title: 'Logged out',
       description: 'You have been logged out',
-    })
+    });
   };
 
-  return (
-    <AuthContext.Provider value={{ user, loading, error, login, logout }}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={{ user, token, error, login, logout, fetchProfile }}>{children}</AuthContext.Provider>;
 };
 
 export default AuthProvider;

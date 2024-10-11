@@ -1,5 +1,16 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
+export class Rating {
+  @Prop()
+  raterId: string;
+
+  @Prop()
+  rating: number;
+
+  @Prop({ type: Date })
+  ratedDate: Date;
+}
+
 export class Moderation {
   @Prop()
   moderatorId: string;
@@ -8,18 +19,36 @@ export class Moderation {
   moderated: boolean;
 
   @Prop()
-  moderationPassed: boolean;
+  status: 'not moderated' | 'pending' | 'approved' | 'rejected';
+
+  @Prop()
+  comments: string;
+
+  @Prop({ type: Date })
+  moderatedDate: Date;
 }
 
 export class Analysis {
   @Prop()
-  analystId: string;
+  analyserId: string;
 
   @Prop()
-  analyzed: boolean;
+  analysed: boolean;
 
   @Prop()
-  analyzePassed: boolean;
+  status: 'not analysed' | 'pending' | 'approved' | 'rejected';
+
+  @Prop()
+  summary: string;
+
+  @Prop()
+  keyFindings: string[];
+
+  @Prop()
+  methodology: string;
+
+  @Prop({ type: Date })
+  analysedDate: Date;
 }
 
 @Schema()
@@ -54,17 +83,20 @@ export class Article {
   @Prop()
   isPosted: boolean;
 
-  @Prop({ type: Date })
+  @Prop({ type: Array, default: [] })
+  ratings: Rating[];
+
+  @Prop({ type: Date, default: Date.now })
   createDate: Date;
 
   @Prop({ type: Date, default: Date.now })
   lastUpdateDate: Date;
 
-  @Prop()
-  moderationDetails: Moderation;
+  @Prop({ type: Moderation, default: {} })
+  moderation: Moderation;
 
-  @Prop()
-  analysisDetails: Analysis;
+  @Prop({ type: Analysis, default: {} })
+  analysis: Analysis;
 }
 
 export const ArticleSchema = SchemaFactory.createForClass(Article);
