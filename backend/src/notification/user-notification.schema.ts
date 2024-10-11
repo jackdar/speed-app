@@ -23,7 +23,7 @@ export class UserNotification {
     @Prop({ type: Date })
     createdAt: Date;
 
-    @Prop({ type: Date })
+    @Prop({ type: Date, default: Date.now })
     updatedAt: Date;
 }
 

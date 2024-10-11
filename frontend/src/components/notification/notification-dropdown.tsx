@@ -5,25 +5,32 @@ import { Button } from "@/components/ui/button"
 import { useEffect, useState } from "react";
 import NotificationItem from "./notification-item";
 import { Separator } from "../ui/separator";
+import { AdminNotifcation } from "@/app/types/notification/admin-notification";
+import { UserNotification } from "@/app/types/notification/user-notification";
+import { AuthUser } from "@/app/hooks/useAuth";
 
-const NotificationDropdown = ({ user }: any) => {
+interface UserProps {
+    user: AuthUser
+}
+
+const NotificationDropdown = ({user}: UserProps) => {
     // console.log(user);
-    const [notifications, setNotifications] = useState<any>();
-    const [userNotifications, setUserNotifications] = useState<any>();
+    const [queueNotifications, setQueueNotifications] = useState<AdminNotifcation[]>([]);
+    const [userNotifications, setUserNotifications] = useState<UserNotification[]>([]);
 
     useEffect(() => {
-        const fetchNotification = async () => {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/notifications/moderator`, {
+        const fetchRoleNotification = async () => {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/notifications/queue`, {
                 method: "GET",
                 headers: {
                     "Authorization": "Bearer " + localStorage.getItem("token")
                 }
             });
             const data = await response.json();
-            setNotifications(data);
+            setQueueNotifications(data);
         }
 
-        fetchNotification();
+        fetchRoleNotification();
 
         const fetchUserNotification = async () => {
             const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/notifications`, {
@@ -37,49 +44,54 @@ const NotificationDropdown = ({ user }: any) => {
         }
 
         fetchUserNotification();
-    }, []);
 
+    }, []);
+    
     return (
         <div>
+            {user.role == "admin" || user.role == "moderator" || user.role == "analyst" ? (
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button variant="ghost">
+                            <BellIcon className="h-4 w-4 mr-2" />
+                            Article Queue
+                            {queueNotifications.length ? ` (${queueNotifications.length})` : ""}
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="w-90 max-h-[400px] overflow-auto">
+                        <div className="grid gap-4 p-4">
+                            <h4 className="font-medium leading-none">Article Queue</h4>
+                            {queueNotifications.length != 0 ? queueNotifications.reverse().map((notification, index) => (
+                                <div key={index}>
+                                    <NotificationItem notification={notification} />
+                                <Separator />
+                            </div>
+                            )): (
+                                <p className="text-sm">No Articles in Queue</p>
+                            )}
+                        </div>
+                    </DropdownMenuContent>
+                </DropdownMenu>
+            ): ""}
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                     <Button variant="ghost">
                         <BellIcon className="h-4 w-4 mr-2" />
                         Notifications
-                        {notifications != null ? ` (${notifications.length})` : ""}
+                        {userNotifications.length ? ` (${userNotifications.length})` : ""}
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-90 max-h-[400px] overflow-auto">
                     <div className="grid gap-4 p-4">
                         <h4 className="font-medium leading-none">Notifications</h4>
-                        {notifications != null && Object.keys(notifications).reverse().map((index) => (
+                        {userNotifications.length != 0 ? userNotifications.reverse().map((notification, index) => (
                             <div key={index}>
-                                <NotificationItem notification={notifications[index]} />
-                                <Separator />
-                            </div>
-                        ))}
-
-                    </div>
-                </DropdownMenuContent>
-            </DropdownMenu>
-            <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                    <Button variant="ghost">
-                        <BellIcon className="h-4 w-4 mr-2" />
-                        User Noti
-                        {userNotifications != null ? ` (${userNotifications.length})` : ""}
-                    </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-90 max-h-[400px] overflow-auto">
-                    <div className="grid gap-4 p-4">
-                        <h4 className="font-medium leading-none">Notifications</h4>
-                        {userNotifications != null && Object.keys(userNotifications).reverse().map((index) => (
-                            <div key={index}>
-                                <NotificationItem notification={userNotifications[index]} />
-                                <Separator />
-                            </div>
-                        ))}
-
+                                <NotificationItem notification={notification} />
+                            <Separator />
+                         </div>
+                        )): (
+                            <p className="text-sm">No notifications</p>
+                        )}
                     </div>
                 </DropdownMenuContent>
             </DropdownMenu>

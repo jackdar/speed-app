@@ -8,7 +8,7 @@ import NotificationDropdown from "./notification/notification-dropdown";
 
 export default function Navbar() {
   const { user, logout } = useAuth();
-  console.log(user?.userId)
+
   return (
     <nav className="w-full bg-black p-4 flex items-center justify-between text-white">
       <div className="flex flex-row gap-6 items-center">

@@ -1,5 +1,5 @@
 export class CreateUserNotificationDto {
-    user_email: string;
+    user_id: string;
     article_id: string;
     article_title: string;
     title: string;
