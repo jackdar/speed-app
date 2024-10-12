@@ -5,6 +5,9 @@ export type UserDocument = User & Document;
 
 @Schema()
 export class User {
+  @Prop({})
+  refreshToken: string;
+
   @Prop({ required: true })
   firstName: string;
 

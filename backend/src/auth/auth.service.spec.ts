@@ -80,7 +80,7 @@ describe('AuthService', () => {
         email: mockUser.email,
         role: mockUser.role,
       });
-      expect(result).toEqual({ access_token: 'token' });
+      expect(result).toEqual({ access_token: 'token', refresh_token: 'refresh-token' });
     });
 
     it('should throw an UnauthorizedException if user not found', async () => {

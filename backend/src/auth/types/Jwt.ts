@@ -3,6 +3,7 @@ export type JwtPayload = {
   role: string;
 };
 
-export type JwtAccessToken = {
+export type JwtToken = {
   access_token: string;
+  refresh_token: string;
 };

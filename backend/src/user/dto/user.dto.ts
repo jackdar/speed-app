@@ -2,6 +2,7 @@ import { UserDocument } from '../user.schema';
 
 export class UserDto {
   _id: string;
+  refreshToken: string | null;
   firstName: string;
   lastName: string;
   email: string;
@@ -15,6 +16,7 @@ export class UserDto {
 
   constructor(user: UserDocument) {
     this._id = user._id as string;
+    this.refreshToken = user.refreshToken;
     this.firstName = user.firstName;
     this.lastName = user.lastName;
     this.email = user.email;

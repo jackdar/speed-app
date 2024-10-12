@@ -3,7 +3,7 @@ import { CreateUserDto } from '../user/dto/create-user.dto';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
-import { JwtAccessToken } from './types/Jwt';
+import { JwtToken } from './types/Jwt';
 
 const mockAuthService = {
   login: jest.fn(),
@@ -37,7 +37,7 @@ describe('AuthController', () => {
         email: 'test@example.com',
         password: 'password',
       };
-      const mockToken: JwtAccessToken = { access_token: 'jwt-token' };
+      const mockToken: JwtToken = { access_token: 'jwt-token', refresh_token: 'refresh-token' };
 
       jest.spyOn(mockAuthService, 'login').mockResolvedValue(mockToken);
 
