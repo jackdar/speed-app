@@ -1,11 +1,11 @@
 'use client';
 
-import { useAuth } from "../app/hooks/useAuth";
 import { User as UserIcon } from "lucide-react";
 import Link from "next/link";
 import NotificationDropdown from "./notification/notification-dropdown";
 import { roleHierarchy } from '@/lib/with-auth';
 import { Button } from './ui/button';
+import { useAuth } from "@/hooks/use-auth";
 
 const routes = [
   {

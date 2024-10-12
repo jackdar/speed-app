@@ -5,8 +5,8 @@ import { Button } from "@/components/ui/button"
 import { useEffect, useState } from "react";
 import NotificationItem from "./notification-item";
 import { Separator } from "../ui/separator";
-import { AdminNotifcation } from "@/app/types/notification/admin-notification";
-import { UserNotification } from "@/app/types/notification/user-notification";
+import { AdminNotifcation } from "@/types/notification/admin-notification";
+import { UserNotification } from "@/types/notification/user-notification";
 import { AuthUser } from "@/app/hooks/useAuth";
 
 interface UserProps {

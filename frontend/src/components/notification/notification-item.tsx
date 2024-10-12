@@ -1,7 +1,7 @@
-import { AdminNotifcation } from "@/app/types/notification/admin-notification";
+import { AdminNotifcation } from "@/types/notification/admin-notification";
 import { Button } from "../ui/button";
 import Link from "next/link";
-import { UserNotification } from "@/app/types/notification/user-notification";
+import { UserNotification } from "@/types/notification/user-notification";
 import { useRouter } from "next/navigation";
 
 interface Props {

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { AdminNotifcation } from "../types/notification/admin-notification";
+import { AdminNotifcation } from "../../types/notification/admin-notification";
 
 const NotificationPage = () => {
   const [notifications, setNotifications] = useState<AdminNotifcation>(
