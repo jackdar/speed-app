@@ -16,13 +16,16 @@ export default function ArticleFeedCard({ article }: { article: Article }) {
   useEffect(() => {
     setOverallRating(ratings.length === 0 ? 0 : ratings.map((rating) => rating.rating).reduce((a, b) => a + b, 0) / ratings.length);
     setUserRating(ratings.find((rating) => rating.raterId === user?._id)?.rating || 0);
+
+    console.log(ratings);
   }, [ratings, user]);
 
   const handleRateArticle = async (rating: number) => {
     const originalRatings = ratings;
     if (userRating === rating) rating = 0;
 
-    setRatings((prevRatings) => prevRatings.map((r) => (r.raterId === user?._id ? { ...r, rating } : r)));
+    if (rating === 0) setRatings((prevRatings) => prevRatings.filter((r) => r.raterId !== user?._id));
+    else setRatings((prevRatings) => prevRatings.map((r) => (r.raterId === user?._id ? { ...r, rating } : r)));
 
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/article/${article._id}/rate`, {
