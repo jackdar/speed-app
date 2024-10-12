@@ -1,4 +1,4 @@
-import { Controller, Get, Param, UseGuards, Request, Headers, ExecutionContext, Put, Body } from "@nestjs/common";
+import { Controller, Get, Param, UseGuards, Request, Headers, ExecutionContext, Put, Body, Req } from "@nestjs/common";
 import { NotificationService } from "./notification.service";
 import { JwtAuthGuard } from "../auth/jwt-auth.guard";
 import { AuthService } from "../auth/auth.service";
@@ -14,37 +14,26 @@ export class NotificationController {
     
 
     @Get('notifications/queue')
-    async getModeratorNotification(@Headers() headers) {
-        let token = headers["authorization"].replace("Bearer ", "");
-        let decoded = await this.authService.verify(token);
-        return await this.notificationService.getUnassignedNotifications(decoded.role);
+    async getModeratorNotification(@Req() req) {
+        return await this.notificationService.getUnassignedNotifications(req.user.role);
     }
 
     @Get('notifications')
-    async getUserNotificationById(@Headers() headers) {
-        // console.log(headers)
-        let token = headers["authorization"].replace('Bearer ', "");
-        let decoded = await this.authService.verify(token);
-        let id = decoded.uid;
-        return await this.notificationService.getUserNotificationsById(id);
+    async getUserNotificationById(@Req() req) {
+        return await this.notificationService.getUserNotificationsById(req.user._id);
     }
 
     @Put('notifications/read')
     async readUserNotification(
-        @Headers() headers,
+        @Req() req,
         @Body() body: UpdateUserNotificationDto) {
-            let token = headers["authorization"].replace("Bearer ", "");
-            let decoded = await this.authService.verify(token);
-            // console.log(body);
-            return await this.notificationService.readUserNotification(decoded.uid, body);
+            return await this.notificationService.readUserNotification(req.user._id, body);
     }
 
     @Put('notifications/assign')
     async assignAdminNotification(
-        @Headers() headers,
+        @Req() req,
         @Body() body ) {
-            let token = headers["authorization"].replace("Bearer ", "");
-            let decoded = await this.authService.verify(token);
-            return await this.notificationService.assignAdminNotification(decoded.uid, body);
+            return await this.notificationService.assignAdminNotification(req.user._id, body);
         }
 }
