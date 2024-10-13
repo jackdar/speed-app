@@ -54,6 +54,9 @@ export class Analysis {
 @Schema()
 export class Article {
   @Prop({ required: true })
+  submitterId: string;
+
+  @Prop({ required: true })
   title: string;
 
   @Prop({ required: true })

@@ -1,4 +1,4 @@
-import { User } from 'src/user/user.schema';
+import { User } from '../../user/user.schema';
 
 export class UpdateAnalysisDto {
   analysedBy: User;

@@ -77,6 +77,7 @@ describe('ArticleController', () => {
             methodology: '',
             analysedDate: new Date(),
           },
+          submitterId: '1',
         },
         {
           title: 'Title 2',
@@ -119,6 +120,7 @@ describe('ArticleController', () => {
             methodology: '',
             analysedDate: new Date(),
           },
+          submitterId: '2',
         },
       ];
 
@@ -173,6 +175,7 @@ describe('ArticleController', () => {
           methodology: '',
           analysedDate: new Date(),
         },
+        submitterId: '3',
       };
 
       jest.spyOn(service, 'getArticleById').mockResolvedValue(mockArticle);
@@ -198,6 +201,7 @@ describe('ArticleController', () => {
         isPosted: true,
         dateCreated: new Date(),
         dateUpdated: new Date(),
+        submitterId: '3',
       };
 
       const mockArticle: Article = {

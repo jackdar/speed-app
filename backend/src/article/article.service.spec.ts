@@ -71,6 +71,7 @@ describe('ArticleService', () => {
   describe('createArticle', () => {
     it('should create and return a new article', async () => {
       const createArticleDto: CreateArticleDto = {
+        submitterId: '1',
         title: 'New Article',
         author: 'New Author',
         publisher: 'New Publisher',
@@ -96,6 +97,7 @@ describe('ArticleService', () => {
 
     it('should throw a BadRequestException on failure', async () => {
       const createArticleDto: CreateArticleDto = {
+        submitterId: '1',
         title: 'New Article',
         author: 'New Author',
         publisher: 'New Publisher',
@@ -123,6 +125,7 @@ describe('ArticleService', () => {
       const mockArticleId = '123';
 
       const mockNewArticle: any = {
+        submitterId: '1',
         title: 'new title',
         author: 'new author',
         publisher: 'new publisher',
@@ -153,7 +156,7 @@ describe('ArticleService', () => {
         .mockImplementation(async (id, data) => {
           expect(id).toBe(mockArticleId);
           expect(data).toEqual(mockNewArticle);
-          return { id: mockArticleId, ...data };
+          return { id: mockArticleId, submitterId: data.submitterId, ...data };
         });
 
       const updatedResult = await service.updateArticle('123', mockNewArticle);

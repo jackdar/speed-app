@@ -2,7 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Article, Rating } from './article.schema';
+import { Article } from './article.schema';
 import { CreateArticleDto } from './dto/create-article.dto';
 import { RatingDto } from './dto/rating.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
