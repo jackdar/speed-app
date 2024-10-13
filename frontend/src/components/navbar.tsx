@@ -37,7 +37,7 @@ export default function Navbar() {
   const filteredRoutes = routes.filter((route) => userLinks.some((permission) => route.permissions.includes(permission)));
 
   return (
-    <nav className="w-full bg-black p-4 flex items-center justify-between text-white">
+    <nav className="sticky top-0 w-full bg-black p-4 flex items-center justify-between text-white z-50">
       <div className="flex flex-row gap-6 items-center">
         <Link href="/">
           <p className="text-3xl font-light">Speed</p>
