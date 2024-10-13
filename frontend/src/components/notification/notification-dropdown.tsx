@@ -5,6 +5,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/compon
 import { AdminNotifcation } from "@/types/notification/admin-notification";
 import { UserNotification } from "@/types/notification/user-notification";
 import { User } from "@/types/user";
+import { Bell, ShieldAlert } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Separator } from "../ui/separator";
 import NotificationItem from "./notification-item";
@@ -48,14 +49,16 @@ const NotificationDropdown = ({user, token}: UserProps) => {
 
     }, [token]);
     return (
-        <div>
+        <div className="flex flex-row gap-4">
             {user.role == "admin" || user.role == "moderator" || user.role == "analyst" ? (
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                        <Button variant="ghost">
-                            <BellIcon className="h-4 w-4 mr-2" />
-                            Article Queue
+                        <Button variant="ghost" className="relative">
+                            <ShieldAlert
+                             className="h-4 w-4 mr-2" />
+                            <p className="hidden xl:block">Article Queue</p>
                             {queueNotifications.length ? ` (${queueNotifications.length})` : ""}
+                            <span className="absolute top-1 right-1 transform translate-x-1/2 -translate-y-1/2 h-4 w-4 rounded-full bg-red-500" />
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="w-90 max-h-[400px] overflow-auto">
@@ -75,9 +78,9 @@ const NotificationDropdown = ({user, token}: UserProps) => {
             ): ""}
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                    <Button variant="ghost">
-                        <BellIcon className="h-4 w-4 mr-2" />
-                        Notifications
+                    <Button variant="ghost" className="relative">
+                        <Bell className="h-4 w-4 lg:mr-2" />
+                        <p className="hidden xl:block">Notifications</p>
                         {userNotifications.length ? ` (${userNotifications.length})` : ""}
                     </Button>
                 </DropdownMenuTrigger>
