@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { UsersService } from '../user/user.service';
 import { ArticleController } from './article.controller';
 import { Article } from './article.schema';
 import { ArticleService } from './article.service';
@@ -8,6 +9,10 @@ const mockArticleService = {
   getArticles: jest.fn(),
   getArticleById: jest.fn(),
   createArticle: jest.fn(),
+};
+
+const mockUsersService = {
+  rateArticle: jest.fn(),
 };
 
 describe('ArticleController', () => {
@@ -21,6 +26,10 @@ describe('ArticleController', () => {
         {
           provide: ArticleService,
           useValue: mockArticleService,
+        },
+        {
+          provide: UsersService,
+          useValue: mockUsersService,
         },
       ],
     }).compile();
