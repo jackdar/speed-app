@@ -31,7 +31,7 @@ const routes = [
 ];
 
 export default function Navbar() {
-  const { user, logout } = useAuth();
+  const { user, token, logout } = useAuth();
 
  
   let userLinks: ("guest" | "registered" | "moderator" | "analyst" | "admin")[];
@@ -59,8 +59,8 @@ export default function Navbar() {
         </div>
       </div>
       {/* <p>Notifications ({notifications.length})</p> */}
-      {user != null ? (
-        <NotificationDropdown user={user} />
+      {user != null && token != null ? (
+        <NotificationDropdown {...{user, token}} />
       ) : ""
       }
       <div className="flex flex-row gap-4">

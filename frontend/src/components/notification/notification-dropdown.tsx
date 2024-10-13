@@ -7,13 +7,14 @@ import NotificationItem from "./notification-item";
 import { Separator } from "../ui/separator";
 import { AdminNotifcation } from "@/types/notification/admin-notification";
 import { UserNotification } from "@/types/notification/user-notification";
-import { AuthUser } from "@/app/hooks/useAuth";
+import { User } from "@/types/user";;
 
 interface UserProps {
-    user: AuthUser
+    user: User;
+    token: string;
 }
 
-const NotificationDropdown = ({user}: UserProps) => {
+const NotificationDropdown = ({user, token}: UserProps) => {
     // console.log(user);
     const [queueNotifications, setQueueNotifications] = useState<AdminNotifcation[]>([]);
     const [userNotifications, setUserNotifications] = useState<UserNotification[]>([]);
@@ -23,7 +24,7 @@ const NotificationDropdown = ({user}: UserProps) => {
             const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/notifications/queue`, {
                 method: "GET",
                 headers: {
-                    "Authorization": "Bearer " + localStorage.getItem("token")
+                    "Authorization": `Bearer ${token}`
                 }
             });
             const data = await response.json();
@@ -36,7 +37,7 @@ const NotificationDropdown = ({user}: UserProps) => {
             const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/notifications`, {
                 method: "GET",
                 headers: {
-                    "Authorization": "Bearer " + localStorage.getItem("token")
+                    "Authorization": `Bearer ${token}`
                 }
             });
             const data = await response.json();
