@@ -33,8 +33,6 @@ const LoginPage = () => {
       }
     })
 
-
-
   const onSubmit = async (data: z.infer<typeof loginSchema>) => {
     login(data.email, data.password);
   }
