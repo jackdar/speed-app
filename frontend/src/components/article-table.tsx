@@ -28,10 +28,20 @@ import {
   TableHeader,
   TableRow,
 } from './ui/table';
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination"
 
 export default function ArticleTable({ data }: { data: Article[] }) {
   const router = useRouter();
   const [sorting, setSorting] = useState<SortingState>([]);
+  const [currentPage, setCurrentPage] = useState<number>(1);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [selectedFilter, setSelectedFilter] = useState<string>('title');
 
@@ -83,6 +93,10 @@ export default function ArticleTable({ data }: { data: Article[] }) {
     state: {
       columnFilters,
       sorting,
+      pagination: {
+        pageIndex: currentPage,
+        pageSize: 10
+      }
     },
     initialState: {
       columnVisibility: {
@@ -231,6 +245,21 @@ export default function ArticleTable({ data }: { data: Article[] }) {
                 >
                   Previous
                 </Button>
+                {/* <Button variant="outline" size="sm" onClick={() => table.setPageIndex(1)}>
+                  1
+                </Button>
+                <Button variant="outline" size="sm" onClick={() => table.setPageIndex(table.getPageCount() - 1)}>
+                  {table.getPageCount() - 1}
+                  </Button> */}
+                <Button variant="outline" size="sm" onClick={() => setCurrentPage(currentPage == 0 ? 1 : currentPage - 1)}>
+                  {currentPage - 1}
+                </Button>
+                <Button variant="outline" size="sm" onClick={() => setCurrentPage(currentPage)}>
+                  {currentPage}
+                </Button>
+                <Button variant="outline" size="sm" onClick={() => setCurrentPage(currentPage + 1)}>
+                  {currentPage + 1}
+                </Button>
                 <Button
                   variant="outline"
                   size="sm"
@@ -239,11 +268,12 @@ export default function ArticleTable({ data }: { data: Article[] }) {
                 >
                   Next
                 </Button>
+
               </div>
             </div>
           </div>
-        </Suspense>
-      </div>
+        </Suspense >
+      </div >
     </>
   );
 }
