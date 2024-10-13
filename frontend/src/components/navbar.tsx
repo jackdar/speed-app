@@ -1,11 +1,13 @@
 'use client';
 
-import { User as UserIcon } from "lucide-react";
-import Link from "next/link";
-import NotificationDropdown from "./notification/notification-dropdown";
+import { useAuth } from '@/hooks/use-auth';
 import { roleHierarchy } from '@/lib/with-auth';
+import { UserIcon } from 'lucide-react';
+import Link from 'next/link';
+import ActiveLink from './active-link';
+import NotificationDropdown from './notification/notification-dropdown';
+import SpeedLogo from './svg/speed-logo';
 import { Button } from './ui/button';
-import { useAuth } from "@/hooks/use-auth";
 
 const routes = [
   {
@@ -33,36 +35,37 @@ const routes = [
 export default function Navbar() {
   const { user, token, logout } = useAuth();
 
- 
-  let userLinks: ("guest" | "registered" | "moderator" | "analyst" | "admin")[];
-  if(user) {
+  let userLinks: ('guest' | 'registered' | 'moderator' | 'analyst' | 'admin')[];
+  if (user) {
     userLinks = roleHierarchy[user.role as keyof typeof roleHierarchy];
   } else {
-    userLinks = roleHierarchy["guest"];
+    userLinks = roleHierarchy['guest'];
   }
   const filteredRoutes = routes.filter((route) =>
-    userLinks.some((permission: string) => route.permissions.includes(permission)),
+    userLinks.some((permission: string) =>
+      route.permissions.includes(permission),
+    ),
   );
- 
+
   return (
-    <nav className="w-full bg-black p-4 flex items-center justify-between text-white">
+    <nav className="sticky top-0 w-full bg-black p-4 flex items-center justify-between text-white">
       <div className="flex flex-row gap-6 items-center">
         <Link href="/articles">
-          <p className="text-3xl font-light">Speed</p>
+          <SpeedLogo className="w-24" />
         </Link>
         <div className="flex flex-row gap-4">
           {filteredRoutes.map((link) => (
-            <Link key={link.href} href={link.href}>
-              <p>{link.name}</p>
-            </Link>
+            <ActiveLink key={link.href} href={link.href}>
+              {link.name}
+            </ActiveLink>
           ))}
         </div>
       </div>
-      {/* <p>Notifications ({notifications.length})</p> */}
       {user != null && token != null ? (
-        <NotificationDropdown {...{user, token}} />
-      ) : ""
-      }
+        <NotificationDropdown {...{ user, token }} />
+      ) : (
+        ''
+      )}
       <div className="flex flex-row gap-4">
         {user && (
           <>
