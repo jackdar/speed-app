@@ -24,7 +24,7 @@ export default function HomeWelcomeCard({ className }: { className?: string }) {
             <Button variant="outline" className="border-black bg-transparent" onClick={() => router.push('/login')}>
               Sign In
             </Button>
-            <Button variant="outline" className="border-black bg-transparent" onClick={() => router.push('/signup')}>
+            <Button variant="outline" className="border-black bg-transparent" onClick={() => router.push('/register')}>
               Sign Up
             </Button>
           </div>
