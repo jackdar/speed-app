@@ -1,5 +1,6 @@
 export type Article = {
   _id: string;
+  submitterId: string;
   title: string;
   author: string;
   publisher: string;

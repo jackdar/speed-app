@@ -2,9 +2,13 @@
 
 import { useAuth } from '@/hooks/use-auth';
 import { Article, Rating } from '@/types';
+import { TabsContent } from '@radix-ui/react-tabs';
 import { Star } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Button } from '../ui/button';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../ui/card';
+import { Table, TableBody, TableCell, TableHead, TableRow } from '../ui/table';
+import { Tabs, TabsList, TabsTrigger } from '../ui/tabs';
 
 export default function ArticleFeedCard({ article }: { article: Article }) {
   const { user, token } = useAuth();
@@ -16,16 +20,17 @@ export default function ArticleFeedCard({ article }: { article: Article }) {
   useEffect(() => {
     setOverallRating(ratings.length === 0 ? 0 : ratings.map((rating) => rating.rating).reduce((a, b) => a + b, 0) / ratings.length);
     setUserRating(ratings.find((rating) => rating.raterId === user?._id)?.rating || 0);
-
-    console.log(ratings);
   }, [ratings, user]);
 
   const handleRateArticle = async (rating: number) => {
     const originalRatings = ratings;
     if (userRating === rating) rating = 0;
 
-    if (rating === 0) setRatings((prevRatings) => prevRatings.filter((r) => r.raterId !== user?._id));
-    else setRatings((prevRatings) => prevRatings.map((r) => (r.raterId === user?._id ? { ...r, rating } : r)));
+    setRatings((prevRatings) =>
+      rating === 0
+        ? prevRatings.filter((r) => r.raterId !== user?._id)
+        : prevRatings.map((r) => (r.raterId === user?._id ? { ...r, rating } : r)),
+    );
 
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/article/${article._id}/rate`, {
@@ -45,21 +50,57 @@ export default function ArticleFeedCard({ article }: { article: Article }) {
       setRatings(updatedArticle.ratings);
     } catch (error) {
       console.error(error);
-      setRatings(originalRatings); // Revert to original ratings on error
+      setRatings(originalRatings);
     }
   };
 
   return (
-    <div className="bg-gray-100 p-8 rounded shadow-md w-full">
-      <h2 className="text-xl text-black mb-4 w-full text-start">{article.title}</h2>
-      <p className="mb-4">
-        Author: {article.author} | Publisher: {article.publisher} | Journal: {article.journal} | Year: {article.year} | Rating:{' '}
-        {overallRating.toFixed(1)}
-      </p>
-      <p>Main Claim: {article.analysis?.summary || 'No claim'}</p>
-      <p>Methodology: {article.analysis?.methodology || 'No methodology'}</p>
-      <p>Key Findings: {article.analysis?.keyFindings || 'No key findings'}</p>
-      <div className="flex justify-start mt-4">
+    <Card className='rounded'>
+      <CardHeader>
+        <CardTitle>{article.title}</CardTitle>
+        <CardDescription>{article.author}</CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-8">
+        <Table>
+          <TableBody>
+            <TableRow>
+              <TableHead>Publisher</TableHead>
+              <TableCell>{article.publisher}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableHead>Journal</TableHead>
+              <TableCell>{article.journal}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableHead>Year</TableHead>
+              <TableCell>{article.year}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableHead>Methodology</TableHead>
+              <TableCell>{article.analysis?.methodology || 'No methodology stated'}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableHead>Overall Rating</TableHead>
+              <TableCell>{overallRating.toFixed(1)}</TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+        {article.analysis?.analysed && (
+          <Tabs defaultValue="claim" className="space-y-4">
+            <TabsList className="grid w-full grid-cols-2">
+              {article.analysis?.summary && <TabsTrigger value="claim">Claim</TabsTrigger>}
+              {article.analysis?.keyFindings && <TabsTrigger value="findings">Key Findings</TabsTrigger>}
+            </TabsList>
+            <TabsContent value="claim">
+              <p>{article.analysis?.summary || 'No claim entered'}</p>
+            </TabsContent>
+            <TabsContent value="findings">
+              <p>{article.analysis?.keyFindings?.join(', ') || 'No key findings'}</p>
+            </TabsContent>
+          </Tabs>
+        )}
+      </CardContent>
+      <CardFooter className="flex justify-start">
         {Array.from({ length: 5 }).map((_, i) => (
           <Button
             key={i}
@@ -71,7 +112,7 @@ export default function ArticleFeedCard({ article }: { article: Article }) {
             <Star size={36} className={i < userRating ? 'fill-yellow-300' : ''} />
           </Button>
         ))}
-      </div>
-    </div>
+      </CardFooter>
+    </Card>
   );
 }
