@@ -2,12 +2,14 @@
 
 import { useAuth } from '@/hooks/use-auth';
 import { roleHierarchy } from '@/lib/with-auth';
-import { UserIcon } from 'lucide-react';
+import { UserIcon, Menu } from 'lucide-react';
 import Link from 'next/link';
 import ActiveLink from './active-link';
 import NotificationDropdown from './notification/notification-dropdown';
 import SpeedLogo from './svg/speed-logo';
 import { Button } from './ui/button';
+import { useState } from 'react';
+import { cn } from '@/lib/utils'
 
 const routes = [
   {
@@ -34,6 +36,7 @@ const routes = [
 
 export default function Navbar() {
   const { user, token, logout } = useAuth();
+  const [navbarOpen, setNavbarOpen] = useState<boolean>(false);
 
   let userLinks: ('guest' | 'registered' | 'moderator' | 'analyst' | 'admin')[];
   if (user) {
@@ -48,12 +51,36 @@ export default function Navbar() {
   );
 
   return (
-    <nav className="sticky top-0 w-full bg-black p-4 flex items-center justify-between text-white">
-      <div className="flex flex-row gap-6 items-center">
+    <nav className="sticky top-0 w-full bg-black p-4 flex items-center justify-between text-white z-50">
+      <aside
+        className={cn(
+          "absolute lg:hidden top-0 w-1/3 h-screen p-8 pt-24 bg-black transition-all duration-150 ease-in-out",
+          navbarOpen ? "left-0" : "left-[-100vw]",
+        )}
+      >
+        <div className="flex flex-col gap-4 w-full mt-18">
+          {filteredRoutes.map((link, i) => (
+            <ActiveLink
+              key={i}
+              href={link.href}
+              onClick={() => setNavbarOpen((prev) => !prev)}
+            >
+              {link.name}
+            </ActiveLink>
+          ))}
+        </div>
+      </aside>
+      <div className="flex flex-row gap-6 items-center z-40">
+        <Button
+          className="flex lg:hidden p-2"
+          onClick={() => setNavbarOpen((prev) => !prev)}
+        >
+          <Menu />
+        </Button>
         <Link href="/articles">
           <SpeedLogo className="w-24" />
         </Link>
-        <div className="flex flex-row gap-4">
+        <div className="hidden lg:flex flex-row gap-4">
           {filteredRoutes.map((link) => (
             <ActiveLink key={link.href} href={link.href}>
               {link.name}

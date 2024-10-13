@@ -9,11 +9,11 @@ import { Button } from './ui/button';
 export default function ActiveLink({
   children,
   href,
-  ...props
+  onClick
 }: {
   children: React.ReactNode;
   href: string;
-  [key: string]: any;
+  onClick?: React.MouseEventHandler<HTMLButtonElement>
 }) {
   const pathname = usePathname();
 
@@ -26,9 +26,10 @@ export default function ActiveLink({
         'hover:bg-accent hover:text-accent-foreground',
         isActive && 'bg-accent text-accent-foreground',
       )}
+      onClick={onClick}
       asChild
     >
-      <Link {...props} href={href}>
+      <Link href={href}>
         {children}
       </Link>
     </Button>
