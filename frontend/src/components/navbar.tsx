@@ -1,10 +1,11 @@
 'use client';
 
-import { useAuth } from '@/hooks/use-auth';
+import { User as UserIcon } from "lucide-react";
+import Link from "next/link";
+import NotificationDropdown from "./notification/notification-dropdown";
 import { roleHierarchy } from '@/lib/with-auth';
-import { User as UserIcon } from 'lucide-react';
-import Link from 'next/link';
 import { Button } from './ui/button';
+import { useAuth } from "@/hooks/use-auth";
 
 const routes = [
   {
@@ -30,14 +31,19 @@ const routes = [
 ];
 
 export default function Navbar() {
-  const { user, logout } = useAuth();
+  const { user, token, logout } = useAuth();
 
-  const userLinks = roleHierarchy[user?.role || 'guest'];
-
+ 
+  let userLinks: ("guest" | "registered" | "moderator" | "analyst" | "admin")[];
+  if(user) {
+    userLinks = roleHierarchy[user.role as keyof typeof roleHierarchy];
+  } else {
+    userLinks = roleHierarchy["guest"];
+  }
   const filteredRoutes = routes.filter((route) =>
-    userLinks.some((permission) => route.permissions.includes(permission)),
+    userLinks.some((permission: string) => route.permissions.includes(permission)),
   );
-
+ 
   return (
     <nav className="w-full bg-black p-4 flex items-center justify-between text-white">
       <div className="flex flex-row gap-6 items-center">
@@ -52,6 +58,11 @@ export default function Navbar() {
           ))}
         </div>
       </div>
+      {/* <p>Notifications ({notifications.length})</p> */}
+      {user != null && token != null ? (
+        <NotificationDropdown {...{user, token}} />
+      ) : ""
+      }
       <div className="flex flex-row gap-4">
         {user && (
           <>
