@@ -1,13 +1,14 @@
 "use client"
 
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent } from "@/components/ui/dropdown-menu"
-import { Button } from "@/components/ui/button"
-import { useEffect, useState } from "react";
-import NotificationItem from "./notification-item";
-import { Separator } from "../ui/separator";
+import { Button } from "@/components/ui/button";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { AdminNotifcation } from "@/types/notification/admin-notification";
 import { UserNotification } from "@/types/notification/user-notification";
-import { User } from "@/types/user";;
+import { User } from "@/types/user";
+import { useEffect, useState } from "react";
+import { Separator } from "../ui/separator";
+import NotificationItem from "./notification-item";
+;
 
 interface UserProps {
     user: User;
@@ -15,7 +16,6 @@ interface UserProps {
 }
 
 const NotificationDropdown = ({user, token}: UserProps) => {
-    // console.log(user);
     const [queueNotifications, setQueueNotifications] = useState<AdminNotifcation[]>([]);
     const [userNotifications, setUserNotifications] = useState<UserNotification[]>([]);
 
@@ -46,7 +46,7 @@ const NotificationDropdown = ({user, token}: UserProps) => {
 
         fetchUserNotification();
 
-    }, []);
+    }, [token]);
     return (
         <div>
             {user.role == "admin" || user.role == "moderator" || user.role == "analyst" ? (
