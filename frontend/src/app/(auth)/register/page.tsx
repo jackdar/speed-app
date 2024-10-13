@@ -4,28 +4,45 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import React from "react";
 import Link from "next/link";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 const RegisterPage = () => {
-  const [form, setForm] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    password: "",
-    role: "registered",
-  });
-
   const [error, setError] = useState("");
   const router = useRouter();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value,
-    });
-  };
+  const formRegex = /^[a-zA-Z]+$/;
+  const passwordRegex = /^[A-Za-z0-9!@#$%^&*()_+\-=\[\]{}|;':"\\/?.,<>?]*$/;
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const registerSchema = z.object({
+    firstName: z.string()
+      .min(1, 'First name is required')
+      .refine((value) => formRegex.test(value ?? ""), 'First name should contain only english letters and no spaces'),
+    lastName: z.string()
+      .min(1, 'Last name is required')
+      .refine((value) => formRegex.test(value ?? ""), 'Last name should contain only englishh letters and no spaces'),
+    email: z.string()
+      .email('Invalid email address'),
+    password: z.string()
+      .min(1, 'Password cannot be empty')
+      .refine((value) => passwordRegex.test(value ?? ""), 'Password should not contain spaces')
+  })
+
+  const {
+    register,
+    handleSubmit,
+    formState: {errors}} = useForm<z.infer<typeof registerSchema>>({
+      resolver: zodResolver(registerSchema),
+      defaultValues: {
+        firstName: "",
+        lastName: "",
+        email: "",
+        password: ""
+      }
+  })
+
+  const onSubmit = async (data: z.infer<typeof registerSchema>) => {
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/auth/register`,
@@ -34,7 +51,7 @@ const RegisterPage = () => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(form),
+          body: JSON.stringify(data),
         }
       );
 
@@ -55,39 +72,43 @@ const RegisterPage = () => {
         <h2 className="text-2xl text-black mb-4 w-full text-start border-b border-black pb-2">
           Signup
         </h2>
-        <form onSubmit={handleSubmit} className="space-y-4 text-black">
-          <input
-            className="w-full p-2 border border-gray-300 rounded"
-            type="text"
-            name="firstName"
-            placeholder="First Name"
-            value={form.firstName}
-            onChange={handleChange}
-          />
-          <input
-            className="w-full p-2 border border-gray-300 rounded"
-            type="text"
-            name="lastName"
-            placeholder="Last Name"
-            value={form.lastName}
-            onChange={handleChange}
-          />
-          <input
-            className="w-full p-2 border border-gray-300 rounded"
-            type="email"
-            name="email"
-            placeholder="Email"
-            value={form.email}
-            onChange={handleChange}
-          />
-          <input
-            className="w-full p-2 border border-gray-300 rounded"
-            type="password"
-            name="password"
-            placeholder="Password"
-            value={form.password}
-            onChange={handleChange}
-          />
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 text-black">
+          <div className="mb-4">
+            <input
+              className="w-full p-2 border border-gray-300 rounded"
+              type="text"
+              placeholder="First Name"
+              {...register("firstName")}
+            />
+            {errors.firstName && <p className="text-red-500 text-sm mt-1">{errors.firstName.message}</p>}
+          </div>
+          <div className="mb-4">
+            <input
+              className="w-full p-2 border border-gray-300 rounded"
+              type="text"
+              placeholder="Last Name"
+              {...register("lastName")}
+            />
+            {errors.lastName && <p className="text-red-500 text-sm mt-1">{errors.lastName.message}</p>}
+          </div>
+          <div className="mb-4">
+            <input
+              className="w-full p-2 border border-gray-300 rounded"
+              type="email"
+              placeholder="Email"
+              {...register("email")}
+            />
+            {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
+          </div>
+          <div className="mb-4">
+            <input
+              className="w-full p-2 border border-gray-300 rounded"
+              type="password"
+              placeholder="Password"
+              {...register("password")}
+            />
+            {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>}
+          </div>
           <button
             className="w-full bg-[#646464] text-white p-2 rounded"
             type="submit"
