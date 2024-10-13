@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { ToastAction } from '../ui/toast';
+import { useAuth } from '@/hooks/use-auth';
 
 const schema = z.object({
   title: z.string().nonempty('Title is required'),
@@ -36,6 +37,7 @@ const schema = z.object({
 });
 
 const PaperForm = () => {
+  const { token } = useAuth();
   const { toast } = useToast();
   const router = useRouter();
   const { user } = useAuth();
@@ -50,10 +52,16 @@ const PaperForm = () => {
 
   const onSubmit = async (data: z.infer<typeof schema>) => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/article/new`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/articles/new`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          credentials: 'include',
+          body: JSON.stringify(data),
         },
         credentials: 'include',
         body: JSON.stringify({ submitterId: user?._id, ...data }),

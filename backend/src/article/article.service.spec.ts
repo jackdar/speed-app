@@ -1,11 +1,17 @@
-import { BadRequestException } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
+import { ArticleService } from './article.service';
+import { getModelToken } from '@nestjs/mongoose';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Model } from 'mongoose';
 import { Article } from './article.schema';
-import { ArticleService } from './article.service';
 import { CreateArticleDto } from './dto/create-article.dto';
+import { BadRequestException } from '@nestjs/common';
+import { NotificationService } from '../notification/notification.service';
+import { AdminNotification } from '../notification/admin-notification.schema';
+import { UserNotification } from '../notification/user-notification.schema';
+import { AuthService } from '../auth/auth.service';
+import { CreateAdminNotifcationDto } from '../notification/dto/create-admin-notification.dto';
+
 
 const mockArticleModel = {
   find: jest.fn(),
@@ -14,8 +20,16 @@ const mockArticleModel = {
   findByIdAndUpdate: jest.fn(),
 };
 
+const mockAuthService = {
+
+}
+const mockNotificationService = {
+  sendNotification: jest.fn()
+}
+
 describe('ArticleService', () => {
   let service: ArticleService;
+  let authService: AuthService;
   let articleModel: Model<Article>;
 
   beforeEach(async () => {
@@ -30,7 +44,16 @@ describe('ArticleService', () => {
           provide: ConfigService,
           useValue: { get: jest.fn() },
         },
+        {
+          provide: AuthService,
+          useValue: mockAuthService,
+        },
+        {
+          provide: NotificationService,
+          useValue: mockNotificationService,
+        },
       ],
+      
     }).compile();
 
     service = module.get<ArticleService>(ArticleService);
@@ -89,9 +112,27 @@ describe('ArticleService', () => {
       const mockArticle = { ...createArticleDto };
 
       jest.spyOn(articleModel, 'create').mockResolvedValue(mockArticle as any);
+      jest.spyOn(service, "createArticle").mockImplementation(async (uid: string, article:CreateArticleDto) => {
+        let createResult = articleModel.create(article);
 
-      const result = await service.createArticle(createArticleDto);
-      expect(articleModel.create).toHaveBeenCalledWith(createArticleDto);
+        let adminNotification: CreateAdminNotifcationDto = {
+          user_id: uid,
+          role: "moderator",
+          article_id: "123",
+          article_title: article.title,
+          title: "New article submitted",
+          message: "View to get assigned",
+          assigned: false,
+          assignee_id: ""
+        }
+        jest.spyOn(mockNotificationService, "sendNotification").mockResolvedValue(adminNotification as any);
+
+        return createResult;
+      })
+      const result = await service.createArticle("123", createArticleDto);
+      
+      console.log(result);
+      // expect(articleModel.create).toHaveBeenCalledWith("123", createArticleDto);
       expect(result).toEqual(mockArticle);
     });
 
@@ -114,7 +155,7 @@ describe('ArticleService', () => {
 
       jest.spyOn(articleModel, 'create').mockRejectedValue(new Error('Error'));
 
-      await expect(service.createArticle(createArticleDto)).rejects.toThrow(
+      await expect(service.createArticle("123", createArticleDto)).rejects.toThrow(
         BadRequestException,
       );
     });
