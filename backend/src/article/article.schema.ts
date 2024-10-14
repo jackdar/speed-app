@@ -19,13 +19,16 @@ export class Moderation {
   moderated: boolean;
 
   @Prop()
+  moderation_passed: boolean;
+
+  @Prop()
   status: 'not moderated' | 'pending' | 'approved' | 'rejected';
 
   @Prop()
   comments: string;
 
   @Prop({ type: Date })
-  moderatedDate: Date;
+  moderatedDate?: Date;
 }
 
 export class Analysis {
@@ -48,7 +51,7 @@ export class Analysis {
   methodology: string;
 
   @Prop({ type: Date })
-  analysedDate: Date;
+  analysedDate?: Date;
 }
 
 @Schema()
@@ -95,10 +98,10 @@ export class Article {
   @Prop({ type: Date, default: Date.now })
   lastUpdateDate: Date;
 
-  @Prop({ type: Moderation, default: {} })
+  @Prop({ type: Moderation })
   moderation: Moderation;
 
-  @Prop({ type: Analysis, default: {} })
+  @Prop({ type: Analysis })
   analysis: Analysis;
 }
 
