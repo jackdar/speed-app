@@ -2,9 +2,9 @@
 
 import { Button } from '@/components/ui/button';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { AdminNotifcation } from '@/types/notification/admin-notification';
 import { UserNotification } from '@/types/notification/user-notification';
@@ -12,6 +12,7 @@ import { User } from '@/types/user';
 import { useEffect, useState } from 'react';
 import { Separator } from '../ui/separator';
 import NotificationItem from './notification-item';
+import { Bell, ShieldAlert } from 'lucide-react';
 interface UserProps {
   user: User;
   token: string;
@@ -32,6 +33,9 @@ const NotificationDropdown = ({user, token}: UserProps) => {
             const data = await response.json();
             setQueueNotifications(data.reverse());
         }
+
+        fetchRoleNotification();
+    }, [token]);
 
   useEffect(() => {
       const fetchRoleNotification = async () => {
@@ -63,8 +67,10 @@ const NotificationDropdown = ({user, token}: UserProps) => {
             const data = await response.json();
             setUserNotifications(data.reverse());
         };
+
+        fetchUserNotification();
     }, [token]);
-     
+
     return (
         <div className="flex flex-row gap-4">
             {user.role == "admin" || user.role == "moderator" || user.role == "analyst" ? (
@@ -74,7 +80,7 @@ const NotificationDropdown = ({user, token}: UserProps) => {
                             <ShieldAlert
                              className="h-4 w-4 mr-2" />
                             <p className="hidden xl:block">Article Queue {queueNotifications.length ? `(${queueNotifications.length})` : ""}</p>
-                           
+
                             {queueNotifications.length ? (
                                 <span className="absolute top-1 right-1 transform translate-x-1/12 -translate-y-1/12 h-2 w-2 rounded-full bg-red-500" />
                             ) : ""}

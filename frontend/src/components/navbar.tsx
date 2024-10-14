@@ -1,15 +1,15 @@
 'use client';
 
 import { useAuth } from '@/hooks/use-auth';
+import { cn } from '@/lib/utils';
 import { roleHierarchy } from '@/lib/with-auth';
-import { UserIcon, Menu } from 'lucide-react';
+import { Menu, UserIcon } from 'lucide-react';
 import Link from 'next/link';
+import { useState } from 'react';
 import ActiveLink from './active-link';
 import NotificationDropdown from './notification/notification-dropdown';
 import SpeedLogo from './svg/speed-logo';
 import { Button } from './ui/button';
-import { useState } from 'react';
-import { cn } from '@/lib/utils'
 
 const routes = [
   {
@@ -54,8 +54,8 @@ export default function Navbar() {
     <nav className="sticky top-0 w-full bg-black p-4 flex items-center justify-between text-white z-50">
       <aside
         className={cn(
-          "absolute lg:hidden top-0 w-1/3 h-screen p-8 pt-24 bg-black transition-all duration-150 ease-in-out",
-          navbarOpen ? "left-0" : "left-[-100vw]",
+          'absolute lg:hidden top-0 w-1/3 h-screen p-8 pt-24 bg-black transition-all duration-150 ease-in-out',
+          navbarOpen ? 'left-0' : 'left-[-100vw]',
         )}
       >
         <div className="flex flex-col gap-4 w-full mt-18">
@@ -77,9 +77,17 @@ export default function Navbar() {
         >
           <Menu />
         </Button>
-        <Link href="/articles">
-          <SpeedLogo className="w-24" />
-        </Link>
+        <Button
+          onClick={() => {
+            if (navbarOpen) setNavbarOpen(false);
+          }}
+          className="bg-transparent hover:bg-transparent"
+          asChild
+        >
+          <Link href="/">
+            <SpeedLogo className="w-24" />
+          </Link>
+        </Button>
         <div className="hidden lg:flex flex-row gap-4">
           {filteredRoutes.map((link) => (
             <ActiveLink key={link.href} href={link.href}>
@@ -99,7 +107,10 @@ export default function Navbar() {
             <Button variant="outline" className="bg-transparent" asChild>
               <Link href="/submission">Submit Article</Link>
             </Button>
-            <Link href="/profile" className="bg-gray-700 rounded-full m-auto p-1.5">
+            <Link
+              href="/profile"
+              className="bg-gray-700 rounded-full m-auto p-1.5"
+            >
               <UserIcon />
             </Link>
           </>

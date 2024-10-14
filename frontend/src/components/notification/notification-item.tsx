@@ -1,8 +1,7 @@
 import { AdminNotifcation } from "@/types/notification/admin-notification";
-import { Button } from "../ui/button";
-import Link from "next/link";
 import { UserNotification } from "@/types/notification/user-notification";
 import { useRouter } from "next/navigation";
+import { Button } from "../ui/button";
 
 interface Props {
     notification: AdminNotifcation | UserNotification
@@ -11,7 +10,7 @@ interface Props {
 
 
 const NotificationItem: React.FC<Props> = ({ notification }) => {
-    
+
     const router = useRouter();
 
     const viewArticle = async () => {
