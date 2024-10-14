@@ -1,8 +1,8 @@
 import { UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
-import { CreateUserDto } from 'src/user/dto/create-user.dto';
-import { UserDto } from 'src/user/dto/user.dto';
+import { CreateUserDto } from '../user/dto/create-user.dto';
+import { UserDto } from '../user/dto/user.dto';
 import { UsersService } from '../user/user.service';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
@@ -55,7 +55,7 @@ describe('AuthService', () => {
         role: 'registered',
         firstName: 'Test',
         lastName: 'User',
-        articlesPublished: [],
+        articlesSubmitted: [],
         articlesModerated: [],
         articlesAnalysed: [],
         articlesRated: [],
@@ -105,7 +105,7 @@ describe('AuthService', () => {
         role: 'registered',
         firstName: 'Test',
         lastName: 'User',
-        articlesPublished: [],
+        articlesSubmitted: [],
         articlesModerated: [],
         articlesAnalysed: [],
         articlesRated: [],
@@ -133,7 +133,7 @@ describe('AuthService', () => {
         role: 'registered',
         firstName: 'Test',
         lastName: 'User',
-        articlesPublished: [],
+        articlesSubmitted: [],
         articlesModerated: [],
         articlesAnalysed: [],
         articlesRated: [],

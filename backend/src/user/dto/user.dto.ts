@@ -1,4 +1,5 @@
-import { UserDocument } from '../user.schema';
+import { Article } from '../../article/article.schema';
+import { UserDocument, UserRating } from '../user.schema';
 
 export class UserDto {
   _id: string;
@@ -8,10 +9,10 @@ export class UserDto {
   password: string;
   role: string;
   bio?: string;
-  articlesPublished?: string[];
-  articlesModerated?: string[];
-  articlesAnalysed?: string[];
-  articlesRated?: Array<{ articleId: string; rating: number }>;
+  articlesSubmitted?: Article[];
+  articlesModerated?: Article[];
+  articlesAnalysed?: Article[];
+  articlesRated?: UserRating[];
 
   constructor(user: UserDocument) {
     this._id = user._id as string;
@@ -21,7 +22,7 @@ export class UserDto {
     this.password = user.password;
     this.role = user.role;
     this.bio = user.bio;
-    this.articlesPublished = user.articlesPublished;
+    this.articlesSubmitted = user.articlesSubmitted;
     this.articlesModerated = user.articlesModerated;
     this.articlesAnalysed = user.articlesAnalysed;
     this.articlesRated = user.articlesRated;

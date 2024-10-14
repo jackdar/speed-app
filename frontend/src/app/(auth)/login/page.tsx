@@ -11,7 +11,7 @@ const LoginPage = () => {
   const { user, login, error } = useAuth();
 
   useEffect(() => {
-    if (user) router.push('articles');
+    if (user) router.push('/');
   }, [user, router]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -31,7 +31,7 @@ const LoginPage = () => {
       const token = localStorage.getItem('token');
 
       if (token != null) {
-        router.push('articles');
+        router.push('/');
       }
     };
 
@@ -41,9 +41,7 @@ const LoginPage = () => {
   return (
     <div className="flex-1 flex justify-center items-center bg-[#8D8D8D]">
       <div className="bg-gray-100 p-8 rounded shadow-md w-full max-w-md">
-        <h2 className="text-2xl text-black mb-4 w-full text-start border-b border-black pb-2">
-          Login
-        </h2>
+        <h2 className="text-2xl text-black mb-4 w-full text-start border-b border-black pb-2">Login</h2>
         <form onSubmit={handleSubmit} className="space-y-4 text-black">
           <input
             className="w-full p-2 border border-gray-300 rounded"
@@ -61,10 +59,7 @@ const LoginPage = () => {
             value={form.password}
             onChange={handleChange}
           />
-          <button
-            type="submit"
-            className="w-full bg-[#646464] text-white p-2 rounded"
-          >
+          <button type="submit" className="w-full bg-[#646464] text-white p-2 rounded">
             Login
           </button>
           {error && <p style={{ color: 'red' }}>{error}</p>}

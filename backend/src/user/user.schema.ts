@@ -1,7 +1,14 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
+import { Article } from '../article/article.schema';
 
 export type UserDocument = User & Document;
+
+export class UserRating {
+  articleId: string;
+  rating: number;
+  ratedDate: Date;
+}
 
 @Schema()
 export class User {
@@ -27,16 +34,16 @@ export class User {
   bio: string;
 
   @Prop({ type: Array, default: [] })
-  articlesPublished: string[];
+  articlesSubmitted: Article[];
 
   @Prop({ type: Array, default: [] })
-  articlesModerated: string[];
+  articlesModerated: Article[];
 
   @Prop({ type: Array, default: [] })
-  articlesAnalysed: string[];
+  articlesAnalysed: Article[];
 
   @Prop({ type: Array, default: [] })
-  articlesRated: Array<{ articleId: string; rating: number }>;
+  articlesRated: UserRating[];
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

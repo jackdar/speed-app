@@ -99,10 +99,7 @@ export default function Navbar() {
             <Button variant="outline" className="bg-transparent" asChild>
               <Link href="/submission">Submit Article</Link>
             </Button>
-            <Link
-              href="/profile"
-              className="bg-gray-700 rounded-full m-auto p-1.5"
-            >
+            <Link href="/profile" className="bg-gray-700 rounded-full m-auto p-1.5">
               <UserIcon />
             </Link>
           </>

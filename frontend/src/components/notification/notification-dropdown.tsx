@@ -1,19 +1,20 @@
 "use client"
 
-import { Button } from "@/components/ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { AdminNotifcation } from "@/types/notification/admin-notification";
-import { UserNotification } from "@/types/notification/user-notification";
-import { User } from "@/types/user";
-import { Bell, ShieldAlert } from "lucide-react";
-import { useEffect, useState } from "react";
-import { Separator } from "../ui/separator";
-import NotificationItem from "./notification-item";
-;
-
+import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { AdminNotifcation } from '@/types/notification/admin-notification';
+import { UserNotification } from '@/types/notification/user-notification';
+import { User } from '@/types/user';
+import { useEffect, useState } from 'react';
+import { Separator } from '../ui/separator';
+import NotificationItem from './notification-item';
 interface UserProps {
-    user: User;
-    token: string;
+  user: User;
+  token: string;
 }
 
 const NotificationDropdown = ({user, token}: UserProps) => {
@@ -32,22 +33,38 @@ const NotificationDropdown = ({user, token}: UserProps) => {
             setQueueNotifications(data.reverse());
         }
 
+  useEffect(() => {
+      const fetchRoleNotification = async () => {
+          const response = await fetch(
+              `${process.env.NEXT_PUBLIC_API_URL}/notifications/queue`,
+                {
+                    method: 'GET',
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                },
+            );
+            const data = await response.json();
+            setQueueNotifications(data.reverse());
+        };
+
         fetchRoleNotification();
 
         const fetchUserNotification = async () => {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/notifications`, {
-                method: "GET",
-                headers: {
-                    "Authorization": `Bearer ${token}`
-                }
-            });
+            const response = await fetch(
+                `${process.env.NEXT_PUBLIC_API_URL}/notifications`,
+                {
+                    method: 'GET',
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                },
+            );
             const data = await response.json();
             setUserNotifications(data.reverse());
-        }
-
-        fetchUserNotification();
-
+        };
     }, [token]);
+     
     return (
         <div className="flex flex-row gap-4">
             {user.role == "admin" || user.role == "moderator" || user.role == "analyst" ? (
@@ -102,5 +119,4 @@ const NotificationDropdown = ({user, token}: UserProps) => {
         </div>
     )
 }
-
 export default NotificationDropdown;

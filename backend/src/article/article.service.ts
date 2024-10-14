@@ -1,12 +1,11 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { Article, Rating } from './article.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { CreateArticleDto } from './dto/create-article.dto';
+import { CreateUserNotificationDto } from 'src/notification/dto/create-user-notification.dto';
 import { CreateAdminNotifcationDto } from '../notification/dto/create-admin-notification.dto';
 import { NotificationService } from '../notification/notification.service';
-import { CreateUserNotificationDto } from 'src/notification/dto/create-user-notification.dto';
-import { ConfigService } from '@nestjs/config';
+import { Article, Rating } from './article.schema';
+import { CreateArticleDto } from './dto/create-article.dto';
 import { RatingDto } from './dto/rating.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
 
@@ -15,7 +14,7 @@ export class ArticleService {
   constructor(
     @InjectModel(Article.name) private articleModel: Model<Article>,
     private notificationService: NotificationService,
-  ) { }
+  ) {}
 
   async getArticles(): Promise<Article[]> {
     return await this.articleModel.find();
@@ -43,7 +42,10 @@ export class ArticleService {
     }
   }
 
-  async createArticle(uid: string = "no user", createArticleDto: CreateArticleDto): Promise<Article> {
+  async createArticle(
+    uid: string = 'no user',
+    createArticleDto: CreateArticleDto,
+  ): Promise<Article> {
     try {
       const currentDate = new Date();
       const createResult = await this.articleModel.create({
@@ -52,26 +54,26 @@ export class ArticleService {
         dateUpdated: createArticleDto.dateUpdated || currentDate,
       });
 
-      let adminNotification: CreateAdminNotifcationDto = {
+      const adminNotification: CreateAdminNotifcationDto = {
         user_id: uid,
-        role: "moderator",
+        role: 'moderator',
         article_id: createResult._id.toString(),
         article_title: createResult.title,
-        title: "New article submitted",
-        message: "View to get assigned",
+        title: 'New article submitted',
+        message: 'View to get assigned',
         assigned: false,
-        assignee_id: ""
-      }
-      let temp2: CreateUserNotificationDto = {
+        assignee_id: '',
+      };
+      const temp2: CreateUserNotificationDto = {
         user_id: uid,
         article_id: createResult._id.toString(),
         article_title: createResult.title,
-        title: "Article Approved",
-        message: "Your submitted article has been approved.",
-        read: false
-      }
-     
-      if(createResult){
+        title: 'Article Approved',
+        message: 'Your submitted article has been approved.',
+        read: false,
+      };
+
+      if (createResult) {
         await this.notificationService.sendNotification(adminNotification);
         await this.notificationService.sendNotification(temp2);
       }
@@ -83,56 +85,39 @@ export class ArticleService {
 
   async rateArticle(id: string, ratingDto: RatingDto): Promise<Article> {
     try {
-      if (ratingDto.rating === 0) {
+      const { userId, rating } = ratingDto;
+      const currentDate = new Date();
+
+      if (rating === 0) {
         return await this.articleModel.findOneAndUpdate(
-          {
-            _id: id,
-            'ratings.raterId': ratingDto.userId,
-          },
-          {
-            $pull: {
-              ratings: {
-                raterId: ratingDto.userId,
-              },
-            },
-          },
+          { _id: id, 'ratings.raterId': userId },
+          { $pull: { ratings: { raterId: userId } } },
+          { new: true },
         );
       }
 
-      const article = await this.articleModel
-        .findOneAndUpdate(
-          {
-            _id: id,
-            'ratings.raterId': ratingDto.userId,
+      const article = await this.articleModel.findOneAndUpdate(
+        { _id: id, 'ratings.raterId': userId },
+        {
+          $set: {
+            'ratings.$.rating': rating,
+            'ratings.$.ratedDate': currentDate,
           },
+        },
+        { upsert: false, new: true },
+      );
+
+      if (!article) {
+        return await this.articleModel.findByIdAndUpdate(
+          id,
           {
-            $set: {
-              'ratings.$.rating': ratingDto.rating,
-              'ratings.$.ratedDate': new Date(),
+            $push: {
+              ratings: { raterId: userId, rating, ratedDate: currentDate },
             },
           },
-          {
-            upsert: false,
-            new: true,
-          },
-        )
-        .then((article) => {
-          if (!article) {
-            return this.articleModel.findByIdAndUpdate(
-              id,
-              {
-                $push: {
-                  ratings: {
-                    raterId: ratingDto.userId,
-                    rating: ratingDto.rating,
-                    ratedDate: new Date(),
-                  },
-                },
-              },
-              { new: true },
-            );
-          }
-        });
+          { new: true },
+        );
+      }
 
       return article;
     } catch (error) {
