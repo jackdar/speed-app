@@ -15,7 +15,7 @@ import { JwtAccessToken } from './types/Jwt';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService) { }
 
   @Post('register')
   async register(@Body() userDto: CreateUserDto): Promise<UserDto> {
@@ -30,6 +30,7 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Get('profile')
   getProfile(@Request() req) {
+    // console.log(req.user);
     return req.user;
   }
 }

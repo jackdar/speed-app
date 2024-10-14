@@ -6,6 +6,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ArticleModule } from './article/article.module';
 import { AuthModule } from './auth/auth.module';
+import { NotificationModule } from './notification/notification.module';
 import { AppLoggerMiddleware } from './middleware/applogger.middleware';
 import { UserModule } from './user/user.module';
 
@@ -26,6 +27,7 @@ import { UserModule } from './user/user.module';
     AdminModule,
     AuthModule,
     UserModule,
+    NotificationModule
   ],
   controllers: [AppController],
   providers: [AppService],
