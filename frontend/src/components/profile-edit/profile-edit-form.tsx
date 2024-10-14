@@ -15,11 +15,16 @@ const ProfileEditForm = () => {
 
   if (!user) throw new Error('User is not authenticated!');
 
+  const nameRegex = /^[a-zA-Z]+$/;
+
   const schema = z.object({
-    firstName: z.string().min(1, 'First name is required'),
-    lastName: z.string().min(1, 'Last name is required'),
-    email: z
-      .string()
+    firstName: z.string()
+      .min(1, 'First name is required')
+      .refine((value) => nameRegex.test(value ?? ""), 'First name should contain only english letters.'),
+    lastName: z.string()
+      .min(1, 'Last name is required')
+      .refine((value) => nameRegex.test(value ?? ""), 'Last name should contain only englishh letters'),
+    email: z.string()
       .email('Invalid email address')
       .refine((val) => val === user.email, {
         message: 'Email must match the current user email',
@@ -33,6 +38,11 @@ const ProfileEditForm = () => {
     formState: { errors },
   } = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
+    defaultValues: {
+      firstName: user.firstName,
+      lastName: user.lastName,
+      bio: user.bio
+    }
   });
 
   const onSubmit = async (data: z.infer<typeof schema>) => {
@@ -82,7 +92,6 @@ const ProfileEditForm = () => {
           type="text"
           id="firstName"
           {...register('firstName')}
-          value={user.firstName}
           className={`w-full px-3 py-2 border ${errors.firstName ? 'border-red-500' : 'border-gray-400'} rounded`}
         />
         {errors.firstName && <p className="text-red-500 text-sm mt-1">{errors.firstName.message}</p>}
@@ -97,7 +106,6 @@ const ProfileEditForm = () => {
           type="text"
           id="lastName"
           {...register('lastName')}
-          value={user.lastName}
           className={`w-full px-3 py-2 border ${errors.lastName ? 'border-red-500' : 'border-gray-400'} rounded`}
         />
         {errors.lastName && <p className="text-red-500 text-sm mt-1">{errors.lastName.message}</p>}
@@ -125,7 +133,6 @@ const ProfileEditForm = () => {
         <textarea
           id="bio"
           {...register('bio')}
-          defaultValue={user.bio}
           className={`w-full px-3 py-2 border ${errors.bio ? 'border-red-500' : 'border-gray-400'} rounded`}
         />
         {errors.bio && <p className="text-red-500 text-sm mt-1">{errors.bio.message}</p>}

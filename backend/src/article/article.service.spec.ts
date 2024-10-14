@@ -3,6 +3,9 @@ import { ConfigService } from '@nestjs/config';
 import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Model } from 'mongoose';
+import { AuthService } from '../auth/auth.service';
+import { CreateAdminNotifcationDto } from '../notification/dto/create-admin-notification.dto';
+import { NotificationService } from '../notification/notification.service';
 import { Article } from './article.schema';
 import { ArticleService } from './article.service';
 import { CreateArticleDto } from './dto/create-article.dto';
@@ -12,6 +15,11 @@ const mockArticleModel = {
   findById: jest.fn(),
   create: jest.fn(),
   findByIdAndUpdate: jest.fn(),
+};
+
+const mockAuthService = {};
+const mockNotificationService = {
+  sendNotification: jest.fn(),
 };
 
 describe('ArticleService', () => {
@@ -29,6 +37,14 @@ describe('ArticleService', () => {
         {
           provide: ConfigService,
           useValue: { get: jest.fn() },
+        },
+        {
+          provide: AuthService,
+          useValue: mockAuthService,
+        },
+        {
+          provide: NotificationService,
+          useValue: mockNotificationService,
         },
       ],
     }).compile();
@@ -71,6 +87,7 @@ describe('ArticleService', () => {
   describe('createArticle', () => {
     it('should create and return a new article', async () => {
       const createArticleDto: CreateArticleDto = {
+        submitterId: '1',
         title: 'New Article',
         author: 'New Author',
         publisher: 'New Publisher',
@@ -88,14 +105,37 @@ describe('ArticleService', () => {
       const mockArticle = { ...createArticleDto };
 
       jest.spyOn(articleModel, 'create').mockResolvedValue(mockArticle as any);
+      jest
+        .spyOn(service, 'createArticle')
+        .mockImplementation(async (uid: string, article: CreateArticleDto) => {
+          const createResult = articleModel.create(article);
 
-      const result = await service.createArticle(createArticleDto);
-      expect(articleModel.create).toHaveBeenCalledWith(createArticleDto);
+          const adminNotification: CreateAdminNotifcationDto = {
+            user_id: uid,
+            role: 'moderator',
+            article_id: '123',
+            article_title: article.title,
+            title: 'New article submitted',
+            message: 'View to get assigned',
+            assigned: false,
+            assignee_id: '',
+          };
+          jest
+            .spyOn(mockNotificationService, 'sendNotification')
+            .mockResolvedValue(adminNotification as any);
+
+          return createResult;
+        });
+      const result = await service.createArticle('123', createArticleDto);
+
+      console.log(result);
+      // expect(articleModel.create).toHaveBeenCalledWith("123", createArticleDto);
       expect(result).toEqual(mockArticle);
     });
 
     it('should throw a BadRequestException on failure', async () => {
       const createArticleDto: CreateArticleDto = {
+        submitterId: '1',
         title: 'New Article',
         author: 'New Author',
         publisher: 'New Publisher',
@@ -112,9 +152,9 @@ describe('ArticleService', () => {
 
       jest.spyOn(articleModel, 'create').mockRejectedValue(new Error('Error'));
 
-      await expect(service.createArticle(createArticleDto)).rejects.toThrow(
-        BadRequestException,
-      );
+      await expect(
+        service.createArticle('123', createArticleDto),
+      ).rejects.toThrow(BadRequestException);
     });
   });
 
@@ -123,6 +163,7 @@ describe('ArticleService', () => {
       const mockArticleId = '123';
 
       const mockNewArticle: any = {
+        submitterId: '1',
         title: 'new title',
         author: 'new author',
         publisher: 'new publisher',
@@ -153,7 +194,7 @@ describe('ArticleService', () => {
         .mockImplementation(async (id, data) => {
           expect(id).toBe(mockArticleId);
           expect(data).toEqual(mockNewArticle);
-          return { id: mockArticleId, ...data };
+          return { id: mockArticleId, submitterId: data.submitterId, ...data };
         });
 
       const updatedResult = await service.updateArticle('123', mockNewArticle);

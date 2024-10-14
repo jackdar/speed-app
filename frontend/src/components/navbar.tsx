@@ -1,9 +1,14 @@
 'use client';
 
 import { useAuth } from '@/hooks/use-auth';
+import { cn } from '@/lib/utils';
 import { roleHierarchy } from '@/lib/with-auth';
-import { User as UserIcon } from 'lucide-react';
+import { Menu, UserIcon } from 'lucide-react';
 import Link from 'next/link';
+import { useState } from 'react';
+import ActiveLink from './active-link';
+import NotificationDropdown from './notification/notification-dropdown';
+import SpeedLogo from './svg/speed-logo';
 import { Button } from './ui/button';
 
 const routes = [
@@ -30,28 +35,72 @@ const routes = [
 ];
 
 export default function Navbar() {
-  const { user, logout } = useAuth();
+  const { user, token, logout } = useAuth();
+  const [navbarOpen, setNavbarOpen] = useState<boolean>(false);
 
-  const userLinks = roleHierarchy[user?.role || 'guest'];
-
+  let userLinks: ('guest' | 'registered' | 'moderator' | 'analyst' | 'admin')[];
+  if (user) {
+    userLinks = roleHierarchy[user.role as keyof typeof roleHierarchy];
+  } else {
+    userLinks = roleHierarchy['guest'];
+  }
   const filteredRoutes = routes.filter((route) =>
-    userLinks.some((permission) => route.permissions.includes(permission)),
+    userLinks.some((permission: string) =>
+      route.permissions.includes(permission),
+    ),
   );
 
   return (
-    <nav className="w-full bg-black p-4 flex items-center justify-between text-white">
-      <div className="flex flex-row gap-6 items-center">
-        <Link href="/articles">
-          <p className="text-3xl font-light">Speed</p>
-        </Link>
-        <div className="flex flex-row gap-4">
+    <nav className="sticky top-0 w-full bg-black p-4 flex items-center justify-between text-white z-50">
+      <aside
+        className={cn(
+          'absolute lg:hidden top-0 w-1/3 h-screen p-8 pt-24 bg-black transition-all duration-150 ease-in-out',
+          navbarOpen ? 'left-0' : 'left-[-100vw]',
+        )}
+      >
+        <div className="flex flex-col gap-4 w-full mt-18">
+          {filteredRoutes.map((link, i) => (
+            <ActiveLink
+              key={i}
+              href={link.href}
+              onClick={() => setNavbarOpen((prev) => !prev)}
+            >
+              {link.name}
+            </ActiveLink>
+          ))}
+        </div>
+      </aside>
+      <div className="flex flex-row gap-6 items-center z-40">
+        <Button
+          className="flex lg:hidden p-2"
+          onClick={() => setNavbarOpen((prev) => !prev)}
+        >
+          <Menu />
+        </Button>
+        <Button
+          onClick={() => {
+            if (navbarOpen) setNavbarOpen(false);
+          }}
+          className="bg-transparent hover:bg-transparent"
+          asChild
+        >
+          <Link href="/">
+            <SpeedLogo className="w-24" />
+          </Link>
+        </Button>
+        <div className="hidden lg:flex flex-row gap-4">
           {filteredRoutes.map((link) => (
-            <Link key={link.href} href={link.href}>
-              <p>{link.name}</p>
-            </Link>
+            <ActiveLink key={link.href} href={link.href}>
+              {link.name}
+            </ActiveLink>
           ))}
         </div>
       </div>
+      {user != null && token != null ? (
+        <NotificationDropdown {...{ user, token }} />
+      ) : (
+        ''
+      )}
       <div className="flex flex-row gap-4">
         {user && (
           <>

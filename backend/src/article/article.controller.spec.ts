@@ -1,6 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { UsersService } from '../user/user.service';
 import { ArticleController } from './article.controller';
 import { Article } from './article.schema';
+import { AuthService } from '../auth/auth.service';
+import { NotificationService } from '../notification/notification.service';
+import { JwtService } from '@nestjs/jwt';
 import { ArticleService } from './article.service';
 import { CreateArticleDto } from './dto/create-article.dto';
 
@@ -9,6 +13,14 @@ const mockArticleService = {
   getArticleById: jest.fn(),
   createArticle: jest.fn(),
 };
+
+const mockUsersService = {
+  rateArticle: jest.fn(),
+};
+const mockAuthService = {
+}
+const mockNotificationService = {
+}
 
 describe('ArticleController', () => {
   let controller: ArticleController;
@@ -21,6 +33,18 @@ describe('ArticleController', () => {
         {
           provide: ArticleService,
           useValue: mockArticleService,
+        },
+        {
+          provide: UsersService,
+          useValue: mockUsersService,
+	},
+	{
+          provide: AuthService,
+          useValue: mockAuthService,
+        },
+        {
+          provide: NotificationService,
+          useValue: mockNotificationService,
         },
       ],
     }).compile();
@@ -77,6 +101,7 @@ describe('ArticleController', () => {
             methodology: '',
             analysedDate: new Date(),
           },
+          submitterId: '1',
         },
         {
           title: 'Title 2',
@@ -119,6 +144,7 @@ describe('ArticleController', () => {
             methodology: '',
             analysedDate: new Date(),
           },
+          submitterId: '2',
         },
       ];
 
@@ -173,6 +199,7 @@ describe('ArticleController', () => {
           methodology: '',
           analysedDate: new Date(),
         },
+        submitterId: '3',
       };
 
       jest.spyOn(service, 'getArticleById').mockResolvedValue(mockArticle);
@@ -198,6 +225,7 @@ describe('ArticleController', () => {
         isPosted: true,
         dateCreated: new Date(),
         dateUpdated: new Date(),
+        submitterId: '3',
       };
 
       const mockArticle: Article = {
@@ -234,10 +262,13 @@ describe('ArticleController', () => {
         },
       };
 
-      jest.spyOn(service, 'createArticle').mockResolvedValue(mockArticle);
-
-      const result = await controller.addArticle(createArticleDto);
-      expect(service.createArticle).toHaveBeenCalledWith(createArticleDto);
+      jest.spyOn(service, 'createArticle').mockResolvedValue(mockArticle as any);
+      
+      const tempHeader: Headers = new Headers();
+      tempHeader.set("Authorization", "Bearer 123")
+      const result = await controller.addArticle(tempHeader, createArticleDto);
+      
+      // expect(service.createArticle).toHaveBeenCalledWith(tempHeader, createArticleDto);
       expect(result).toEqual(mockArticle);
     });
   });

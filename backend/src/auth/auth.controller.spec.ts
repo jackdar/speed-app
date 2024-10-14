@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { CreateUserDto } from '../user/dto/create-user.dto';
+import { UsersService } from '../user/user.service';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
@@ -8,6 +9,10 @@ import { JwtAccessToken } from './types/Jwt';
 const mockAuthService = {
   login: jest.fn(),
   register: jest.fn(),
+};
+
+const mockUsersService = {
+  getProfiles: jest.fn(),
 };
 
 describe('AuthController', () => {
@@ -20,6 +25,10 @@ describe('AuthController', () => {
         {
           provide: AuthService,
           useValue: mockAuthService,
+        },
+        {
+          provide: UsersService,
+          useValue: mockUsersService,
         },
       ],
     }).compile();

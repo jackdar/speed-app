@@ -1,7 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { CreateUserDto } from 'src/user/dto/create-user.dto';
-import { UserDto } from 'src/user/dto/user.dto';
+import { CreateUserDto } from '../user/dto/create-user.dto';
+import { UserDto } from '../user/dto/user.dto';
 import { UsersService } from '../user/user.service';
 import { JwtAccessToken } from './types/Jwt';
 
@@ -10,7 +10,7 @@ export class AuthService {
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,
-  ) {}
+  ) { }
 
   async register(userDto: CreateUserDto): Promise<UserDto> {
     return this.usersService.register(userDto);
@@ -28,10 +28,18 @@ export class AuthService {
     if (!isPasswordValid)
       throw new UnauthorizedException('Invalid credentials');
 
-    const payload = { email: user.email, role: user.role };
+    const payload = { uid:user._id, email: user.email, role: user.role };
 
     return {
       access_token: this.jwtService.sign(payload),
     };
+  }
+
+  async verify(token: any) {
+    try {
+      return this.jwtService.verify(token);
+    } catch (e) {
+      return { message: "Unauthorized" };
+    }
   }
 }

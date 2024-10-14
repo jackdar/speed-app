@@ -1,5 +1,6 @@
 'use client';
 
+import { useAuth } from '@/hooks/use-auth';
 import { useToast } from '@/hooks/use-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
@@ -35,8 +36,10 @@ const schema = z.object({
 });
 
 const PaperForm = () => {
+  const { token } = useAuth();
   const { toast } = useToast();
   const router = useRouter();
+  const { user } = useAuth();
 
   const {
     register,
@@ -49,14 +52,15 @@ const PaperForm = () => {
   const onSubmit = async (data: z.infer<typeof schema>) => {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/article/new`,
+        `${process.env.NEXT_PUBLIC_API_URL}/articles/new`,
         {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
           },
           credentials: 'include',
-          body: JSON.stringify(data),
+          body: JSON.stringify({ submitterId: user?._id, ...data }),
         },
       );
 
