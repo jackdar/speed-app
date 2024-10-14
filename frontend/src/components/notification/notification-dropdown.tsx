@@ -56,8 +56,8 @@ const NotificationDropdown = ({user, token}: UserProps) => {
                         <Button variant="ghost" className="relative">
                             <ShieldAlert
                              className="h-4 w-4 mr-2" />
-                            <p className="hidden xl:block">Article Queue</p>
-                            {queueNotifications.length ? ` (${queueNotifications.length})` : ""}
+                            <p className="hidden xl:block">Article Queue {queueNotifications.length ? `(${queueNotifications.length})` : ""}</p>
+                           
                             {queueNotifications.length ? (
                                 <span className="absolute top-1 right-1 transform translate-x-1/12 -translate-y-1/12 h-2 w-2 rounded-full bg-red-500" />
                             ) : ""}
