@@ -1,4 +1,5 @@
 export class CreateArticleDto {
+  submitterId: string;
   title: string;
   author: string;
   publisher: string;

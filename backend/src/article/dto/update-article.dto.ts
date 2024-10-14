@@ -1,6 +1,7 @@
 import { Analysis, Moderation, Rating } from '../article.schema';
 
 export class UpdateArticleDto {
+  submitterId: string;
   title: string;
   author: string;
   publisher: string;

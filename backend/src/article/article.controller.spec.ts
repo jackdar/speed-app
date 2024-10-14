@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { UsersService } from '../user/user.service';
 import { ArticleController } from './article.controller';
 import { Article } from './article.schema';
 import { AuthService } from '../auth/auth.service';
@@ -13,11 +14,12 @@ const mockArticleService = {
   createArticle: jest.fn(),
 };
 
+const mockUsersService = {
+  rateArticle: jest.fn(),
+};
 const mockAuthService = {
-
 }
 const mockNotificationService = {
-
 }
 
 describe('ArticleController', () => {
@@ -33,6 +35,10 @@ describe('ArticleController', () => {
           useValue: mockArticleService,
         },
         {
+          provide: UsersService,
+          useValue: mockUsersService,
+	},
+	{
           provide: AuthService,
           useValue: mockAuthService,
         },
@@ -95,6 +101,7 @@ describe('ArticleController', () => {
             methodology: '',
             analysedDate: new Date(),
           },
+          submitterId: '1',
         },
         {
           title: 'Title 2',
@@ -137,6 +144,7 @@ describe('ArticleController', () => {
             methodology: '',
             analysedDate: new Date(),
           },
+          submitterId: '2',
         },
       ];
 
@@ -191,6 +199,7 @@ describe('ArticleController', () => {
           methodology: '',
           analysedDate: new Date(),
         },
+        submitterId: '3',
       };
 
       jest.spyOn(service, 'getArticleById').mockResolvedValue(mockArticle);
@@ -216,6 +225,7 @@ describe('ArticleController', () => {
         isPosted: true,
         dateCreated: new Date(),
         dateUpdated: new Date(),
+        submitterId: '3',
       };
 
       const mockArticle: Article = {

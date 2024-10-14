@@ -1,8 +1,16 @@
-
-import { Controller, Get, Post, Put, Param, Body, Headers } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Headers,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
+import { AuthService } from '../auth/auth.service';
+import { UsersService } from '../user/user.service';
 import { ArticleService } from './article.service';
 import { CreateArticleDto } from './dto/create-article.dto';
-import { AuthService } from '../auth/auth.service';
 import { RatingDto } from './dto/rating.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
 
@@ -10,8 +18,9 @@ import { UpdateArticleDto } from './dto/update-article.dto';
 export class ArticleController {
   constructor(
     private readonly articleService: ArticleService,
-    private readonly authService: AuthService
-  ) { }
+    private readonly usersService: UsersService,
+    private readonly authService: AuthService,
+  ) {}
 
   @Get('/articles')
   async getArticles() {
@@ -33,7 +42,7 @@ export class ArticleController {
 
   @Post('/article/:id/rate')
   async rateArticle(@Body() ratingDto: RatingDto, @Param('id') id: string) {
-    console.log(ratingDto);
+    await this.usersService.rateArticle(ratingDto.userId, id, ratingDto.rating);
     return await this.articleService.rateArticle(id, ratingDto);
   }
 
@@ -42,15 +51,15 @@ export class ArticleController {
     return await this.articleService.getArticleRatings(id);
   }
 
-
   @Post('articles/new')
   async addArticle(
-    @Headers() headers: Headers, 
-    @Body() article: CreateArticleDto) {
-    let token = headers["authorization"];
+    @Headers() headers: Headers,
+    @Body() article: CreateArticleDto,
+  ) {
+    let token = headers['authorization'];
     let decoded = null;
-    if(token) {
-      token = token.replace("Bearer ", "");
+    if (token) {
+      token = token.replace('Bearer ', '');
       decoded = await this.authService.verify(token);
       console.log(decoded);
     }

@@ -13,7 +13,7 @@ const mockUser: any = {
   password: 'hashedPassword',
   role: 'registered',
   bio: '',
-  articlesPublished: [],
+  articlesSubmitted: [],
   articlesModerated: [],
   articlesAnalysed: [],
   articlesRated: [],

@@ -13,7 +13,7 @@ const LoginPage = () => {
   const { user, login, error } = useAuth();
 
   useEffect(() => {
-    if (user) router.push('articles');
+    if (user) router.push('/');
   }, [user, router]);
 
   const loginSchema = z.object({
@@ -42,7 +42,7 @@ const LoginPage = () => {
       const token = localStorage.getItem('token');
 
       if (token != null) {
-        router.push('articles');
+        router.push('/');
       }
     };
 
@@ -71,10 +71,7 @@ const LoginPage = () => {
             placeholder="Password"
             {...register("password")}
           />
-          <button
-            type="submit"
-            className="w-full bg-[#646464] text-white p-2 rounded"
-          >
+          <button type="submit" className="w-full bg-[#646464] text-white p-2 rounded">
             Login
           </button>
           {error && <p style={{ color: 'red' }}>{error}</p>}

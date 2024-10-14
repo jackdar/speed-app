@@ -30,11 +30,7 @@ const ProfilePage = () => {
                 </h2>
                 <p className="text-gray-500">{`${capitalise(user.role)}`}</p>
               </div>
-              <Button
-                variant="outline"
-                className="border-black bg-transparent mx-auto lg:ml-auto lg:mr-0"
-                asChild
-              >
+              <Button variant="outline" className="border-black bg-transparent mx-auto lg:ml-auto lg:mr-0" asChild>
                 <Link href="/profile/edit">Edit Profile</Link>
               </Button>
             </div>
@@ -51,40 +47,36 @@ const ProfilePage = () => {
             <div className="grid grid-cols-2 p-8 bg-white rounded-xl">
               <Paperclip size={32} />
               <p>
-                {user.articlesPublished?.length || 0}{' '}
-                <span className="text-base">published</span>
+                {user.articlesSubmitted?.length || 0} <span className="text-base">submitted</span>
               </p>
             </div>
             <div className="grid grid-cols-2 p-8 bg-white rounded-xl">
               <ListCheck size={32} />
               <p>
-                {user.articlesModerated?.length || 0}{' '}
-                <span className="text-base">moderated</span>
+                {user.articlesModerated?.length || 0} <span className="text-base">moderated</span>
               </p>
             </div>
             <div className="grid grid-cols-2 p-8 bg-white rounded-xl">
               <Search size={32} />
               <p>
-                {user.articlesAnalysed?.length || 0}{' '}
-                <span className="text-base">analysed</span>
+                {user.articlesAnalysed?.length || 0} <span className="text-base">analysed</span>
               </p>
             </div>
             <div className="grid grid-cols-2 p-8 bg-white rounded-xl">
               <Star size={32} />
               <p>
-                {user.articlesRated?.length || 0}{' '}
-                <span className="text-base">rated</span>
+                {user.articlesRated?.length || 0} <span className="text-base">rated</span>
               </p>
             </div>
           </div>
         </div>
         <div>
-          <h3 className="text-xl">Recently Published Articles</h3>
+          <h3 className="text-xl">Recently Submitted Articles</h3>
           <div className="flex flex-col space-y-2">
-            {user.articlesPublished?.length ? (
-              user.articlesPublished.map((article) => (
-                <div key={article} className="flex items-center gap-4">
-                  <p>{article}</p>
+            {user.articlesSubmitted?.length ? (
+              user.articlesSubmitted.map((article) => (
+                <div key={article._id} className="flex items-center gap-4">
+                  <p>{article.title}</p>
                   <Button variant="outline" asChild>
                     <Link href={`/article/${article}`}>View Article</Link>
                   </Button>
