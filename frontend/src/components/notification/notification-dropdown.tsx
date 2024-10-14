@@ -82,8 +82,7 @@ const NotificationDropdown = ({user, token}: UserProps) => {
                 <DropdownMenuTrigger asChild>
                     <Button variant="ghost" className="relative">
                         <Bell className="h-4 w-4 lg:mr-2" />
-                        <p className="hidden xl:block">Notifications</p>
-                        {userNotifications.length ? ` (${userNotifications.length})` : ""}
+                        <p className="hidden xl:block">Notifications {userNotifications.length ? `(${userNotifications.length})` : ""}</p>
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-90 max-h-[400px] overflow-auto">
