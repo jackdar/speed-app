@@ -37,33 +37,33 @@ describe('AdminService', () => {
   describe('Admin Service', () => {
     describe('getModeratorQueue()', () => {
       const unmodMockArticle = {
-        moderationDetails: {
+        moderation: {
           moderated: false,
           moderation_passed: false,
         },
-        analysisDetails: {
+        analysis: {
           analyzed: false,
           analyzed_passed: false,
         },
       };
 
       const modMockArticle = {
-        moderationDetails: {
+        moderation: {
           moderated: true,
           moderation_passed: true,
         },
-        analysisDetails: {
+        analysis: {
           analyzed: false,
           analyzed_passed: false,
         },
       };
 
       const expectedUnmodArticle = {
-        moderationDetails: {
+        moderation: {
           moderated: false,
           moderation_passed: false,
         },
-        analysisDetails: {
+        analysis: {
           analyzed: false,
           analyzed_passed: false,
         },
@@ -93,44 +93,44 @@ describe('AdminService', () => {
 
     describe('getAnalystQueue()', () => {
       const modPassNoAnalyzeMockArticle = {
-        moderationDetails: {
+        moderation: {
           moderated: true,
-          moderation_passed: true,
+          moderation_passed: true
         },
-        analysisDetails: {
+        analysis: {
           analyzed: false,
           analyzed_passed: false,
         },
       };
 
       const modNoPassNoAnalyzeMockArticle = {
-        moderationDetails: {
+        moderation: {
           moderated: true,
           moderation_passed: false,
         },
-        analysisDetails: {
+        analysis: {
           analyzed: false,
           analyzed_passed: false,
         },
       };
 
       const modNoPassAnalyzedMockArticle = {
-        moderationDetails: {
+        moderation: {
           moderated: true,
           moderation_passed: true,
         },
-        analysisDetails: {
+        analysis: {
           analyzed: true,
           analyzed_passed: false,
         },
       };
 
       const expectedUnanalyzedArticle = {
-        moderationDetails: {
+        moderation: {
           moderated: true,
           moderation_passed: true,
         },
-        analysisDetails: {
+        analysis: {
           analyzed: false,
           analyzed_passed: false,
         },
