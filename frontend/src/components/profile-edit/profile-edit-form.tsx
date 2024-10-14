@@ -15,11 +15,16 @@ const ProfileEditForm = () => {
 
   if (!user) throw new Error('User is not authenticated!');
 
+  const nameRegex = /^[a-zA-Z]+$/;
+
   const schema = z.object({
-    firstName: z.string().min(1, 'First name is required'),
-    lastName: z.string().min(1, 'Last name is required'),
-    email: z
-      .string()
+    firstName: z.string()
+      .min(1, 'First name is required')
+      .refine((value) => nameRegex.test(value ?? ""), 'First name should contain only english letters.'),
+    lastName: z.string()
+      .min(1, 'Last name is required')
+      .refine((value) => nameRegex.test(value ?? ""), 'Last name should contain only englishh letters'),
+    email: z.string()
       .email('Invalid email address')
       .refine((val) => val === user.email, {
         message: 'Email must match the current user email',
