@@ -34,14 +34,12 @@ export default function Navbar() {
 
   const userLinks = roleHierarchy[user?.role || 'guest'];
 
-  const filteredRoutes = routes.filter((route) =>
-    userLinks.some((permission) => route.permissions.includes(permission)),
-  );
+  const filteredRoutes = routes.filter((route) => userLinks.some((permission) => route.permissions.includes(permission)));
 
   return (
     <nav className="w-full bg-black p-4 flex items-center justify-between text-white">
       <div className="flex flex-row gap-6 items-center">
-        <Link href="/articles">
+        <Link href="/">
           <p className="text-3xl font-light">Speed</p>
         </Link>
         <div className="flex flex-row gap-4">
@@ -58,10 +56,7 @@ export default function Navbar() {
             <Button variant="outline" className="bg-transparent" asChild>
               <Link href="/submission">Submit Article</Link>
             </Button>
-            <Link
-              href="/profile"
-              className="bg-gray-700 rounded-full m-auto p-1.5"
-            >
+            <Link href="/profile" className="bg-gray-700 rounded-full m-auto p-1.5">
               <UserIcon />
             </Link>
           </>

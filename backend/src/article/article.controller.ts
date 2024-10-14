@@ -28,13 +28,7 @@ export class ArticleController {
 
   @Post('/article/:id/rate')
   async rateArticle(@Body() ratingDto: RatingDto, @Param('id') id: string) {
-    console.log(ratingDto);
     return await this.articleService.rateArticle(id, ratingDto);
-  }
-
-  @Get('/article/:id/ratings')
-  async getArticleRatings(@Param('id') id: string) {
-    return await this.articleService.getArticleRatings(id);
   }
 
   @Post('/article/new')

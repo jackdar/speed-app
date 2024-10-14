@@ -56,68 +56,43 @@ export class ArticleService {
 
   async rateArticle(id: string, ratingDto: RatingDto): Promise<Article> {
     try {
-      if (ratingDto.rating === 0) {
+      const { userId, rating } = ratingDto;
+      const currentDate = new Date();
+
+      if (rating === 0) {
         return await this.articleModel.findOneAndUpdate(
-          {
-            _id: id,
-            'ratings.raterId': ratingDto.userId,
-          },
-          {
-            $pull: {
-              ratings: {
-                raterId: ratingDto.userId,
-              },
-            },
-          },
+          { _id: id, 'ratings.raterId': userId },
+          { $pull: { ratings: { raterId: userId } } },
+          { new: true },
         );
       }
 
-      const article = await this.articleModel
-        .findOneAndUpdate(
-          {
-            _id: id,
-            'ratings.raterId': ratingDto.userId,
+      const article = await this.articleModel.findOneAndUpdate(
+        { _id: id, 'ratings.raterId': userId },
+        {
+          $set: {
+            'ratings.$.rating': rating,
+            'ratings.$.ratedDate': currentDate,
           },
+        },
+        { upsert: false, new: true },
+      );
+
+      if (!article) {
+        return await this.articleModel.findByIdAndUpdate(
+          id,
           {
-            $set: {
-              'ratings.$.rating': ratingDto.rating,
-              'ratings.$.ratedDate': new Date(),
+            $push: {
+              ratings: { raterId: userId, rating, ratedDate: currentDate },
             },
           },
-          {
-            upsert: false,
-            new: true,
-          },
-        )
-        .then((article) => {
-          if (!article) {
-            return this.articleModel.findByIdAndUpdate(
-              id,
-              {
-                $push: {
-                  ratings: {
-                    raterId: ratingDto.userId,
-                    rating: ratingDto.rating,
-                    ratedDate: new Date(),
-                  },
-                },
-              },
-              { new: true },
-            );
-          }
-        });
+          { new: true },
+        );
+      }
 
       return article;
     } catch (error) {
       throw new BadRequestException('Failed to rate article. ' + error);
     }
-  }
-
-  async getArticleRatings(id: string): Promise<Rating[]> {
-    const article = await this.articleModel.findById(id);
-    if (!article) {
-      throw new BadRequestException('Article not found');
-    }
-    return article.ratings;
   }
 }
