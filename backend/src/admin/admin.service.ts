@@ -7,19 +7,19 @@ import { Article } from '../article/article.schema';
 export class AdminService {
   constructor(
     @InjectModel(Article.name) private articleModel: Model<Article>,
-  ) {}
+  ) { }
 
   async getModeratorQueue(): Promise<any> {
     return await this.articleModel.find({
-      'moderationDetails.moderated': false,
+      'moderation.moderated': false,
     });
   }
 
   async getAnalystQueue(): Promise<any> {
     return await this.articleModel.find({
-      'moderationDetails.moderated': true,
-      'moderationDetails.moderation_passed': true,
-      'analysisDetails.analyzed': false,
+      'moderation.moderated': true,
+      'moderation.moderation_passed': true,
+      'analysis.analyzed': false,
     });
   }
 }

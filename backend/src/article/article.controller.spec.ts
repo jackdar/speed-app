@@ -37,8 +37,8 @@ describe('ArticleController', () => {
         {
           provide: UsersService,
           useValue: mockUsersService,
-	},
-	{
+        },
+        {
           provide: AuthService,
           useValue: mockAuthService,
         },
@@ -88,6 +88,7 @@ describe('ArticleController', () => {
           moderation: {
             moderatorId: '1',
             moderated: true,
+            moderation_passed: true,
             status: 'approved',
             comments: 'well done',
             moderatedDate: new Date(),
@@ -131,6 +132,7 @@ describe('ArticleController', () => {
           moderation: {
             moderatorId: '1',
             moderated: true,
+            moderation_passed: true,
             status: 'approved',
             comments: 'well done',
             moderatedDate: new Date(),
@@ -186,6 +188,7 @@ describe('ArticleController', () => {
         moderation: {
           moderatorId: '1',
           moderated: true,
+          moderation_passed: true,
           status: 'approved',
           comments: 'well done',
           moderatedDate: new Date(),
@@ -247,6 +250,7 @@ describe('ArticleController', () => {
         moderation: {
           moderatorId: '1',
           moderated: true,
+          moderation_passed: true,
           status: 'approved',
           comments: 'well done',
           moderatedDate: new Date(),
@@ -263,11 +267,11 @@ describe('ArticleController', () => {
       };
 
       jest.spyOn(service, 'createArticle').mockResolvedValue(mockArticle as any);
-      
+
       const tempHeader: Headers = new Headers();
       tempHeader.set("Authorization", "Bearer 123")
       const result = await controller.addArticle(tempHeader, createArticleDto);
-      
+
       // expect(service.createArticle).toHaveBeenCalledWith(tempHeader, createArticleDto);
       expect(result).toEqual(mockArticle);
     });

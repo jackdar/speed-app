@@ -14,7 +14,7 @@ export class ArticleService {
   constructor(
     @InjectModel(Article.name) private articleModel: Model<Article>,
     private notificationService: NotificationService,
-  ) {}
+  ) { }
 
   async getArticles(): Promise<Article[]> {
     return await this.articleModel.find();
@@ -48,8 +48,24 @@ export class ArticleService {
   ): Promise<Article> {
     try {
       const currentDate = new Date();
+
       const createResult = await this.articleModel.create({
         ...createArticleDto,
+        moderation: {
+          moderatorId: "",
+          moderated: false,
+          moderation_passed: false,
+          status: "not moderated",
+          comments: ""
+        },
+        analysis: {
+          analyserId: "",
+          analysed: false,
+          status: "not analysed",
+          summary: "",
+          keyFindings: [],
+          methodology: ""
+        },
         dateCreated: createArticleDto.dateCreated || currentDate,
         dateUpdated: createArticleDto.dateUpdated || currentDate,
       });
