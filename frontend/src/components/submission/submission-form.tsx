@@ -1,12 +1,12 @@
 'use client';
 
+import { useAuth } from '@/hooks/use-auth';
 import { useToast } from '@/hooks/use-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { ToastAction } from '../ui/toast';
-import { useAuth } from '@/hooks/use-auth';
 
 const schema = z.object({
   title: z.string().nonempty('Title is required'),
@@ -39,6 +39,7 @@ const PaperForm = () => {
   const { token } = useAuth();
   const { toast } = useToast();
   const router = useRouter();
+  const { user } = useAuth();
 
   const {
     register,
@@ -56,10 +57,10 @@ const PaperForm = () => {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
+            Authorization: `Bearer ${token}`,
           },
           credentials: 'include',
-          body: JSON.stringify(data),
+          body: JSON.stringify({ submitterId: user?._id, ...data }),
         },
       );
 

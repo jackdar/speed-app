@@ -45,9 +45,9 @@ export default function Navbar() {
   );
  
   return (
-    <nav className="w-full bg-black p-4 flex items-center justify-between text-white">
+    <nav className="sticky top-0 w-full bg-black p-4 flex items-center justify-between text-white z-50">
       <div className="flex flex-row gap-6 items-center">
-        <Link href="/articles">
+        <Link href="/">
           <p className="text-3xl font-light">Speed</p>
         </Link>
         <div className="flex flex-row gap-4">
@@ -69,10 +69,7 @@ export default function Navbar() {
             <Button variant="outline" className="bg-transparent" asChild>
               <Link href="/submission">Submit Article</Link>
             </Button>
-            <Link
-              href="/profile"
-              className="bg-gray-700 rounded-full m-auto p-1.5"
-            >
+            <Link href="/profile" className="bg-gray-700 rounded-full m-auto p-1.5">
               <UserIcon />
             </Link>
           </>
