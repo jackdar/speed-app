@@ -58,7 +58,9 @@ const NotificationDropdown = ({user, token}: UserProps) => {
                              className="h-4 w-4 mr-2" />
                             <p className="hidden xl:block">Article Queue</p>
                             {queueNotifications.length ? ` (${queueNotifications.length})` : ""}
-                            <span className="absolute top-1 right-1 transform translate-x-1/2 -translate-y-1/2 h-4 w-4 rounded-full bg-red-500" />
+                            {queueNotifications.length ? (
+                                <span className="absolute top-1 right-1 transform translate-x-1/12 -translate-y-1/12 h-2 w-2 rounded-full bg-red-500" />
+                            ) : ""}
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="w-90 max-h-[400px] overflow-auto">
