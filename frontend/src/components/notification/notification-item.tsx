@@ -14,8 +14,7 @@ const NotificationItem: React.FC<Props> = ({ notification }) => {
     const router = useRouter();
 
     const viewArticle = async () => {
-        console.log("role" in notification ? "ADMIN NOTI" : "USER NOTI")
-        if("role" in notification) {
+        if ("role" in notification) {
             // Change to moderate view afterwards
             router.push(`/articles/${notification.article_id}`);
         } else {
@@ -34,7 +33,7 @@ const NotificationItem: React.FC<Props> = ({ notification }) => {
     }
 
     return (
-        <div className="flex items-center p-1 justify-between">
+        <div className="flex items-center p-1 justify-between max-w-md">
             <div className="p-1 grid grid-cols-[25px_1fr] items-start pb-4 last:mb-0 last:pb-0 pr-10">
                 <span className="flex h-2 w-2 translate-y-1.5 rounded-full bg-blue-500" />
                 <div className="grid gap-1">

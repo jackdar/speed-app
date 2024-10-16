@@ -8,6 +8,8 @@ import { Article, Rating } from './article.schema';
 import { CreateArticleDto } from './dto/create-article.dto';
 import { RatingDto } from './dto/rating.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
+import { UpdateModerationDto } from './dto/update-moderation.dto';
+import { UpdateAnalysisDto } from './dto/update-analysis.dto';
 
 @Injectable()
 export class ArticleService {
@@ -42,6 +44,30 @@ export class ArticleService {
     }
   }
 
+  async moderateArticle(articleId: string, moderationDetails: UpdateModerationDto): Promise<Article> {
+    try {
+      moderationDetails.moderatedDate = new Date();
+      const updatedModerationDetails: UpdateModerationDto = moderationDetails;
+      await this.articleModel.findByIdAndUpdate(articleId, { $set: updatedModerationDetails });
+      const updatedResult = this.articleModel.findById(articleId);
+      return updatedResult;
+    } catch (error) {
+      throw new BadRequestException("Failed to update moderation details. " + error);
+    }
+  }
+
+  async analyseArticle(articleId: string, analysisDetails: UpdateAnalysisDto): Promise<Article> {
+    try {
+      analysisDetails.analysisDate = new Date();
+      const updatedAnalysisDetails: UpdateAnalysisDto = analysisDetails;
+      await this.articleModel.findByIdAndUpdate(articleId, { $set: updatedAnalysisDetails });
+      const updatedResult = this.articleModel.findById(articleId);
+      return updatedResult;
+    } catch (error) {
+      throw new BadRequestException("Failed to update analysis details. " + error);
+    }
+  }
+
   async createArticle(
     uid: string = 'no user',
     createArticleDto: CreateArticleDto,
@@ -59,7 +85,7 @@ export class ArticleService {
           comments: ""
         },
         analysis: {
-          analyserId: "",
+          analystId: "",
           analysed: false,
           status: "not analysed",
           summary: "",
