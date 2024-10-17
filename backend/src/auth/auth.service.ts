@@ -1,11 +1,11 @@
 import { ForbiddenException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { CreateUserDto } from 'src/user/dto/create-user.dto';
-import { UserDto } from 'src/user/dto/user.dto';
+import { CreateUserDto } from '../user/dto/create-user.dto';
+import { UserDto } from '../user/dto/user.dto';
 import { UsersService } from '../user/user.service';
 import { JwtToken } from './types/Jwt';
 import { ConfigService } from '@nestjs/config';
-import * as bcrypt from 'bcrypt';
+import * as argon2 from "argon2";
 
 @Injectable()
 export class AuthService {
@@ -30,18 +30,12 @@ export class AuthService {
 
     if (!isPasswordValid)
       throw new UnauthorizedException('Invalid credentials');
-
-    const payload = { uid: user._id, email: user.email, role: user.role };
     const tokens = await this.getTokens(user._id, user.email, user.role);
     await this.updateRefreshToken(user._id, tokens.refreshToken);
-    // console.log(tokens);
     return {
       access_token: tokens.accessToken,
       refresh_token: tokens.refreshToken
     };
-    // return {
-    //   access_token: this.jwtService.sign(payload),
-    // };
   }
 
   async logout(uid: string) {
@@ -49,9 +43,11 @@ export class AuthService {
   }
 
   async updateRefreshToken(uid: string, refreshToken: string) {
-    const hashedRefreshToken = await bcrypt.hash(refreshToken, 10);
-    await this.usersService.updateUser(uid, {
-      refreshToken: hashedRefreshToken,
+    const hashedRefreshToken = await argon2.hash(refreshToken);
+    await this.usersService.updateUser(uid, { 
+      $set: {
+        "refreshToken": hashedRefreshToken,
+      }
     });
   }
 
@@ -65,7 +61,7 @@ export class AuthService {
         },
         {
           secret: this.configService.get<string>("JWT_SECRET"),
-          expiresIn: "30m"
+          expiresIn: "15m"
         }
       ),
       this.jwtService.signAsync(
@@ -76,7 +72,7 @@ export class AuthService {
         },
         {
           secret: this.configService.get<string>("JWT_REFRESH_SECRET"),
-          expiresIn: "7d"
+          expiresIn: "1d"
         }
       )
     ]);
@@ -84,14 +80,14 @@ export class AuthService {
     return { accessToken, refreshToken };
   }
 
-  async refreshTokens(uid: string, refreshToken: string): Promise<JwtToken> {
+  async refreshTokens(uid: string, plainRefreshToken: string): Promise<JwtToken> {
     const user = await this.usersService.findById(uid);
 
     if(!user || !user.refreshToken)
       throw new ForbiddenException("Access Denied");
-  
-    const refreshTokenMatches = await bcrypt.compare(refreshToken, user.refreshToken);
-
+   
+    const refreshTokenMatches = await argon2.verify(user.refreshToken, plainRefreshToken);
+ 
     if(!refreshTokenMatches)
       throw new ForbiddenException("Access Denied");
 
