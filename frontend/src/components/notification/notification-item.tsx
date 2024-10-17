@@ -2,14 +2,16 @@ import { AdminNotifcation } from "@/types/notification/admin-notification";
 import { UserNotification } from "@/types/notification/user-notification";
 import { useRouter } from "next/navigation";
 import { Button } from "../ui/button";
+import { User } from "@/types";
 
 interface Props {
     notification: AdminNotifcation | UserNotification
+    token: string
 }
 
 
 
-const NotificationItem: React.FC<Props> = ({ notification }) => {
+const NotificationItem = ({ notification, token}:Props) => {
 
     const router = useRouter();
 
@@ -17,11 +19,22 @@ const NotificationItem: React.FC<Props> = ({ notification }) => {
         if ("role" in notification) {
             // Change to moderate view afterwards
             router.push(`/articles/${notification.article_id}`);
+            // Updates notification to be assigned
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/notifications/assign`, {
+                method: "PUT",
+                headers: {
+                    "Authorization": "Bearer " + token,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    "notification_id": notification._id
+                })
+            })
         } else {
             let temp = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/notifications/read`, {
                 method: "PUT",
                 headers: {
-                    "Authorization": "Bearer " + localStorage.getItem("token"),
+                    "Authorization": "Bearer " + token,
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({

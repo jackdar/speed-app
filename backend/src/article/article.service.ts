@@ -48,9 +48,9 @@ export class ArticleService {
     try {
       moderationDetails.moderatedDate = new Date();
       const updatedModerationDetails: UpdateModerationDto = moderationDetails;
-      await this.articleModel.findByIdAndUpdate(articleId, { $set: updatedModerationDetails });
-      const updatedResult = this.articleModel.findById(articleId);
-      return updatedResult;
+      const updatedArticle = await this.articleModel.findByIdAndUpdate(articleId, { $set: {"moderation": updatedModerationDetails }}, {new: true});
+
+      return updatedArticle;
     } catch (error) {
       throw new BadRequestException("Failed to update moderation details. " + error);
     }
@@ -60,9 +60,9 @@ export class ArticleService {
     try {
       analysisDetails.analysisDate = new Date();
       const updatedAnalysisDetails: UpdateAnalysisDto = analysisDetails;
-      await this.articleModel.findByIdAndUpdate(articleId, { $set: updatedAnalysisDetails });
-      const updatedResult = this.articleModel.findById(articleId);
-      return updatedResult;
+      const updatedArticle = await this.articleModel.findByIdAndUpdate(articleId, { $set: {"analysis": updatedAnalysisDetails }}, {new: true});
+      
+      return updatedArticle;
     } catch (error) {
       throw new BadRequestException("Failed to update analysis details. " + error);
     }
@@ -106,18 +106,9 @@ export class ArticleService {
         assigned: false,
         assignee_id: '',
       };
-      const temp2: CreateUserNotificationDto = {
-        user_id: uid,
-        article_id: createResult._id.toString(),
-        article_title: createResult.title,
-        title: 'Article Approved',
-        message: 'Your submitted article has been approved.',
-        read: false,
-      };
-
+    
       if (createResult) {
         await this.notificationService.sendNotification(adminNotification);
-        await this.notificationService.sendNotification(temp2);
       }
       return createResult;
     } catch (error) {
