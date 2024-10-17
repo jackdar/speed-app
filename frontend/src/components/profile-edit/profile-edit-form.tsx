@@ -11,7 +11,7 @@ import { ToastAction } from '../ui/toast';
 const ProfileEditForm = () => {
   const { toast } = useToast();
   const router = useRouter();
-  const { user, token, fetchProfile } = useAuth();
+  const { user, accessToken, fetchProfile } = useAuth();
 
   if (!user) throw new Error('User is not authenticated!');
 
@@ -40,7 +40,7 @@ const ProfileEditForm = () => {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${accessToken}`,
       },
       body: JSON.stringify(data),
     })
