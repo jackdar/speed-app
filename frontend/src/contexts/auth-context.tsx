@@ -103,9 +103,9 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
         "Authorization": `Bearer ${accessToken}`
       }
     })
-    // localStorage.removeItem('access_token')
-    // localStorage.removeItem('refresh_token')
-    // setUser(null);
+    localStorage.removeItem('access_token')
+    localStorage.removeItem('refresh_token')
+    setUser(null);
     router.push('/');
     toast({
       variant: 'default',
