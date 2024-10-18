@@ -11,6 +11,15 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   SortingState,
+  useReactTable,
+} from "@tanstack/react-table";
+import { ChevronDown, ChevronUp } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Suspense, useMemo, useRef, useState } from "react";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
+import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 import {
   Table,
   TableBody,
@@ -18,8 +27,8 @@ import {
   TableHead,
   TableHeader,
   TableRow,
+} from "./ui/table";
 
-export default function ArticleTable({ data }: { data: Article[] }) {
 export default function ArticleTable({
   data,
   mode = "normal",
@@ -28,10 +37,10 @@ export default function ArticleTable({
   data: Article[];
   mode?: "normal" | "mod" | "analyse";
   search?: boolean;
+}) {
   const router = useRouter();
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [selectedFilter, setSelectedFilter] = useState<string>('title');
   const [selectedFilter, setSelectedFilter] = useState<string>("title");
 
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -39,37 +48,57 @@ export default function ArticleTable({
   const columns = useMemo<ColumnDef<Article>[]>(
     () => [
       {
-        header: 'Title',
-        accessorKey: 'title',
+        header: "Title",
+        accessorKey: "title",
       },
       {
-        header: 'Author',
-        accessorKey: 'author',
+        header: "Author",
+        accessorKey: "author",
       },
       {
-        header: 'Journal',
-        accessorKey: 'journal',
+        header: "Journal",
+        accessorKey: "journal",
       },
       {
-        header: 'Year',
-        accessorKey: 'year',
+        header: "Year",
+        accessorKey: "year",
         filterFn: (row, columnId, filterValue) => {
-          return row.getValue<number | string>(columnId).toString().toLowerCase().trim().startsWith(filterValue) ? true : false;
+          return row
+            .getValue<number | string>(columnId)
+            .toString()
+            .toLowerCase()
+            .trim()
+            .startsWith(filterValue)
+            ? true
+            : false;
         },
       },
       {
-        header: 'DOI',
-        accessorKey: 'doi',
+        header: "DOI",
+        accessorKey: "doi",
       },
       {
-        header: 'Rating',
-        accessorKey: 'rating',
+        header: "Rating",
+        accessorKey: "rating",
       },
       {
-        header: 'Methdology',
-        accessorKey: 'methdology',
-
+        header: "Methdology",
+        accessorKey: "methdology",
       },
+      {
+        header: "Action",
+        accessorKey: "action",
+        cell: () => {
+            switch (mode) {
+              case "mod":
+                return <Button>Moderate</Button>
+              case "analyse":
+                return <Button>Admin</Button>
+              default:
+                return null
+            }
+        }
+      } 
     ],
     [],
   );
@@ -91,12 +120,14 @@ export default function ArticleTable({
     initialState: {
       columnVisibility: {
         id: false,
+        action: mode !== "normal"
       },
     },
   });
 
   return (
     <>
+      {search &&
       <div className="flex justify-center items-start bg-[#8D8D8D] p-8">
         <div className="bg-gray-100 p-8 rounded shadow-md w-full">
           <h2 className=" text-2xl text-black mb-4 w-full text-start border-b border-black pb-2">
@@ -131,18 +162,19 @@ export default function ArticleTable({
               {columns.map((column, index) => (
                 <div className="flex items-center space-x-2" key={index}>
                   <RadioGroupItem
-                    value={column.header?.toString() || ''}
+                    value={column.header?.toString() || ""}
                     id={column.header?.toString() || `column-${index}`}
                   />
                   <Label
                     htmlFor={column.header?.toString() || `column-${index}`}
-                  >{`${column.header?.toString() || 'Unnamed Column'}`}</Label>
+                  >{`${column.header?.toString() || "Unnamed Column"}`}</Label>
                 </div>
               ))}
             </RadioGroup>
           </div>
         </div>
       </div>
+      }
       <div className="flex flex-1 flex-col p-8">
         <Suspense>
           <div className="w-full">
@@ -155,27 +187,29 @@ export default function ArticleTable({
                         {headerGroup.headers.map((header) => {
                           return (
                             <TableHead key={header.id} className="text-nowrap">
-                              {header.isPlaceholder
-                                ? null
-                                : (<div
+                              {header.isPlaceholder ? null : (
+                                <div
                                   {...{
                                     className: header.column.getCanSort()
-                                      ? 'flex flex-row gap-1 items-center cursor-pointer select-none'
-                                      : '',
-                                    onClick: header.column.getToggleSortingHandler(),
+                                      ? "flex flex-row gap-1 items-center cursor-pointer select-none"
+                                      : "",
+                                    onClick:
+                                      header.column.getToggleSortingHandler(),
                                   }}
                                 >
                                   {flexRender(
                                     header.column.columnDef.header,
-                                    header.getContext()
+                                    header.getContext(),
                                   )}
                                   {{
                                     asc: <ChevronUp size={16} />,
                                     desc: <ChevronDown size={16} />,
-                                  }[header.column.getIsSorted() as string] ?? null}
-                                </div>)
-                              }
-                            </TableHead>)
+                                  }[header.column.getIsSorted() as string] ??
+                                    null}
+                                </div>
+                              )}
+                            </TableHead>
+                          );
                         })}
                       </TableRow>
                     ))}
@@ -186,11 +220,11 @@ export default function ArticleTable({
                         <TableRow
                           key={row.id}
                           className="cursor-pointer"
-                          data-state={row.getIsSelected() && 'selected'}
+                          data-state={row.getIsSelected() && "selected"}
                           onClick={() => {
                             row.toggleSelected();
                             if (row.getIsSelected()) {
-                              router.push('/articles', { scroll: false });
+                              router.push("/articles", { scroll: false });
                             } else {
                               router.push(`/articles/${row.original._id}`, {
                                 scroll: false,
@@ -223,8 +257,8 @@ export default function ArticleTable({
               </div>
               <div
                 className={cn(
-                  'flex items-center justify-end space-x-2 py-4',
-                  table.getPageCount() < 2 && 'hidden',
+                  "flex items-center justify-end space-x-2 py-4",
+                  table.getPageCount() < 2 && "hidden",
                 )}
               >
                 <Button
