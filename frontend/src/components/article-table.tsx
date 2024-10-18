@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { cn } from '@/lib/utils';
-import { Article } from '@/types';
+import { cn } from "@/lib/utils";
+import { Article } from "@/types";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -11,15 +11,6 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   SortingState,
-  useReactTable
-} from '@tanstack/react-table';
-import { ChevronDown, ChevronUp } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { Suspense, useMemo, useRef, useState } from 'react';
-import { Button } from './ui/button';
-import { Input } from './ui/input';
-import { Label } from './ui/label';
-import { RadioGroup, RadioGroupItem } from './ui/radio-group';
 import {
   Table,
   TableBody,
@@ -27,13 +18,21 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from './ui/table';
 
 export default function ArticleTable({ data }: { data: Article[] }) {
+export default function ArticleTable({
+  data,
+  mode = "normal",
+  search = false
+}: {
+  data: Article[];
+  mode?: "normal" | "mod" | "analyse";
+  search?: boolean;
   const router = useRouter();
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [selectedFilter, setSelectedFilter] = useState<string>('title');
+  const [selectedFilter, setSelectedFilter] = useState<string>("title");
 
   const searchInputRef = useRef<HTMLInputElement>(null);
 

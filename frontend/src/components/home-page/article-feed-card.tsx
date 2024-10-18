@@ -9,8 +9,9 @@ import { Button } from '../ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../ui/card';
 import { Table, TableBody, TableCell, TableHead, TableRow } from '../ui/table';
 import { Tabs, TabsList, TabsTrigger } from '../ui/tabs';
+import { cn } from '@/lib/utils';
 
-export default function ArticleFeedCard({ article }: { article: Article }) {
+export default function ArticleFeedCard({ article, className }: { article: Article, className?: string }) {
   const { user, token } = useAuth();
 
   const [ratings, setRatings] = useState<Rating[]>(article.ratings);
@@ -55,7 +56,7 @@ export default function ArticleFeedCard({ article }: { article: Article }) {
   };
 
   return (
-    <Card className='rounded'>
+    <Card className={cn('rounded', className)}>
       <CardHeader>
         <CardTitle>{article.title}</CardTitle>
         <CardDescription>{article.author}</CardDescription>
