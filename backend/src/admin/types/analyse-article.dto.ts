@@ -1,4 +1,4 @@
-import { UpdateAnalysisDto } from "src/article/dto/update-analysis.dto";
+import { UpdateAnalysisDto } from "../../article/dto/update-analysis.dto";
 
 export class AnalyseArticleDto {
     articleId: string;
