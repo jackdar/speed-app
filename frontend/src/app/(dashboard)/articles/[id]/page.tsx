@@ -12,7 +12,6 @@ import { Article } from "@/types";
 import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
 import { useAuth } from "@/hooks/use-auth";
-import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -86,7 +85,7 @@ export default function ArticlePage({ params }: { params: { id: string } }) {
 
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/articles/${params.id}/analysis`,
+        `${process.env.NEXT_PUBLIC_API_URL}/articles/${params.id}/analysis/approve`,
         {
           method: "POST",
           headers: {
@@ -97,6 +96,8 @@ export default function ArticlePage({ params }: { params: { id: string } }) {
             summary,
             keyFindings,
             methodology,
+            status: "approved",
+            isPosted: true,
           }),
         }
       );
@@ -105,10 +106,39 @@ export default function ArticlePage({ params }: { params: { id: string } }) {
         throw new Error("Failed to submit analysis");
       }
 
-      setSuccessMessage("Analysis submitted successfully.");
+      setSuccessMessage("Analysis approved and article posted successfully.");
     } catch (error) {
       console.error(error);
       setError("An error occurred while submitting the analysis.");
+    }
+  };
+
+  const handleReject = async () => {
+    setError("");
+    setSuccessMessage("");
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/articles/${params.id}/analysis/reject`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            status: "rejected",
+          }),
+        }
+      );
+
+      if (!res.ok) {
+        throw new Error("Failed to reject analysis");
+      }
+
+      setSuccessMessage("Analysis rejected successfully.");
+    } catch (error) {
+      console.error(error);
+      setError("An error occurred while rejecting the analysis.");
     }
   };
 
@@ -131,38 +161,46 @@ export default function ArticlePage({ params }: { params: { id: string } }) {
             <CardDescription>{article.author}</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <p>Journal: {article.journal}</p>
-                <p>Year: {article.year}</p>
-                <p>DOI: {article.doi}</p>
-              </div>
-              <div>
-                <p>Publisher: {article.publisher}</p>
-                <p>Volume: {article.volume}</p>
-                <p>
-                  Pages: {article.pagesStart} - {article.pagesEnd}
-                </p>
+            <>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <p>Journal: {article.journal}</p>
+                  <p>Year: {article.year}</p>
+                  <p>DOI: {article.doi}</p>
+                </div>
+                <div>
+                  <p>Publisher: {article.publisher}</p>
+                  <p>Volume: {article.volume}</p>
+                  <p>
+                    Pages: {article.pagesStart} - {article.pagesEnd}
+                  </p>
+                </div>
               </div>
               {article.analysis && article.analysis.status === "approved" && (
-                <div>
-                  <p>Methodology: {article.analysis.methodology}</p>
-                  <p>Key Findings:</p>
-                  <p>
-                    {article.analysis.keyFindings.map((finding) => {
-                      return <p>- {finding}</p>;
-                    })}
-                  </p>
-                  <p>Article summary:</p>
-                  <p>{article.analysis.summary}</p>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <p>Methodology: {article.analysis.methodology}</p>
+                    <p>Key Findings:</p>
+                    <ul>
+                      {article.analysis.keyFindings.map((finding, index) => (
+                        <li key={index}>- {finding}</li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div>
+                    <p>Article summary:</p>
+                    <p>{article.analysis.summary}</p>
+                  </div>
                 </div>
               )}
-            </div>
+            </>
           </CardContent>
         </Card>
         {isAnalyst &&
-          article.analysis &&
-          article.analysis.status === "pending" && (
+          (!article.analysis ||
+            article.analysis.status === "pending" ||
+            article.analysis.status === "rejected") && (
             <div className="mt-8">
               <h2 className="text-xl font-semibold mb-4">Submit Analysis</h2>
               {error && <p className="text-red-500 mb-2">{error}</p>}
@@ -189,7 +227,7 @@ export default function ArticlePage({ params }: { params: { id: string } }) {
                     <Input
                       value={keyFindingInput}
                       onChange={(e) => setKeyFindingInput(e.target.value)}
-                      className="flex-grow"
+                      className="flex-grow bg-white"
                     />
                     <Button
                       type="button"
@@ -199,13 +237,13 @@ export default function ArticlePage({ params }: { params: { id: string } }) {
                       Add
                     </Button>
                   </div>
-                  <ul>
+                  <div>
                     {keyFindings.map((finding, index) => (
-                      <li key={index} className="list-disc ml-5">
-                        {finding}
-                      </li>
+                      <p key={index} className="list-disc ml-5">
+                        - {finding}
+                      </p>
                     ))}
-                  </ul>
+                  </div>
                 </div>
                 <div className="mb-4">
                   <label className="block text-sm font-medium mb-1">
@@ -216,17 +254,26 @@ export default function ArticlePage({ params }: { params: { id: string } }) {
                       <SelectValue placeholder="Select a methodology" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="methodology1">Waterfall</SelectItem>
-                      <SelectItem value="methodology2">Agile</SelectItem>
-                      <SelectItem value="methodology3">Kanban</SelectItem>
-                      <SelectItem value="methodology4">SCRUM</SelectItem>
-                      <SelectItem value="methodology5">
+                      <SelectItem value="Waterfall">Waterfall</SelectItem>
+                      <SelectItem value="Agile">Agile</SelectItem>
+                      <SelectItem value="Kanban">Kanban</SelectItem>
+                      <SelectItem value="SCRUM">SCRUM</SelectItem>
+                      <SelectItem value="Extreme Programming">
                         Extreme Programming
                       </SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
-                <Button type="submit">Submit Analysis</Button>
+                <div className="flex space-x-4">
+                  <Button type="submit">Approve Analysis</Button>
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    onClick={handleReject}
+                  >
+                    Reject Article
+                  </Button>
+                </div>
               </form>
             </div>
           )}

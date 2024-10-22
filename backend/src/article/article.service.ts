@@ -8,13 +8,14 @@ import { Article, Rating } from './article.schema';
 import { CreateArticleDto } from './dto/create-article.dto';
 import { RatingDto } from './dto/rating.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
+import { CreateAnalysisDto } from './dto/create-analysis.dto';
 
 @Injectable()
 export class ArticleService {
   constructor(
     @InjectModel(Article.name) private articleModel: Model<Article>,
     private notificationService: NotificationService,
-  ) { }
+  ) {}
 
   async getArticles(): Promise<Article[]> {
     return await this.articleModel.find();
@@ -52,19 +53,19 @@ export class ArticleService {
       const createResult = await this.articleModel.create({
         ...createArticleDto,
         moderation: {
-          moderatorId: "",
+          moderatorId: '',
           moderated: false,
           moderation_passed: false,
-          status: "not moderated",
-          comments: ""
+          status: 'not moderated',
+          comments: '',
         },
         analysis: {
-          analyserId: "",
+          analyserId: '',
           analysed: false,
-          status: "not analysed",
-          summary: "",
+          status: 'not analysed',
+          summary: '',
           keyFindings: [],
-          methodology: ""
+          methodology: '',
         },
         dateCreated: createArticleDto.dateCreated || currentDate,
         dateUpdated: createArticleDto.dateUpdated || currentDate,
@@ -147,5 +148,55 @@ export class ArticleService {
       throw new BadRequestException('Article not found');
     }
     return article.ratings;
+  }
+
+  async approveAnalysis(
+    id: string,
+    analyserId: string,
+    analysisData: CreateAnalysisDto,
+  ): Promise<Article> {
+    try {
+      const article = await this.articleModel.findById(id);
+      if (!article) {
+        throw new BadRequestException('Article not found');
+      }
+
+      article.analysis = {
+        ...article.analysis,
+        ...analysisData,
+        analyserId,
+        analysed: true,
+        status: 'approved',
+        analysedDate: new Date(),
+      };
+      article.isPosted = true;
+      article.lastUpdateDate = new Date();
+
+      return await article.save();
+    } catch (error) {
+      throw new BadRequestException('Failed to approve analysis. ' + error);
+    }
+  }
+
+  async rejectAnalysis(id: string, analyserId: string): Promise<Article> {
+    try {
+      const article = await this.articleModel.findById(id);
+      if (!article) {
+        throw new BadRequestException('Article not found');
+      }
+
+      article.analysis = {
+        ...article.analysis,
+        analyserId,
+        analysed: true,
+        status: 'rejected',
+        analysedDate: new Date(),
+      };
+      article.lastUpdateDate = new Date();
+
+      return await article.save();
+    } catch (error) {
+      throw new BadRequestException('Failed to reject analysis. ' + error);
+    }
   }
 }
