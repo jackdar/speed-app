@@ -9,7 +9,7 @@ export default async function ArticlesPage() {
     .then((res) => res.json())
     .catch(console.error);
 
-  return <ArticleTable data={articles} />;
+  return <ArticleTable data={articles} search={true} />;
 }
 
 export const dynamic = 'force-dynamic';
