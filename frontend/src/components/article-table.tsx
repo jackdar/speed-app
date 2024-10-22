@@ -93,14 +93,14 @@ export default function ArticleTable({
             case "mod":
               return <Button>Moderate</Button>;
             case "analyse":
-              return <Button>Analyse</Button>;
+              return <Button>Review</Button>;
             default:
               return null;
           }
         },
       },
     ],
-    [],
+    []
   );
 
   const table = useReactTable({
@@ -169,7 +169,9 @@ export default function ArticleTable({
                     />
                     <Label
                       htmlFor={column.header?.toString() || `column-${index}`}
-                    >{`${column.header?.toString() || "Unnamed Column"}`}</Label>
+                    >{`${
+                      column.header?.toString() || "Unnamed Column"
+                    }`}</Label>
                   </div>
                 ))}
               </RadioGroup>
@@ -201,7 +203,7 @@ export default function ArticleTable({
                                 >
                                   {flexRender(
                                     header.column.columnDef.header,
-                                    header.getContext(),
+                                    header.getContext()
                                   )}
                                   {{
                                     asc: <ChevronUp size={16} />,
@@ -238,7 +240,7 @@ export default function ArticleTable({
                             <TableCell key={cell.id}>
                               {flexRender(
                                 cell.column.columnDef.cell,
-                                cell.getContext(),
+                                cell.getContext()
                               )}
                             </TableCell>
                           ))}
@@ -260,7 +262,7 @@ export default function ArticleTable({
               <div
                 className={cn(
                   "flex items-center justify-end space-x-2 py-4",
-                  table.getPageCount() < 2 && "hidden",
+                  table.getPageCount() < 2 && "hidden"
                 )}
               >
                 <Button

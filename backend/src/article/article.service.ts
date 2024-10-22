@@ -8,13 +8,16 @@ import { Article, Rating } from './article.schema';
 import { CreateArticleDto } from './dto/create-article.dto';
 import { RatingDto } from './dto/rating.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
+import { CreateAnalysisDto } from './dto/create-analysis.dto';
+import { UpdateModerationDto } from './dto/update-moderation.dto';
+import { UpdateAnalysisDto } from './dto/update-analysis.dto';
 
 @Injectable()
 export class ArticleService {
   constructor(
     @InjectModel(Article.name) private articleModel: Model<Article>,
     private notificationService: NotificationService,
-  ) { }
+  ) {}
 
   async getArticles(): Promise<Article[]> {
     return await this.articleModel.find({
@@ -44,6 +47,30 @@ export class ArticleService {
     }
   }
 
+  async moderateArticle(articleId: string, moderationDetails: UpdateModerationDto): Promise<Article> {
+    try {
+      moderationDetails.moderatedDate = new Date();
+      const updatedModerationDetails: UpdateModerationDto = moderationDetails;
+      const updatedArticle = await this.articleModel.findByIdAndUpdate(articleId, { $set: {"moderation": updatedModerationDetails }}, {new: true});
+
+      return updatedArticle;
+    } catch (error) {
+      throw new BadRequestException("Failed to update moderation details. " + error);
+    }
+  }
+
+  async analyseArticle(articleId: string, analysisDetails: UpdateAnalysisDto): Promise<Article> {
+    try {
+      analysisDetails.analysisDate = new Date();
+      const updatedAnalysisDetails: UpdateAnalysisDto = analysisDetails;
+      const updatedArticle = await this.articleModel.findByIdAndUpdate(articleId, { $set: {"analysis": updatedAnalysisDetails }}, {new: true});
+      
+      return updatedArticle;
+    } catch (error) {
+      throw new BadRequestException("Failed to update analysis details. " + error);
+    }
+  }
+
   async createArticle(
     uid: string = 'no user',
     createArticleDto: CreateArticleDto,
@@ -54,19 +81,19 @@ export class ArticleService {
       const createResult = await this.articleModel.create({
         ...createArticleDto,
         moderation: {
-          moderatorId: "",
+          moderatorId: '',
           moderated: false,
           moderation_passed: false,
-          status: "not moderated",
-          comments: ""
+          status: 'pending',
+          comments: '',
         },
         analysis: {
-          analyserId: "",
+          analyserId: '',
           analysed: false,
-          status: "not analysed",
-          summary: "",
+          status: 'not analysed',
+          summary: '',
           keyFindings: [],
-          methodology: ""
+          methodology: '',
         },
         dateCreated: createArticleDto.dateCreated || currentDate,
         dateUpdated: createArticleDto.dateUpdated || currentDate,
@@ -82,18 +109,9 @@ export class ArticleService {
         assigned: false,
         assignee_id: '',
       };
-      const temp2: CreateUserNotificationDto = {
-        user_id: uid,
-        article_id: createResult._id.toString(),
-        article_title: createResult.title,
-        title: 'Article Approved',
-        message: 'Your submitted article has been approved.',
-        read: false,
-      };
-
+    
       if (createResult) {
         await this.notificationService.sendNotification(adminNotification);
-        await this.notificationService.sendNotification(temp2);
       }
       return createResult;
     } catch (error) {
@@ -149,5 +167,55 @@ export class ArticleService {
       throw new BadRequestException('Article not found');
     }
     return article.ratings;
+  }
+
+  async approveAnalysis(
+    id: string,
+    analyserId: string,
+    analysisData: CreateAnalysisDto,
+  ): Promise<Article> {
+    try {
+      const article = await this.articleModel.findById(id);
+      if (!article) {
+        throw new BadRequestException('Article not found');
+      }
+
+      article.analysis = {
+        ...article.analysis,
+        ...analysisData,
+        analyserId,
+        analysed: true,
+        status: 'approved',
+        analysedDate: new Date(),
+      };
+      article.isPosted = true;
+      article.lastUpdateDate = new Date();
+
+      return await article.save();
+    } catch (error) {
+      throw new BadRequestException('Failed to approve analysis. ' + error);
+    }
+  }
+
+  async rejectAnalysis(id: string, analyserId: string): Promise<Article> {
+    try {
+      const article = await this.articleModel.findById(id);
+      if (!article) {
+        throw new BadRequestException('Article not found');
+      }
+
+      article.analysis = {
+        ...article.analysis,
+        analyserId,
+        analysed: true,
+        status: 'rejected',
+        analysedDate: new Date(),
+      };
+      article.lastUpdateDate = new Date();
+
+      return await article.save();
+    } catch (error) {
+      throw new BadRequestException('Failed to reject analysis. ' + error);
+    }
   }
 }

@@ -13,6 +13,7 @@ import { ArticleService } from './article.service';
 import { CreateArticleDto } from './dto/create-article.dto';
 import { RatingDto } from './dto/rating.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
+import { CreateAnalysisDto } from './dto/create-analysis.dto';
 
 @Controller()
 export class ArticleController {
@@ -64,5 +65,32 @@ export class ArticleController {
       console.log(decoded);
     }
     return await this.articleService.createArticle(decoded?.uid, article);
+  }
+
+  @Post('/articles/:id/analysis/approve')
+  async approveArticleAnalysis(
+    @Param('id') id: string,
+    @Body() analysisData: CreateAnalysisDto,
+    @Headers('authorization') authHeader: string,
+  ) {
+    const token = authHeader.replace('Bearer ', '');
+    const decoded = await this.authService.verify(token);
+
+    return await this.articleService.approveAnalysis(
+      id,
+      decoded.uid,
+      analysisData,
+    );
+  }
+
+  @Post('/articles/:id/analysis/reject')
+  async rejectArticleAnalysis(
+    @Param('id') id: string,
+    @Headers('authorization') authHeader: string,
+  ) {
+    const token = authHeader.replace('Bearer ', '');
+    const decoded = await this.authService.verify(token);
+
+    return await this.articleService.rejectAnalysis(id, decoded.uid);
   }
 }
