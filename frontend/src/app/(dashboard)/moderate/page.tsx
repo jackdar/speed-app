@@ -51,7 +51,7 @@ function ModeratePage() {
           </div>
         </div>
         <div className="flex w-full h-full">
-          <ArticleTable data={modQueue} />
+          <ArticleTable data={modQueue} mode="mod"/>
         </div>
       </>
     )
