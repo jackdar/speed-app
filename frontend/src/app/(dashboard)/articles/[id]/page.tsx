@@ -162,7 +162,13 @@ export default function ArticlePage({ params }: { params: { id: string } }) {
           </CardHeader>
           <CardContent>
             <>
-              <div className="grid grid-cols-2 gap-4">
+              <div
+                className={
+                  article.analysis.analysed
+                    ? `grid gap-4 grid-cols-3`
+                    : `grid gap-4 grid-cols-2`
+                }
+              >
                 <div>
                   <p>Journal: {article.journal}</p>
                   <p>Year: {article.year}</p>
@@ -175,25 +181,25 @@ export default function ArticlePage({ params }: { params: { id: string } }) {
                     Pages: {article.pagesStart} - {article.pagesEnd}
                   </p>
                 </div>
-              </div>
-              {article.analysis && article.analysis.status === "approved" && (
-                <div className="grid grid-cols-2 gap-4 pt-16">
-                  <div>
-                    <p>Methodology: {article.analysis.methodology}</p>
-                    <p>Key Findings:</p>
-                    <ul>
-                      {article.analysis.keyFindings.map((finding, index) => (
-                        <li key={index}>- {finding}</li>
-                      ))}
-                    </ul>
-                  </div>
+                {article.analysis && article.analysis.status === "approved" && (
+                  <>
+                    <div>
+                      <p>Methodology: {article.analysis.methodology}</p>
+                      <p>Key Findings:</p>
+                      <ul>
+                        {article.analysis.keyFindings.map((finding, index) => (
+                          <li key={index}>- {finding}</li>
+                        ))}
+                      </ul>
+                    </div>
 
-                  <div>
-                    <p>Article summary:</p>
-                    <p>{article.analysis.summary}</p>
-                  </div>
-                </div>
-              )}
+                    <div>
+                      <p>Article summary:</p>
+                      <p>{article.analysis.summary}</p>
+                    </div>
+                  </>
+                )}
+              </div>
             </>
           </CardContent>
         </Card>
