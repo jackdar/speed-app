@@ -56,7 +56,7 @@ export class ArticleService {
           moderatorId: '',
           moderated: false,
           moderation_passed: false,
-          status: 'not moderated',
+          status: 'pending',
           comments: '',
         },
         analysis: {
