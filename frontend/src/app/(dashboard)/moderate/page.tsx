@@ -16,7 +16,7 @@ function ModeratePage() {
   useEffect(() => {
     const fetchModQueue = async () => {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/articles`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/queue`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -46,19 +46,12 @@ function ModeratePage() {
           <div className="bg-gray-100 p-8 rounded shadow-md w-3/4">
             <h2 className="flex flex-row justify-between text-2xl text-black mb-8 w-full text-start border-b border-black pb-2">
               Moderation Queue
-              <Button
-                variant="outline"
-                className="border-black"
-                onClick={() => router.back()}
-              >
-                Back
-              </Button>
             </h2>
             {modQueue.length} left in queue
           </div>
         </div>
         <div className="flex w-full h-full">
-          <ArticleTable data={modQueue} mode='mod' />
+          <ArticleTable data={modQueue} />
         </div>
       </>
     )
