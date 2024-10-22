@@ -177,7 +177,7 @@ export default function ArticlePage({ params }: { params: { id: string } }) {
                 </div>
               </div>
               {article.analysis && article.analysis.status === "approved" && (
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 gap-4 pt-16">
                   <div>
                     <p>Methodology: {article.analysis.methodology}</p>
                     <p>Key Findings:</p>
@@ -216,7 +216,7 @@ export default function ArticlePage({ params }: { params: { id: string } }) {
                     value={summary}
                     onChange={(e) => setSummary(e.target.value)}
                     rows={5}
-                    className="w-full"
+                    className="w-full rounded-lg border border-input px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                   />
                 </div>
                 <div className="mb-4">
@@ -250,7 +250,7 @@ export default function ArticlePage({ params }: { params: { id: string } }) {
                     Methodology
                   </label>
                   <Select value={methodology} onValueChange={setMethodology}>
-                    <SelectTrigger className="w-full">
+                    <SelectTrigger className="w-full bg-white">
                       <SelectValue placeholder="Select a methodology" />
                     </SelectTrigger>
                     <SelectContent>
