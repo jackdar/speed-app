@@ -164,7 +164,7 @@ export default function ArticlePage({ params }: { params: { id: string } }) {
             <>
               <div
                 className={
-                  article.analysis.analysed
+                  article.analysis && article.analysis.analysed
                     ? `grid gap-4 grid-cols-3`
                     : `grid gap-4 grid-cols-2`
                 }
