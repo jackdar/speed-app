@@ -27,7 +27,7 @@ export type Rating = {
 export type Moderation = {
   moderatorId: string;
   moderated: boolean;
-  status: 'approved' | 'rejected';
+  status: "approved" | "rejected";
   comments: string;
   moderatedDate: Date;
 };
@@ -35,7 +35,7 @@ export type Moderation = {
 export type Analysis = {
   analystId: string;
   analysed: boolean;
-  status: 'pending' | 'completed';
+  status: "not analysed" | "pending" | "approved" | "rejected";
   summary: string;
   keyFindings: string[];
   methodology: string;
