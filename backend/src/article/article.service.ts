@@ -17,7 +17,9 @@ export class ArticleService {
   ) { }
 
   async getArticles(): Promise<Article[]> {
-    return await this.articleModel.find();
+    return await this.articleModel.find({
+      'isPosted': true,
+    });
   }
 
   async getArticleById(id: string): Promise<Article> {
