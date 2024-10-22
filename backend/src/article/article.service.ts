@@ -1,7 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { CreateUserNotificationDto } from 'src/notification/dto/create-user-notification.dto';
 import { CreateAdminNotifcationDto } from '../notification/dto/create-admin-notification.dto';
 import { NotificationService } from '../notification/notification.service';
 import { Article, Rating } from './article.schema';

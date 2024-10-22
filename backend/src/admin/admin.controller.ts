@@ -1,6 +1,5 @@
 import { Controller, Get, Post, Req, Body } from '@nestjs/common';
 import { AdminService } from './admin.service';
-import { Moderation } from 'src/article/article.schema';
 import { ModerateArticleDto } from './types/moderate-article.dto';
 import { AnalyseArticleDto } from './types/analyse-article.dto';
 

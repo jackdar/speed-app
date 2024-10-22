@@ -7,7 +7,7 @@ import { NotificationService } from '../notification/notification.service';
 import { CreateUserNotificationDto } from '../notification/dto/create-user-notification.dto';
 import { ArticleService } from '../article/article.service';
 import { AnalyseArticleDto } from './types/analyse-article.dto';
-import { CreateAdminNotifcationDto } from 'src/notification/dto/create-admin-notification.dto';
+import { CreateAdminNotifcationDto } from '../notification/dto/create-admin-notification.dto';
 
 @Injectable()
 export class AdminService {

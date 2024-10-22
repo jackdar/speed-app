@@ -4,7 +4,7 @@ import { ArticleModule } from '../article/article.module';
 import { Article, ArticleSchema } from '../article/article.schema';
 import { AdminController } from './admin.controller';
 import { AdminService } from './admin.service';
-import { NotificationModule } from 'src/notification/notification.module';
+import { NotificationModule } from '../notification/notification.module';
 
 @Module({
   imports: [
