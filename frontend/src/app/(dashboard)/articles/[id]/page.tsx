@@ -21,6 +21,7 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
+import ModerationForm from "@/components/moderation/moderation-form";
 
 export default function ArticlePage({ params }: { params: { id: string } }) {
   const { token, user } = useAuth();
@@ -35,6 +36,9 @@ export default function ArticlePage({ params }: { params: { id: string } }) {
   const isAnalyst =
     (user && user.role === "analyst") || (user && user.role === "admin");
 
+  const isModerator =
+    (user && user.role === "moderator") || (user && user.role === "admin");
+
   useEffect(() => {
     const fetchArticle = async () => {
       try {
@@ -45,7 +49,7 @@ export default function ArticlePage({ params }: { params: { id: string } }) {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
             },
-          }
+          },
         );
         if (!res.ok) {
           throw new Error("Failed to fetch article");
@@ -99,7 +103,7 @@ export default function ArticlePage({ params }: { params: { id: string } }) {
             status: "approved",
             isPosted: true,
           }),
-        }
+        },
       );
 
       if (!res.ok) {
@@ -128,7 +132,7 @@ export default function ArticlePage({ params }: { params: { id: string } }) {
           body: JSON.stringify({
             status: "rejected",
           }),
-        }
+        },
       );
 
       if (!res.ok) {
@@ -203,6 +207,10 @@ export default function ArticlePage({ params }: { params: { id: string } }) {
             </>
           </CardContent>
         </Card>
+        <div className="mt-8">
+          <h2 className="text-xl font-semibold mb-4">Submit Moderation</h2>
+          {isModerator && <ModerationForm article={article} />}
+        </div>
         {isAnalyst &&
           (!article.analysis ||
             article.analysis.status === "pending" ||

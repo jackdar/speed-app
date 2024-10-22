@@ -16,7 +16,7 @@ function AnalysePage() {
   useEffect(() => {
     const fetchModQueue = async () => {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/articles`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/queue/analyst`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
