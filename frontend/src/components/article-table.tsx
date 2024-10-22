@@ -32,7 +32,7 @@ import {
 export default function ArticleTable({
   data,
   mode = "normal",
-  search = false
+  search = false,
 }: {
   data: Article[];
   mode?: "normal" | "mod" | "analyse";
@@ -89,18 +89,18 @@ export default function ArticleTable({
         header: "Action",
         accessorKey: "action",
         cell: () => {
-            switch (mode) {
-              case "mod":
-                return <Button>Moderate</Button>
-              case "analyse":
-                return <Button>Admin</Button>
-              default:
-                return null
-            }
-        }
-      } 
+          switch (mode) {
+            case "mod":
+              return <Button>Moderate</Button>;
+            case "analyse":
+              return <Button>Review</Button>;
+            default:
+              return null;
+          }
+        },
+      },
     ],
-    [],
+    []
   );
 
   const table = useReactTable({
@@ -120,61 +120,63 @@ export default function ArticleTable({
     initialState: {
       columnVisibility: {
         id: false,
-        action: mode !== "normal"
+        action: mode !== "normal",
       },
     },
   });
 
   return (
     <>
-      {search &&
-      <div className="flex justify-center items-start bg-[#8D8D8D] p-8">
-        <div className="bg-gray-100 p-8 rounded shadow-md w-full">
-          <h2 className=" text-2xl text-black mb-4 w-full text-start border-b border-black pb-2">
-            Articles
-          </h2>
-          <div className="flex flex-col gap-4">
-            <Input
-              ref={searchInputRef}
-              placeholder="Search..."
-              value={
-                table.getColumn(selectedFilter)?.getFilterValue() as string
-              }
-              onChange={(event) => {
-                console.log(event.target.value);
-                setColumnFilters([]);
-                table
-                  .getColumn(selectedFilter)
-                  ?.setFilterValue(event.target.value);
-              }}
-            />
-            <RadioGroup
-              defaultValue="Title"
-              className="flex flex-row"
-              onValueChange={(value) => {
-                console.log(value);
-                setSelectedFilter(value.toLowerCase());
-                table
-                  .getColumn(value.toLowerCase())
-                  ?.setFilterValue(searchInputRef.current?.value);
-              }}
-            >
-              {columns.map((column, index) => (
-                <div className="flex items-center space-x-2" key={index}>
-                  <RadioGroupItem
-                    value={column.header?.toString() || ""}
-                    id={column.header?.toString() || `column-${index}`}
-                  />
-                  <Label
-                    htmlFor={column.header?.toString() || `column-${index}`}
-                  >{`${column.header?.toString() || "Unnamed Column"}`}</Label>
-                </div>
-              ))}
-            </RadioGroup>
+      {search && (
+        <div className="flex justify-center items-start bg-[#8D8D8D] p-8">
+          <div className="bg-gray-100 p-8 rounded shadow-md w-full">
+            <h2 className=" text-2xl text-black mb-4 w-full text-start border-b border-black pb-2">
+              Articles
+            </h2>
+            <div className="flex flex-col gap-4">
+              <Input
+                ref={searchInputRef}
+                placeholder="Search..."
+                value={
+                  table.getColumn(selectedFilter)?.getFilterValue() as string
+                }
+                onChange={(event) => {
+                  console.log(event.target.value);
+                  setColumnFilters([]);
+                  table
+                    .getColumn(selectedFilter)
+                    ?.setFilterValue(event.target.value);
+                }}
+              />
+              <RadioGroup
+                defaultValue="Title"
+                className="flex flex-row"
+                onValueChange={(value) => {
+                  console.log(value);
+                  setSelectedFilter(value.toLowerCase());
+                  table
+                    .getColumn(value.toLowerCase())
+                    ?.setFilterValue(searchInputRef.current?.value);
+                }}
+              >
+                {columns.map((column, index) => (
+                  <div className="flex items-center space-x-2" key={index}>
+                    <RadioGroupItem
+                      value={column.header?.toString() || ""}
+                      id={column.header?.toString() || `column-${index}`}
+                    />
+                    <Label
+                      htmlFor={column.header?.toString() || `column-${index}`}
+                    >{`${
+                      column.header?.toString() || "Unnamed Column"
+                    }`}</Label>
+                  </div>
+                ))}
+              </RadioGroup>
+            </div>
           </div>
         </div>
-      </div>
-      }
+      )}
       <div className="flex flex-1 flex-col p-8">
         <Suspense>
           <div className="w-full">
@@ -199,7 +201,7 @@ export default function ArticleTable({
                                 >
                                   {flexRender(
                                     header.column.columnDef.header,
-                                    header.getContext(),
+                                    header.getContext()
                                   )}
                                   {{
                                     asc: <ChevronUp size={16} />,
@@ -236,7 +238,7 @@ export default function ArticleTable({
                             <TableCell key={cell.id}>
                               {flexRender(
                                 cell.column.columnDef.cell,
-                                cell.getContext(),
+                                cell.getContext()
                               )}
                             </TableCell>
                           ))}
@@ -258,7 +260,7 @@ export default function ArticleTable({
               <div
                 className={cn(
                   "flex items-center justify-end space-x-2 py-4",
-                  table.getPageCount() < 2 && "hidden",
+                  table.getPageCount() < 2 && "hidden"
                 )}
               >
                 <Button
