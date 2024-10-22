@@ -82,8 +82,8 @@ export default function ArticleTable({
         accessorKey: "rating",
       },
       {
-        header: "Methdology",
-        accessorKey: "methdology",
+        header: "Methodology",
+        accessorKey: "methodology",
       },
       {
         header: "Action",
@@ -120,6 +120,8 @@ export default function ArticleTable({
     initialState: {
       columnVisibility: {
         id: false,
+        rating: mode === "normal",
+        methodology: mode === "normal",
         action: mode !== "normal",
       },
     },

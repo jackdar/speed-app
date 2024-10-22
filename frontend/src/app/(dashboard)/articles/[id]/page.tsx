@@ -21,6 +21,7 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
+import ModerationForm from "@/components/moderation/moderation-form";
 
 export default function ArticlePage({ params }: { params: { id: string } }) {
   const { token, user } = useAuth();
@@ -35,6 +36,9 @@ export default function ArticlePage({ params }: { params: { id: string } }) {
   const isAnalyst =
     (user && user.role === "analyst") || (user && user.role === "admin");
 
+  const isModerator =
+    (user && user.role === "moderator") || (user && user.role === "admin");
+
   useEffect(() => {
     const fetchArticle = async () => {
       try {
@@ -45,7 +49,7 @@ export default function ArticlePage({ params }: { params: { id: string } }) {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
             },
-          }
+          },
         );
         if (!res.ok) {
           throw new Error("Failed to fetch article");
@@ -99,7 +103,7 @@ export default function ArticlePage({ params }: { params: { id: string } }) {
             status: "approved",
             isPosted: true,
           }),
-        }
+        },
       );
 
       if (!res.ok) {
@@ -128,7 +132,7 @@ export default function ArticlePage({ params }: { params: { id: string } }) {
           body: JSON.stringify({
             status: "rejected",
           }),
-        }
+        },
       );
 
       if (!res.ok) {
@@ -203,87 +207,89 @@ export default function ArticlePage({ params }: { params: { id: string } }) {
             </>
           </CardContent>
         </Card>
-        {isAnalyst &&
-          (!article.analysis ||
-            article.analysis.status === "pending" ||
-            article.analysis.status === "rejected") &&
-          article.moderation.status === "approved" && (
-            <div className="mt-8">
-              <h2 className="text-xl font-semibold mb-4">Submit Analysis</h2>
-              {error && <p className="text-red-500 mb-2">{error}</p>}
-              {successMessage && (
-                <p className="text-green-500 mb-2">{successMessage}</p>
-              )}
-              <form onSubmit={handleSubmit}>
-                <div className="mb-4">
-                  <label className="block text-sm font-medium mb-1">
-                    Summary
-                  </label>
-                  <textarea
-                    value={summary}
-                    onChange={(e) => setSummary(e.target.value)}
-                    rows={5}
-                    className="w-full rounded-lg border border-input px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+        {isModerator && (
+          <div className="mt-8">
+            <h2 className="text-xl font-semibold mb-4">Submit Moderation</h2>
+            <ModerationForm article={article} />
+          </div>
+        )}
+        {isAnalyst && (
+          <div className="mt-8">
+            <h2 className="text-xl font-semibold mb-4">Submit Analysis</h2>
+            {error && <p className="text-red-500 mb-2">{error}</p>}
+            {successMessage && (
+              <p className="text-green-500 mb-2">{successMessage}</p>
+            )}
+            <form onSubmit={handleSubmit}>
+              <div className="mb-4">
+                <label className="block text-sm font-medium mb-1">
+                  Summary
+                </label>
+                <textarea
+                  value={summary}
+                  onChange={(e) => setSummary(e.target.value)}
+                  rows={5}
+                  className="w-full rounded-lg border border-input px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium mb-1">
+                  Key Findings
+                </label>
+                <div className="flex mb-2">
+                  <Input
+                    value={keyFindingInput}
+                    onChange={(e) => setKeyFindingInput(e.target.value)}
+                    className="flex-grow bg-white"
                   />
-                </div>
-                <div className="mb-4">
-                  <label className="block text-sm font-medium mb-1">
-                    Key Findings
-                  </label>
-                  <div className="flex mb-2">
-                    <Input
-                      value={keyFindingInput}
-                      onChange={(e) => setKeyFindingInput(e.target.value)}
-                      className="flex-grow bg-white"
-                    />
-                    <Button
-                      type="button"
-                      onClick={handleAddKeyFinding}
-                      className="ml-2"
-                    >
-                      Add
-                    </Button>
-                  </div>
-                  <div>
-                    {keyFindings.map((finding, index) => (
-                      <p key={index} className="list-disc ml-5">
-                        - {finding}
-                      </p>
-                    ))}
-                  </div>
-                </div>
-                <div className="mb-4">
-                  <label className="block text-sm font-medium mb-1">
-                    Methodology
-                  </label>
-                  <Select value={methodology} onValueChange={setMethodology}>
-                    <SelectTrigger className="w-full bg-white">
-                      <SelectValue placeholder="Select a methodology" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="Waterfall">Waterfall</SelectItem>
-                      <SelectItem value="Agile">Agile</SelectItem>
-                      <SelectItem value="Kanban">Kanban</SelectItem>
-                      <SelectItem value="SCRUM">SCRUM</SelectItem>
-                      <SelectItem value="Extreme Programming">
-                        Extreme Programming
-                      </SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="flex space-x-4">
-                  <Button type="submit">Approve Analysis</Button>
                   <Button
                     type="button"
-                    variant="destructive"
-                    onClick={handleReject}
+                    onClick={handleAddKeyFinding}
+                    className="ml-2"
                   >
-                    Reject Article
+                    Add
                   </Button>
                 </div>
-              </form>
-            </div>
-          )}
+                <div>
+                  {keyFindings.map((finding, index) => (
+                    <p key={index} className="list-disc ml-5">
+                      - {finding}
+                    </p>
+                  ))}
+                </div>
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium mb-1">
+                  Methodology
+                </label>
+                <Select value={methodology} onValueChange={setMethodology}>
+                  <SelectTrigger className="w-full bg-white">
+                    <SelectValue placeholder="Select a methodology" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Waterfall">Waterfall</SelectItem>
+                    <SelectItem value="Agile">Agile</SelectItem>
+                    <SelectItem value="Kanban">Kanban</SelectItem>
+                    <SelectItem value="SCRUM">SCRUM</SelectItem>
+                    <SelectItem value="Extreme Programming">
+                      Extreme Programming
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="flex space-x-4">
+                <Button type="submit">Approve Analysis</Button>
+                <Button
+                  type="button"
+                  variant="destructive"
+                  onClick={handleReject}
+                >
+                  Reject Article
+                </Button>
+              </div>
+            </form>
+          </div>
+        )}
       </div>
     </div>
   );

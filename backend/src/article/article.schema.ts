@@ -22,7 +22,7 @@ export class Moderation {
   moderation_passed: boolean;
 
   @Prop()
-  status: 'not moderated' | 'pending' | 'approved' | 'rejected';
+  status: 'pending' | 'approved' | 'rejected';
 
   @Prop()
   comments: string;
