@@ -211,11 +211,7 @@ export default function ArticlePage({ params }: { params: { id: string } }) {
           <h2 className="text-xl font-semibold mb-4">Submit Moderation</h2>
           {isModerator && <ModerationForm article={article} />}
         </div>
-        {isAnalyst &&
-          (!article.analysis ||
-            article.analysis.status === "pending" ||
-            article.analysis.status === "rejected") &&
-          article.moderation.status === "approved" && (
+        {isAnalyst && (
             <div className="mt-8">
               <h2 className="text-xl font-semibold mb-4">Submit Analysis</h2>
               {error && <p className="text-red-500 mb-2">{error}</p>}

@@ -30,16 +30,7 @@ function AnalysePage() {
 
         console.log(data);
 
-        const filteredArticles = data.filter((article: Article) => {
-          const moderationApproved =
-            article.moderation && article.moderation.status === "approved";
-          const analysisPending =
-            !article.analysis || article.analysis.status === "pending";
-
-          return moderationApproved && analysisPending;
-        });
-
-        setAnalystQueue(filteredArticles);
+        setAnalystQueue(data);
       } catch (e) {
         console.error(e);
       }
@@ -47,7 +38,7 @@ function AnalysePage() {
 
     fetchModQueue();
   }, [token]);
-
+  
   return (
     analystQueue && (
       <>

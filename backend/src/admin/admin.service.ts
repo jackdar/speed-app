@@ -51,8 +51,8 @@ export class AdminService {
 
       const userNotification: CreateUserNotificationDto = {
         user_id: updatedResult.submitterId.toString(),
-        article_id: "123",
-        article_title: "Rubbish",
+        article_id: articleId,
+        article_title: updatedResult.title,
         title: `Your article has been ${moderationDetails.status}`,
         message: `${moderationDetails.status == 'approved' ? "Congratulations, your article has been approved and now pending analysis." : "Your article has been rejected"}`,
         read: false
